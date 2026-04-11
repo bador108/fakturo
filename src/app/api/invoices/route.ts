@@ -1,8 +1,23 @@
-import { auth } from '@clerk/nextjs/server'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { FREE_TIER_LIMIT } from '@/lib/stripe'
 import type { InvoiceFormData } from '@/types'
+
+async function ensureUser(userId: string, db: ReturnType<typeof createServiceClient>) {
+  const { data: existing } = await db.from('users').select('id, plan, invoice_count_this_month, invoice_count_reset_at').eq('id', userId).single()
+  if (existing) return existing
+
+  // Auto-create user if missing
+  const clerkUser = await currentUser()
+  const { data: created } = await db.from('users').insert({
+    id: userId,
+    email: clerkUser?.emailAddresses[0]?.emailAddress ?? '',
+    full_name: [clerkUser?.firstName, clerkUser?.lastName].filter(Boolean).join(' ') || null,
+  }).select().single()
+
+  return created
+}
 
 export async function GET() {
   const { userId } = await auth()
@@ -24,15 +39,9 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const db = createServiceClient()
+  const user = await ensureUser(userId, db)
 
-  // Check quota
-  const { data: user } = await db
-    .from('users')
-    .select('plan, invoice_count_this_month, invoice_count_reset_at')
-    .eq('id', userId)
-    .single()
-
-  if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+  if (!user) return NextResponse.json({ error: 'Nepodařilo se vytvořit uživatele.' }, { status: 500 })
 
   // Reset counter if new month
   const lastReset = new Date(user.invoice_count_reset_at)
@@ -45,7 +54,7 @@ export async function POST(req: Request) {
 
   if (user.plan === 'free' && count >= FREE_TIER_LIMIT) {
     return NextResponse.json(
-      { error: `Free tier limit (${FREE_TIER_LIMIT} faktury/měsíc) byl dosažen. Upgradujte na Pro.`, code: 'LIMIT_REACHED' },
+      { error: `Dosáhli jste limitu ${FREE_TIER_LIMIT} faktur/měsíc (Free plán). Upgradujte na Pro.`, code: 'LIMIT_REACHED' },
       { status: 403 }
     )
   }
@@ -77,11 +86,7 @@ export async function POST(req: Request) {
     if (itemsErr) return NextResponse.json({ error: itemsErr.message }, { status: 500 })
   }
 
-  // Increment monthly counter
-  await db
-    .from('users')
-    .update({ invoice_count_this_month: count + 1 })
-    .eq('id', userId)
+  await db.from('users').update({ invoice_count_this_month: count + 1 }).eq('id', userId)
 
   return NextResponse.json(invoice, { status: 201 })
 }
