@@ -18,7 +18,9 @@ export function Sidebar() {
   return (
     <aside className="w-64 hidden md:flex flex-col bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 px-4 py-6 gap-2">
       <div className="px-2 mb-6">
-        <span className="text-xl font-bold text-indigo-600">Fakturo</span>
+        <Link href="/" className="text-xl font-bold text-indigo-600 hover:text-indigo-500 transition">
+          Fakturo
+        </Link>
       </div>
 
       <nav className="flex-1 space-y-1">
