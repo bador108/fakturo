@@ -21,7 +21,7 @@ export default async function SignInPage() {
             <h1 className="text-2xl font-semibold text-slate-900">Vítejte zpět</h1>
             <p className="text-slate-400 mt-1 text-sm">Přihlaste se ke svému účtu</p>
           </div>
-          <SignIn />
+          <SignIn forceRedirectUrl="/dashboard" />
           <p className="text-center text-sm text-slate-400 mt-6">
             Nemáte účet?{' '}
             <Link href="/sign-up" className="text-indigo-600 hover:underline font-medium">

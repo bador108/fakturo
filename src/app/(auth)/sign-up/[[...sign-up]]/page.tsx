@@ -21,7 +21,7 @@ export default async function SignUpPage() {
             <h1 className="text-2xl font-semibold text-slate-900">Vytvořte si účet</h1>
             <p className="text-slate-400 mt-1 text-sm">Zdarma · Bez kreditní karty</p>
           </div>
-          <SignUp />
+          <SignUp forceRedirectUrl="/dashboard" />
           <p className="text-center text-sm text-slate-400 mt-6">
             Již máte účet?{' '}
             <Link href="/sign-in" className="text-indigo-600 hover:underline font-medium">
