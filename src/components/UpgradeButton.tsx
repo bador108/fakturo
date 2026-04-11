@@ -2,9 +2,17 @@
 
 export function UpgradeButton() {
   async function upgrade() {
-    const res = await fetch('/api/stripe/create-checkout', { method: 'POST' })
-    const { url } = await res.json()
-    if (url) window.location.href = url
+    try {
+      const res = await fetch('/api/stripe/create-checkout', { method: 'POST' })
+      if (!res.ok) {
+        alert('Stripe není nakonfigurován. Přidej STRIPE_SECRET_KEY do prostředí.')
+        return
+      }
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+    } catch {
+      alert('Stripe není nakonfigurován.')
+    }
   }
   return (
     <button
