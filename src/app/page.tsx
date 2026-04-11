@@ -38,7 +38,7 @@ export default async function HomePage() {
         </div>
         <h1 className="text-5xl md:text-6xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight max-w-3xl">
           Fakturace,{' '}
-          <span className="text-indigo-600">která nezaberá čas</span>
+          <span className="text-indigo-600">která nezabírá čas</span>
         </h1>
         <p className="mt-6 text-lg text-zinc-500 dark:text-zinc-400 max-w-xl">
           Vytvářejte profesionální faktury v češtině, exportujte PDF a sledujte platby. Pro freelancery a malé firmy.
