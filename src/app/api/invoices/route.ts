@@ -10,12 +10,13 @@ async function ensureUser(userId: string, db: ReturnType<typeof createServiceCli
 
   // Auto-create user if missing
   const clerkUser = await currentUser()
-  const { data: created } = await db.from('users').insert({
+  const { data: created, error: createErr } = await db.from('users').insert({
     id: userId,
     email: clerkUser?.emailAddresses[0]?.emailAddress ?? '',
     full_name: [clerkUser?.firstName, clerkUser?.lastName].filter(Boolean).join(' ') || null,
   }).select().single()
 
+  if (createErr) console.error('User create error:', createErr.message, createErr.code)
   return created
 }
 
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
   const db = createServiceClient()
   const user = await ensureUser(userId, db)
 
-  if (!user) return NextResponse.json({ error: 'Nepodařilo se vytvořit uživatele.' }, { status: 500 })
+  if (!user) return NextResponse.json({ error: 'Nepodařilo se vytvořit uživatele. Zkontroluj SUPABASE_SERVICE_ROLE_KEY ve Vercelu.' }, { status: 500 })
 
   // Reset counter if new month
   const lastReset = new Date(user.invoice_count_reset_at)
