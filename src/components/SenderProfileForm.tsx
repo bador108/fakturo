@@ -66,7 +66,7 @@ export function SenderProfileForm({ userId, profile }: Props) {
       </div>
       <div className="flex items-center gap-3">
         <Button onClick={save} loading={saving}>Uložit</Button>
-        {saved && <span className="text-sm text-green-600 dark:text-green-400">Uloženo ✓</span>}
+        {saved && <span className="text-sm text-green-600">Uloženo ✓</span>}
       </div>
     </div>
   )

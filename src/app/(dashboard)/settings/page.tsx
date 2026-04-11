@@ -19,16 +19,16 @@ export default async function SettingsPage() {
 
   return (
     <div className="max-w-2xl space-y-8">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Nastavení</h1>
+      <h1 className="text-2xl font-bold text-zinc-900">Nastavení</h1>
 
       {/* Plan status */}
-      <div className="p-5 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
+      <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-3">Plán</h2>
         {plan === 'pro' ? (
-          <p className="text-sm text-green-600 dark:text-green-400 font-medium">✓ Pro plán aktivní – neomezené faktury</p>
+          <p className="text-sm text-green-600 font-medium">✓ Pro plán aktivní – neomezené faktury</p>
         ) : (
           <div className="flex items-center justify-between">
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="text-sm text-zinc-600">
               Free plán · {used} / {FREE_TIER_LIMIT} faktur tento měsíc
             </p>
             <UpgradeButton />
@@ -37,7 +37,7 @@ export default async function SettingsPage() {
       </div>
 
       {/* Default sender profile */}
-      <div className="p-5 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
+      <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-4">Výchozí údaje dodavatele</h2>
         <SenderProfileForm userId={userId} profile={profile ?? undefined} />
       </div>
