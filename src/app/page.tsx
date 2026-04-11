@@ -183,7 +183,10 @@ export default async function HomePage() {
       {/* CTA */}
       <section className="bg-indigo-600 py-16">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <Image src="/logo.svg" alt="Fakturo" width={120} height={30} className="mx-auto mb-6 brightness-0 invert" />
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <Image src="/icon.svg" alt="Fakturo" width={40} height={40} className="rounded-xl" unoptimized />
+            <span className="text-2xl font-bold text-white tracking-tight">Fakturo</span>
+          </div>
           <h2 className="text-3xl font-bold text-white mb-4">Připraveni začít fakturovat?</h2>
           <p className="text-indigo-200 mb-8">Registrace zabere méně než minutu. Kreditní karta není potřeba.</p>
           <Link href="/sign-up" className="bg-white text-indigo-600 px-8 py-3 rounded-xl font-bold text-lg hover:bg-indigo-50 transition inline-block">
@@ -193,7 +196,10 @@ export default async function HomePage() {
       </section>
 
       <footer className="bg-white border-t border-slate-100 py-8 text-center">
-        <Image src="/logo.svg" alt="Fakturo" width={90} height={22} className="mx-auto mb-3 opacity-50" />
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <Image src="/icon.svg" alt="Fakturo" width={24} height={24} className="rounded-md opacity-60" unoptimized />
+          <span className="text-sm font-semibold text-slate-400">Fakturo</span>
+        </div>
         <p className="text-sm text-slate-400">© {new Date().getFullYear()} Fakturo · Fakturace pro freelancery</p>
       </footer>
     </div>
