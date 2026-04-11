@@ -5,8 +5,6 @@ import { StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { Plus, FileText } from 'lucide-react'
-import { FREE_TIER_LIMIT } from '@/lib/stripe'
-import { UpgradeButton } from '@/components/UpgradeButton'
 import type { Invoice } from '@/types'
 
 export default async function DashboardPage() {
@@ -43,11 +41,8 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex gap-3 items-center">
-          {atLimit && (
-            <UpgradeButton />
-          )}
           <Link href="/invoices/new">
-            <Button disabled={atLimit}>
+            <Button>
               <Plus className="h-4 w-4" />
               Nová faktura
             </Button>
