@@ -20,7 +20,6 @@ export default async function DashboardPage() {
 
   const plan = user?.plan ?? 'free'
   const usedThisMonth = user?.invoice_count_this_month ?? 0
-  const atLimit = plan === 'free' && usedThisMonth >= FREE_TIER_LIMIT
 
   const stats = {
     total: invoices?.length ?? 0,
@@ -36,7 +35,7 @@ export default async function DashboardPage() {
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Přehled</h1>
           <p className="text-sm text-zinc-500 mt-0.5">
             {plan === 'free'
-              ? `${usedThisMonth} / ${FREE_TIER_LIMIT} faktur tento měsíc (Free)`
+              ? `${usedThisMonth} faktur tento měsíc (Free)`
               : 'Pro plán · neomezené faktury'}
           </p>
         </div>
