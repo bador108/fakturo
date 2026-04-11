@@ -2,9 +2,8 @@ import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase'
 import { StatusBadge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { formatCurrency, formatDate } from '@/lib/utils'
-import { Plus, FileText } from 'lucide-react'
+import { Plus, FileText, TrendingUp, CheckCircle, Clock } from 'lucide-react'
 import type { Invoice } from '@/types'
 
 export default async function DashboardPage() {
@@ -28,70 +27,89 @@ export default async function DashboardPage() {
     revenue: invoices?.filter(i => i.status === 'paid').reduce((s, i) => s + Number(i.total), 0) ?? 0,
   }
 
+  const statCards = [
+    { label: 'Celkový příjem', value: formatCurrency(stats.revenue, 'CZK'), icon: TrendingUp, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Zaplaceno', value: stats.paid, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Čeká na platbu', value: stats.total - stats.paid - stats.draft, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { label: 'Koncepty', value: stats.draft, icon: FileText, color: 'text-slate-500', bg: 'bg-slate-100' },
+  ]
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-5xl">
+
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Přehled</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">
-            {plan === 'free'
-              ? `${usedThisMonth} faktur tento měsíc (Free)`
-              : 'Pro plán · neomezené faktury'}
+          <h1 className="text-2xl font-semibold text-slate-900">Přehled</h1>
+          <p className="text-sm text-slate-400 mt-0.5">
+            {plan === 'free' ? `${usedThisMonth} faktur tento měsíc · Free plán` : 'Pro plán · neomezené faktury'}
           </p>
         </div>
-        <div className="flex gap-3 items-center">
-          <Link href="/invoices/new">
-            <Button>
-              <Plus className="h-4 w-4" />
-              Nová faktura
-            </Button>
-          </Link>
-        </div>
+        <Link
+          href="/invoices/new"
+          className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition shadow-sm shadow-indigo-200"
+        >
+          <Plus className="h-4 w-4" />
+          Nová faktura
+        </Link>
       </div>
 
-      {/* Stats */}
+      {/* Stat cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: 'Celkem faktur', value: stats.total },
-          { label: 'Zaplaceno', value: stats.paid },
-          { label: 'Koncepty', value: stats.draft },
-          { label: 'Celkový příjem', value: formatCurrency(stats.revenue, 'CZK') },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-5">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{label}</p>
-            <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{value}</p>
+        {statCards.map(({ label, value, icon: Icon, color, bg }) => (
+          <div key={label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div className={`inline-flex items-center justify-center h-9 w-9 rounded-xl ${bg} mb-3`}>
+              <Icon className={`h-4.5 w-4.5 ${color}`} />
+            </div>
+            <p className="text-2xl font-bold text-slate-900">{value}</p>
+            <p className="text-xs text-slate-400 mt-0.5">{label}</p>
           </div>
         ))}
       </div>
 
       {/* Invoice list */}
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
-        <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-          <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">Faktury</h2>
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-50 flex items-center justify-between">
+          <h2 className="font-semibold text-slate-800">Poslední faktury</h2>
+          <span className="text-xs text-slate-400">{stats.total} celkem</span>
         </div>
 
         {!invoices?.length ? (
-          <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
-            <FileText className="h-12 w-12 mb-4 opacity-30" />
-            <p className="text-sm">Zatím žádné faktury</p>
-            <Link href="/invoices/new" className="mt-4 text-sm text-indigo-600 hover:underline">
-              Vytvořit první fakturu →
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="h-16 w-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
+              <FileText className="h-8 w-8 text-slate-300" />
+            </div>
+            <p className="text-sm font-medium text-slate-500">Zatím žádné faktury</p>
+            <p className="text-xs text-slate-400 mt-1">Vytvořte svoji první fakturu</p>
+            <Link
+              href="/invoices/new"
+              className="mt-5 inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition"
+            >
+              <Plus className="h-4 w-4" />
+              Vytvořit fakturu
             </Link>
           </div>
         ) : (
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          <div className="divide-y divide-slate-50">
             {(invoices as Invoice[]).map(inv => (
-              <Link key={inv.id} href={`/invoices/${inv.id}`} className="flex items-center gap-4 px-6 py-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition">
+              <Link
+                key={inv.id}
+                href={`/invoices/${inv.id}`}
+                className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition group"
+              >
+                <div className="h-9 w-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
+                  <FileText className="h-4 w-4 text-indigo-400" />
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-zinc-900 dark:text-zinc-100 text-sm">
-                    {inv.invoice_number} · {inv.client_name}
+                  <p className="font-medium text-slate-800 text-sm group-hover:text-indigo-600 transition">
+                    {inv.client_name}
                   </p>
-                  <p className="text-xs text-zinc-400 mt-0.5">
-                    Vystaveno {formatDate(inv.issue_date)} · splatnost {formatDate(inv.due_date)}
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    #{inv.invoice_number} · splatnost {formatDate(inv.due_date)}
                   </p>
                 </div>
                 <StatusBadge status={inv.status} />
-                <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100 text-sm w-28 text-right">
+                <span className="font-semibold text-slate-800 text-sm w-28 text-right tabular-nums">
                   {formatCurrency(inv.total, inv.currency)}
                 </span>
               </Link>
@@ -102,4 +120,3 @@ export default async function DashboardPage() {
     </div>
   )
 }
-
