@@ -2,7 +2,7 @@ import Stripe from 'stripe'
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
-export const FREE_TIER_LIMIT = 3
+export const FREE_TIER_LIMIT = 30
 
 export async function getOrCreateStripeCustomer(
   userId: string,
