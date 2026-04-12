@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UserButton, useUser } from '@clerk/nextjs'
-import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, BarChart2, Receipt, Lightbulb } from 'lucide-react'
+import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, BarChart2, Receipt } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { NotificationBell } from '@/components/NotificationBell'
 
@@ -59,15 +59,6 @@ export function Sidebar() {
           )
         })}
       </nav>
-
-      {/* Feedback link */}
-      <a
-        href="mailto:napad@fakturo.cz?subject=Nápad na zlepšení Fakturo"
-        className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition mx-0"
-      >
-        <Lightbulb className="h-3.5 w-3.5 shrink-0" />
-        Navrhnout zlepšení
-      </a>
 
       {/* User */}
       <div className="border-t border-slate-100 pt-4 mt-1">
