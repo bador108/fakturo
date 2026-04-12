@@ -3,9 +3,10 @@ import Image from 'next/image'
 import Script from 'next/script'
 import { auth } from '@clerk/nextjs/server'
 import {
-  FileText, Zap, Shield, Globe, CheckCircle2, Users, Receipt,
-  RefreshCw, BarChart2, TrendingUp, Send, ArrowRight
+  Zap, Shield, Globe, CheckCircle2,
+  TrendingUp, ArrowRight, Sparkles,
 } from 'lucide-react'
+import { FeatureShowcase } from '@/components/FeatureShowcase'
 
 export default async function HomePage() {
   const { userId } = await auth()
@@ -61,25 +62,25 @@ export default async function HomePage() {
           <p className="mt-4 text-sm text-slate-400">Zdarma 30 faktur/měsíc · Pro neomezeně za 500 Kč/měs.</p>
         </div>
 
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl h-80 md:h-96">
-          <Image
-            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80"
-            alt="Člověk pracující na faktuře"
-            fill
-            className="object-cover"
-            unoptimized
-          />
-          <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur rounded-xl p-4 shadow-lg">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0">
-                <FileText className="h-4 w-4 text-indigo-600" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-slate-800">Faktura #20260042</p>
-                <p className="text-xs text-slate-400">Novák s.r.o · 12 500 Kč</p>
-              </div>
-              <span className="text-xs bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full font-medium">Zaplaceno</span>
+        {/* Hero screenshot */}
+        <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-slate-200">
+          <div className="bg-slate-800 flex items-center gap-2 px-4 py-2.5">
+            <span className="h-3 w-3 rounded-full bg-red-400" />
+            <span className="h-3 w-3 rounded-full bg-yellow-400" />
+            <span className="h-3 w-3 rounded-full bg-emerald-400" />
+            <div className="ml-3 flex-1 bg-slate-700 rounded-md h-5 flex items-center px-3">
+              <span className="text-[10px] text-slate-400 font-mono">fakturo.vercel.app/dashboard</span>
             </div>
+          </div>
+          <div className="relative aspect-[1200/740]">
+            <Image
+              src="/screenshots/dashboard.png"
+              alt="Fakturo dashboard"
+              fill
+              className="object-cover object-top"
+              priority
+              sizes="(max-width: 768px) 100vw, 600px"
+            />
           </div>
         </div>
       </section>
@@ -96,120 +97,84 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Features grid */}
+      {/* Feature showcase with real screenshots */}
       <section className="max-w-6xl mx-auto px-6 py-20">
-        <div className="text-center mb-14">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-violet-50 text-violet-600 text-sm font-medium px-4 py-1.5 rounded-full mb-4">
+            <Sparkles className="h-3.5 w-3.5" />
+            Ukázka aplikace
+          </div>
           <h2 className="text-3xl font-bold text-slate-900">Vše co potřebujete</h2>
-          <p className="mt-3 text-slate-400 max-w-xl mx-auto">Fakturo není jen fakturace — je to kompletní finanční nástroj pro freelancery a malé firmy.</p>
+          <p className="mt-3 text-slate-400 max-w-xl mx-auto">
+            Fakturo není jen fakturace — je to kompletní finanční nástroj pro freelancery a malé firmy.
+          </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: FileText,
-              color: 'bg-indigo-50',
-              iconColor: 'text-indigo-600',
-              title: 'Profesionální faktury',
-              desc: 'Vytvořte fakturu za pár kliknutí. IČO, DIČ, DPH, QR platba — vše na jednom místě. PDF připraveno k odeslání.',
-              img: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&q=80',
-            },
-            {
-              icon: Send,
-              color: 'bg-violet-50',
-              iconColor: 'text-violet-600',
-              title: 'Odeslání emailem',
-              desc: 'Pošlete fakturu přímo z aplikace. Klient dostane PDF přílohu — bez Outlooku, bez kopírování.',
-              img: 'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=600&q=80',
-            },
-            {
-              icon: Users,
-              color: 'bg-sky-50',
-              iconColor: 'text-sky-600',
-              title: 'Správa klientů',
-              desc: 'Evidujte klienty a jejich kontaktní údaje. Při tvorbě faktury je vyberte jedním kliknutím.',
-              img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80',
-            },
-            {
-              icon: Receipt,
-              color: 'bg-amber-50',
-              iconColor: 'text-amber-600',
-              title: 'Evidence výdajů',
-              desc: 'Sledujte výdaje a mějte přehled o tom, kolik utráíte. Jednoduše, bez komplikovaného účetnictví.',
-              img: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&q=80',
-            },
-            {
-              icon: RefreshCw,
-              color: 'bg-emerald-50',
-              iconColor: 'text-emerald-600',
-              title: 'Opakující se faktury',
-              desc: 'Nastavte šablony pro pravidelné fakturace. Ušetřete čas na rutinních úkolech každý měsíc.',
-              img: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80',
-            },
-            {
-              icon: BarChart2,
-              color: 'bg-rose-50',
-              iconColor: 'text-rose-600',
-              title: 'Cashflow přehled',
-              desc: 'Graf příjmů za posledních 6 měsíců. Vždy víte, jak na tom jste — a kam se váš byznys ubírá.',
-              img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80',
-            },
-          ].map(({ icon: Icon, color, iconColor, title, desc, img }) => (
-            <div key={title} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group">
-              <div className="relative h-44 overflow-hidden">
-                <Image src={img} alt={title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" unoptimized />
-                <div className={`absolute top-3 left-3 h-9 w-9 ${color} rounded-xl flex items-center justify-center shadow-sm`}>
-                  <Icon className={`h-4 w-4 ${iconColor}`} />
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-semibold text-slate-800 mb-1">{title}</h3>
-                <p className="text-sm text-slate-400">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <FeatureShowcase />
       </section>
 
-      {/* How it works */}
-      <section className="bg-white border-y border-slate-100 py-20">
+      {/* Key benefits strip */}
+      <section className="bg-white border-y border-slate-100 py-16">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-slate-900">Jak to funguje?</h2>
-            <p className="mt-3 text-slate-400">Faktura hotová za 3 kroky</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-6">
             {[
-              { step: '01', title: 'Vyplň fakturu', desc: 'Zadej údaje dodavatele, odběratele a položky. IČO, DIČ, DPH – vše na jednom místě.', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80' },
-              { step: '02', title: 'Stáhni nebo pošli PDF', desc: 'Stáhni profesionální PDF nebo pošli fakturu přímo emailem klientovi — jedním kliknutím.', img: 'https://images.unsplash.com/photo-1568667256549-094345857637?w=600&q=80' },
-              { step: '03', title: 'Sleduj platby', desc: 'Označuj faktury jako odeslané nebo zaplacené. Cashflow přehled vždy po ruce.', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80' },
-            ].map(({ step, title, desc, img }) => (
-              <div key={step} className="flex flex-col items-center text-center">
-                <div className="relative w-full h-52 rounded-2xl overflow-hidden shadow-md mb-6 group">
-                  <Image src={img} alt={title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" unoptimized />
-                  <div className="absolute top-3 left-3 bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">{step}</div>
+              { icon: Globe, color: 'bg-indigo-50', iconColor: 'text-indigo-600', title: 'CZK · EUR · USD', desc: 'Fakturujte v libovolné měně s live kurzy ČNB.' },
+              { icon: Shield, color: 'bg-emerald-50', iconColor: 'text-emerald-600', title: 'Bezpečné uložení', desc: 'Data v cloudu, přístupná odkudkoliv.' },
+              { icon: TrendingUp, color: 'bg-amber-50', iconColor: 'text-amber-600', title: 'DPH 0·15·21 %', desc: 'Automatický výpočet a přehled DPH k odvodu.' },
+              { icon: Zap, color: 'bg-violet-50', iconColor: 'text-violet-600', title: 'Rychlá registrace', desc: 'Méně než minuta, bez karty.' },
+            ].map(({ icon: Icon, color, iconColor, title, desc }) => (
+              <div key={title} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col items-center text-center gap-3">
+                <div className={`h-11 w-11 ${color} rounded-xl flex items-center justify-center`}>
+                  <Icon className={`h-5 w-5 ${iconColor}`} />
                 </div>
-                <h3 className="font-semibold text-slate-800 text-lg mb-2">{title}</h3>
-                <p className="text-sm text-slate-400 max-w-xs">{desc}</p>
+                <p className="font-semibold text-slate-800 text-sm">{title}</p>
+                <p className="text-xs text-slate-400">{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Key benefits strip */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid md:grid-cols-4 gap-6">
+      {/* How it works */}
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl font-bold text-slate-900">Jak to funguje?</h2>
+          <p className="mt-3 text-slate-400">Faktura hotová za 3 kroky</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
           {[
-            { icon: Globe, color: 'bg-indigo-50', iconColor: 'text-indigo-600', title: 'CZK · EUR · USD', desc: 'Fakturujte v libovolné měně.' },
-            { icon: Shield, color: 'bg-emerald-50', iconColor: 'text-emerald-600', title: 'Bezpečné uložení', desc: 'Data v cloudu, přístupná odkudkoliv.' },
-            { icon: TrendingUp, color: 'bg-amber-50', iconColor: 'text-amber-600', title: 'DPH 0·15·21 %', desc: 'Automatický výpočet DPH.' },
-            { icon: Zap, color: 'bg-violet-50', iconColor: 'text-violet-600', title: 'Rychlá registrace', desc: 'Méně než minuta, bez karty.' },
-          ].map(({ icon: Icon, color, iconColor, title, desc }) => (
-            <div key={title} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col items-center text-center gap-3">
-              <div className={`h-11 w-11 ${color} rounded-xl flex items-center justify-center`}>
-                <Icon className={`h-5 w-5 ${iconColor}`} />
+            {
+              step: '01',
+              title: 'Vyplň fakturu',
+              desc: 'Zadej údaje dodavatele, odběratele a položky. IČO, DIČ, DPH – vše na jednom místě. ARES doplní údaje za tebe.',
+              img: '/screenshots/new-invoice.png',
+            },
+            {
+              step: '02',
+              title: 'Pošli klientovi',
+              desc: 'Stáhni profesionální PDF nebo pošli fakturu přímo emailem — jedním kliknutím. Volitelně včetně platebního odkazu.',
+              img: '/screenshots/invoices.png',
+            },
+            {
+              step: '03',
+              title: 'Sleduj finance',
+              desc: 'Označuj faktury jako zaplacené. Grafy cashflow, přehled DPH a automatické upomínky po splatnosti.',
+              img: '/screenshots/finance.png',
+            },
+          ].map(({ step, title, desc, img }) => (
+            <div key={step} className="flex flex-col items-center text-center">
+              <div className="relative w-full rounded-2xl overflow-hidden shadow-lg mb-6 ring-1 ring-slate-200">
+                <div className="bg-slate-800 flex items-center gap-1.5 px-3 py-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                  <div className="absolute top-1.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">{step}</div>
+                </div>
+                <div className="relative aspect-[1200/740]">
+                  <Image src={img} alt={title} fill className="object-cover object-top" sizes="400px" />
+                </div>
               </div>
-              <p className="font-semibold text-slate-800 text-sm">{title}</p>
-              <p className="text-xs text-slate-400">{desc}</p>
+              <h3 className="font-semibold text-slate-800 text-lg mb-2">{title}</h3>
+              <p className="text-sm text-slate-400 max-w-xs">{desc}</p>
             </div>
           ))}
         </div>
@@ -233,7 +198,7 @@ export default async function HomePage() {
                   'Správa klientů',
                   'Evidence výdajů',
                   'Cashflow přehled',
-                  'CZK / EUR / USD',
+                  'CZK / EUR / USD (live kurzy ČNB)',
                   'Základní podpora',
                 ].map(f => (
                   <li key={f} className="flex items-center gap-2">
@@ -258,8 +223,10 @@ export default async function HomePage() {
                   'Správa klientů',
                   'Evidence výdajů',
                   'Opakující se faktury',
-                  'Cashflow přehled',
-                  'CZK / EUR / USD',
+                  'Upomínky automaticky',
+                  'Export Pohoda XML',
+                  'Cashflow přehled + grafy',
+                  'CZK / EUR / USD (live kurzy ČNB)',
                   'Prioritní podpora',
                 ].map(f => (
                   <li key={f} className="flex items-center gap-2">
