@@ -3,13 +3,14 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import QRCode from 'qrcode'
-import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X, Copy, FileText, User } from 'lucide-react'
+import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X, Copy, FileText, User, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { ItemTemplatesPicker } from '@/components/ItemTemplatesPicker'
+import { ClientPicker } from '@/components/ClientPicker'
 import { calcTotals, formatCurrency } from '@/lib/utils'
-import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate, InvoiceType, SenderProfile } from '@/types'
+import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate, InvoiceType, SenderProfile, Client } from '@/types'
 
 interface InvoiceFormProps {
   defaultValues?: Partial<InvoiceFormData>
@@ -183,6 +184,8 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     due_date: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
     currency: 'CZK',
     vat_rate: 21,
+    vat_payer: true,
+    reverse_charge: false,
     notes: '',
     items: [{ ...DEFAULT_ITEM }],
     ...defaultValues,
@@ -218,7 +221,10 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   async function save(status: 'draft' | 'sent') {
     setSaving(true)
     try {
-      const payload = { ...form, subtotal, vat_amount, total, status }
+      // When non-payer or reverse charge: no VAT added
+      const effectiveVat = (form.vat_payer && !form.reverse_charge) ? vat_amount : 0
+      const effectiveTotal = subtotal + effectiveVat
+      const payload = { ...form, subtotal, vat_amount: effectiveVat, total: effectiveTotal, status }
       const url = invoiceId ? `/api/invoices/${invoiceId}` : '/api/invoices'
       const method = invoiceId ? 'PUT' : 'POST'
       const res = await fetch(url, {
@@ -275,6 +281,10 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
               <Button variant="secondary" size="sm" onClick={downloadPdf} loading={generatingPdf}>
                 <FileDown className="h-4 w-4" />
                 PDF
+              </Button>
+              <Button variant="secondary" size="sm" onClick={() => { window.location.href = `/api/export/json/${invoiceId}` }}>
+                <Download className="h-4 w-4" />
+                JSON
               </Button>
               <Button variant="secondary" size="sm" onClick={() => { setSendEmail(form.client_email || ''); setSendModal(true); setSendResult(null) }}>
                 <Mail className="h-4 w-4" />
@@ -371,7 +381,19 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         </section>
 
         <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm space-y-4">
-          <h2 className="font-semibold text-slate-800">Odběratel</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-slate-800">Odběratel</h2>
+            <ClientPicker onSelect={(c: Client) => setForm(f => ({
+              ...f,
+              client_name: c.name,
+              client_address: c.address ?? '',
+              client_city: c.city ?? '',
+              client_zip: c.zip ?? '',
+              client_country: c.country,
+              client_ico: c.ico ?? '',
+              client_email: c.email ?? '',
+            }))} />
+          </div>
           <Input label="Jméno / firma" value={form.client_name} onChange={e => set('client_name', e.target.value)} />
           <Input label="Adresa" value={form.client_address} onChange={e => set('client_address', e.target.value)} />
           <div className="grid grid-cols-2 gap-3">
@@ -405,11 +427,25 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
               currentItems={form.items}
             />
           </div>
-          <Select label="" className="w-40" value={form.vat_rate} onChange={e => set('vat_rate', Number(e.target.value) as VatRate)}>
-            <option value={0}>DPH 0 %</option>
-            <option value={15}>DPH 15 %</option>
-            <option value={21}>DPH 21 %</option>
-          </Select>
+          <div className="flex items-center gap-2">
+            <label className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={form.vat_payer}
+                onChange={e => set('vat_payer', e.target.checked)}
+                className="rounded"
+              />
+              Plátce DPH
+            </label>
+            {form.vat_payer && (
+              <Select label="" className="w-36" value={form.vat_rate} onChange={e => set('vat_rate', Number(e.target.value) as VatRate)}>
+                <option value={0}>DPH 0 %</option>
+                <option value={10}>DPH 10 %</option>
+                <option value={15}>DPH 15 %</option>
+                <option value={21}>DPH 21 %</option>
+              </Select>
+            )}
+          </div>
         </div>
 
         <div className="hidden md:grid grid-cols-[1fr_80px_90px_110px_40px] gap-3 text-xs font-medium text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-100">
@@ -439,17 +475,28 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
 
         {/* Totals */}
         <div className="mt-4 flex flex-col items-end gap-1 text-sm">
-          <div className="flex gap-8 text-slate-400">
-            <span>Základ DPH</span>
-            <span className="w-32 text-right font-mono">{formatCurrency(subtotal, form.currency)}</span>
-          </div>
-          <div className="flex gap-8 text-slate-400">
-            <span>DPH ({form.vat_rate} %)</span>
-            <span className="w-32 text-right font-mono">{formatCurrency(vat_amount, form.currency)}</span>
-          </div>
+          {form.vat_payer && (
+            <>
+              <div className="flex gap-8 text-slate-400">
+                <span>Základ DPH</span>
+                <span className="w-32 text-right font-mono">{formatCurrency(subtotal, form.currency)}</span>
+              </div>
+              {form.reverse_charge ? (
+                <div className="flex gap-8 text-amber-600 text-xs">
+                  <span>Přenesená daňová povinnost</span>
+                  <span className="w-32 text-right">§ 92a ZDPH</span>
+                </div>
+              ) : (
+                <div className="flex gap-8 text-slate-400">
+                  <span>DPH ({form.vat_rate} %)</span>
+                  <span className="w-32 text-right font-mono">{formatCurrency(vat_amount, form.currency)}</span>
+                </div>
+              )}
+            </>
+          )}
           <div className="flex gap-8 font-bold text-slate-900 text-base border-t border-slate-100 pt-2 mt-1">
             <span>Celkem</span>
-            <span className="w-32 text-right font-mono">{formatCurrency(total, form.currency)}</span>
+            <span className="w-32 text-right font-mono">{formatCurrency(form.vat_payer && !form.reverse_charge ? total : subtotal, form.currency)}</span>
           </div>
           {form.currency !== 'CZK' && cnbRates[form.currency] && (
             <div className="flex gap-8 text-xs text-slate-400 mt-1">
@@ -475,16 +522,29 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         )}
       </section>
 
-      {/* Notes */}
-      <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm">
-        <label className="block text-sm font-medium text-slate-600 mb-2">Poznámky</label>
-        <textarea
-          rows={3}
-          value={form.notes}
-          onChange={e => set('notes', e.target.value)}
-          placeholder="Platební podmínky, bankovní spojení, poděkování..."
-          className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-        />
+      {/* Notes + flags */}
+      <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-600 mb-2">Poznámky</label>
+          <textarea
+            rows={3}
+            value={form.notes}
+            onChange={e => set('notes', e.target.value)}
+            placeholder="Platební podmínky, bankovní spojení, poděkování..."
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+          />
+        </div>
+        {form.vat_payer && (
+          <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer select-none w-fit">
+            <input
+              type="checkbox"
+              checked={form.reverse_charge}
+              onChange={e => set('reverse_charge', e.target.checked)}
+              className="rounded"
+            />
+            Přenesená daňová povinnost (§ 92a ZDPH)
+          </label>
+        )}
       </section>
 
       {/* Email modal */}

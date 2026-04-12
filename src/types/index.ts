@@ -2,7 +2,7 @@ export type Plan = 'free' | 'start' | 'pro'
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'cancelled'
 export type InvoiceFilter = 'all' | 'sent' | 'paid' | 'overdue' | 'draft'
 export type InvoiceType = 'faktura' | 'zalohova' | 'opravny' | 'nabidka'
-export type VatRate = 0 | 15 | 21
+export type VatRate = 0 | 10 | 15 | 21
 export type Currency = 'CZK' | 'EUR' | 'USD'
 export type RecurrenceType = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
 export type ExpenseCategory = 'kancelar' | 'cestovne' | 'software' | 'hardware' | 'marketing' | 'ostatni'
@@ -151,6 +151,23 @@ export interface Invoice {
   invoice_items?: InvoiceItem[]
 }
 
+export interface Client {
+  id: string
+  user_id: string
+  name: string
+  address: string | null
+  city: string | null
+  zip: string | null
+  country: string
+  ico: string | null
+  dic: string | null
+  email: string | null
+  phone: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface ItemTemplate {
   id: string
   user_id: string
@@ -201,6 +218,8 @@ export interface InvoiceFormData {
   due_date: string
   currency: Currency
   vat_rate: VatRate
+  vat_payer: boolean
+  reverse_charge: boolean
   notes: string
 
   // Items
