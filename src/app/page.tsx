@@ -61,7 +61,7 @@ export default async function HomePage() {
               Přihlásit se
             </Link>
           </div>
-          <p className="mt-4 text-sm text-slate-400">Zdarma 15 faktur/měsíc · Start od 99 Kč/měs.</p>
+          <p className="mt-4 text-sm text-slate-400">Zdarma 15 faktur/měsíc · neomezené faktury od 99 Kč/měs.</p>
         </div>
 
         {/* Hero screenshot — clickable */}
