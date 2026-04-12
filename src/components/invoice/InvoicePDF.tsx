@@ -3,6 +3,7 @@ import {
   Page,
   Text,
   View,
+  Image,
   StyleSheet,
   Font,
 } from '@react-pdf/renderer'
@@ -92,6 +93,11 @@ const styles = StyleSheet.create({
   notesBox: { backgroundColor: c.bg, borderRadius: 6, padding: 12, marginBottom: 24 },
   notesLabel: { fontSize: 7, color: c.muted, textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 4 },
   notesText: { fontSize: 9, color: c.text, lineHeight: 1.6 },
+  // QR
+  qrBlock: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, marginBottom: 20 },
+  qrImage: { width: 72, height: 72 },
+  qrLabel: { fontSize: 7, color: c.muted, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 },
+  qrText: { fontSize: 8, color: c.text },
   // Footer
   footer: { marginTop: 'auto', borderTopWidth: 1, borderTopColor: c.border, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between' },
   footerText: { fontSize: 8, color: c.muted },
@@ -100,9 +106,10 @@ const styles = StyleSheet.create({
 interface Props {
   invoice: Invoice
   items: InvoiceItem[]
+  qrCode?: string
 }
 
-export function InvoicePDF({ invoice, items }: Props) {
+export function InvoicePDF({ invoice, items, qrCode }: Props) {
   const currency = invoice.currency
 
   return (
@@ -194,6 +201,19 @@ export function InvoicePDF({ invoice, items }: Props) {
             <Text style={styles.grandTotalValue}>{formatCurrency(invoice.total, currency)}</Text>
           </View>
         </View>
+
+        {/* QR platba */}
+        {qrCode && (
+          <View style={styles.qrBlock}>
+            <Image src={qrCode} style={styles.qrImage} />
+            <View>
+              <Text style={styles.qrLabel}>QR Platba</Text>
+              <Text style={styles.qrText}>Naskenujte QR kód</Text>
+              <Text style={styles.qrText}>pro rychlou platbu</Text>
+              {invoice.sender_iban && <Text style={[styles.qrText, { marginTop: 4, color: c.muted }]}>{invoice.sender_iban}</Text>}
+            </View>
+          </View>
+        )}
 
         {/* Notes */}
         {invoice.notes && (

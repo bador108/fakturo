@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, Trash2, Save, Send, FileDown } from 'lucide-react'
+import { Plus, Trash2, Save, Send, FileDown, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
@@ -26,6 +26,42 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [generatingPdf, setGeneratingPdf] = useState(false)
+  const [aresLoading, setAresLoading] = useState<'sender' | 'client' | null>(null)
+  const [aresError, setAresError] = useState<'sender' | 'client' | null>(null)
+
+  async function lookupAres(type: 'sender' | 'client') {
+    const ico = type === 'sender' ? form.sender_ico : form.client_ico
+    if (!ico) return
+    setAresLoading(type)
+    setAresError(null)
+    try {
+      const res = await fetch(`/api/ares?ico=${encodeURIComponent(ico)}`)
+      if (!res.ok) { setAresError(type); return }
+      const data = await res.json()
+      if (type === 'sender') {
+        setForm(f => ({
+          ...f,
+          sender_name: data.name || f.sender_name,
+          sender_address: data.address || f.sender_address,
+          sender_city: data.city || f.sender_city,
+          sender_zip: data.zip || f.sender_zip,
+          sender_dic: data.dic || f.sender_dic,
+        }))
+      } else {
+        setForm(f => ({
+          ...f,
+          client_name: data.name || f.client_name,
+          client_address: data.address || f.client_address,
+          client_city: data.city || f.client_city,
+          client_zip: data.zip || f.client_zip,
+        }))
+      }
+    } catch {
+      setAresError(type)
+    } finally {
+      setAresLoading(null)
+    }
+  }
 
   const [form, setForm] = useState<InvoiceFormData>({
     sender_name: '',
@@ -164,7 +200,19 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             <Input label="PSČ" value={form.sender_zip} onChange={e => set('sender_zip', e.target.value)} />
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Input label="IČO" value={form.sender_ico} onChange={e => set('sender_ico', e.target.value)} />
+            <div className="space-y-1">
+              <Input label="IČO" value={form.sender_ico} onChange={e => set('sender_ico', e.target.value)} />
+              <button
+                type="button"
+                onClick={() => lookupAres('sender')}
+                disabled={!form.sender_ico || aresLoading === 'sender'}
+                className="flex items-center gap-1 text-xs text-indigo-600 hover:underline disabled:opacity-40 disabled:no-underline"
+              >
+                <Search className="h-3 w-3" />
+                {aresLoading === 'sender' ? 'Hledám…' : 'Doplnit z ARESu'}
+              </button>
+              {aresError === 'sender' && <p className="text-xs text-red-500">Firma nenalezena</p>}
+            </div>
             <Input label="DIČ" value={form.sender_dic} onChange={e => set('sender_dic', e.target.value)} />
           </div>
           <Input label="Číslo účtu / IBAN" value={form.sender_bank} onChange={e => set('sender_bank', e.target.value)} />
@@ -182,7 +230,19 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             <Input label="Město" value={form.client_city} onChange={e => set('client_city', e.target.value)} />
             <Input label="PSČ" value={form.client_zip} onChange={e => set('client_zip', e.target.value)} />
           </div>
-          <Input label="IČO" value={form.client_ico} onChange={e => set('client_ico', e.target.value)} />
+          <div className="space-y-1">
+            <Input label="IČO" value={form.client_ico} onChange={e => set('client_ico', e.target.value)} />
+            <button
+              type="button"
+              onClick={() => lookupAres('client')}
+              disabled={!form.client_ico || aresLoading === 'client'}
+              className="flex items-center gap-1 text-xs text-indigo-600 hover:underline disabled:opacity-40 disabled:no-underline"
+            >
+              <Search className="h-3 w-3" />
+              {aresLoading === 'client' ? 'Hledám…' : 'Doplnit z ARESu'}
+            </button>
+            {aresError === 'client' && <p className="text-xs text-red-500">Firma nenalezena</p>}
+          </div>
         </section>
       </div>
 
