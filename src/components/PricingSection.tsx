@@ -112,7 +112,7 @@ const plans: Plan[] = [
 ]
 
 export function PricingSection() {
-  const [annual, setAnnual] = useState(true)
+  const [annual, setAnnual] = useState(false)
   const [loading, setLoading] = useState<string | null>(null)
   function handleUpgrade(plan: 'start' | 'pro') {
     const billing = annual ? 'annual' : 'monthly'

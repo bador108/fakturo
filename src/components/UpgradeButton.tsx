@@ -25,7 +25,7 @@ const PLANS = [
 
 export function UpgradeButton() {
   const [open, setOpen] = useState(false)
-  const [billing, setBilling] = useState<'annual' | 'monthly'>('annual')
+  const [billing, setBilling] = useState<'annual' | 'monthly'>('monthly')
   const [selected, setSelected] = useState<'start' | 'pro'>('start')
 
   function go() {
