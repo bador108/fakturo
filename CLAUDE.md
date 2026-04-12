@@ -9,7 +9,7 @@
 - PDF generation: `@react-pdf/renderer`
 - Deployed on Vercel
 
-Free tier: 3 invoices/month. Pro tier: 150 Kč/month (unlimited invoices).
+Free tier: 15 invoices/month. Start tier: 99 Kč/month (unlimited invoices, expenses, cashflow). Pro tier: 249 Kč/month (everything + recurring invoices, reminders, Pohoda export, item templates, multiple sender profiles).
 
 ---
 
