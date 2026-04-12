@@ -211,6 +211,7 @@ export function InvoicePDF({ invoice, items, qrCode }: Props) {
         {/* QR platba */}
         {qrCode && (
           <View style={styles.qrBlock}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image src={qrCode} style={styles.qrImage} />
             <View>
               <Text style={styles.qrLabel}>QR Platba</Text>

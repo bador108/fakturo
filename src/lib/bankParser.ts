@@ -66,7 +66,7 @@ function parseCSV(text: string): BankTransaction[] {
     /částka|amount|objem|kredit|credit|příjem|příchozí|castka/i.test(h)
   )
   const creditIdx = headers.findIndex(h => /kredit|credit|příjem|in/i.test(h))
-  const debitIdx = headers.findIndex(h => /debet|debit|výdaj|out/i.test(h))
+
   const dateIdx = headers.findIndex(h => /datum|date|datu/i.test(h))
   const descIdx = headers.findIndex(h => /popis|zpráva|zprava|note|description|message|info/i.test(h))
   const currencyIdx = headers.findIndex(h => /měna|mena|currency/i.test(h))

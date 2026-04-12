@@ -348,6 +348,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         {/* QR platba */}
         {qrDataUrl && (
           <div className="mt-5 pt-5 border-t border-slate-100 flex items-center gap-5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={qrDataUrl} alt="QR platba" width={100} height={100} className="rounded-lg border border-slate-100" />
             <div>
               <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1">QR platba</p>
