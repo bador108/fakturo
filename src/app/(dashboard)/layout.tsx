@@ -2,7 +2,6 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/Sidebar'
 import { SupportButton } from '@/components/SupportButton'
-import { DashboardChat } from '@/components/DashboardChat'
 import { createServiceClient } from '@/lib/supabase'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +27,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {children}
       </main>
       <SupportButton />
-      <DashboardChat />
     </div>
   )
 }
