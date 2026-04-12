@@ -1,6 +1,6 @@
 'use client'
 
-interface MonthData {
+export interface MonthData {
   label: string
   revenue: number
   invoiced: number
@@ -38,7 +38,6 @@ export function CashflowChart({ months }: CashflowChartProps) {
 
           return (
             <g key={m.label}>
-              {/* Paid bar */}
               <rect
                 x={x}
                 y={chartHeight - revenueH}
@@ -48,7 +47,6 @@ export function CashflowChart({ months }: CashflowChartProps) {
                 fill="#6366f1"
                 opacity={0.9}
               />
-              {/* Invoiced bar */}
               <rect
                 x={x + barWidth + 4}
                 y={chartHeight - invoicedH}
@@ -57,7 +55,6 @@ export function CashflowChart({ months }: CashflowChartProps) {
                 rx={3}
                 fill="#c7d2fe"
               />
-              {/* Month label */}
               <text
                 x={x + barWidth}
                 y={chartHeight + 16}
@@ -73,23 +70,4 @@ export function CashflowChart({ months }: CashflowChartProps) {
       </svg>
     </div>
   )
-}
-
-export function buildMonthData(invoices: { status: string; total: number; issue_date: string }[]): MonthData[] {
-  const now = new Date()
-  const months: MonthData[] = []
-
-  for (let i = 5; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
-    const label = d.toLocaleString('cs-CZ', { month: 'short' })
-
-    const monthInvoices = invoices.filter(inv => inv.issue_date?.startsWith(key))
-    const revenue = monthInvoices.filter(i => i.status === 'paid').reduce((s, i) => s + Number(i.total), 0)
-    const invoiced = monthInvoices.reduce((s, i) => s + Number(i.total), 0)
-
-    months.push({ label, revenue, invoiced })
-  }
-
-  return months
 }

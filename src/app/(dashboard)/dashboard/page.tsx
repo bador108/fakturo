@@ -5,7 +5,8 @@ import { StatusBadge } from '@/components/ui/badge'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { Plus, FileText, TrendingUp, CheckCircle, Clock, AlertCircle } from 'lucide-react'
 import type { Invoice } from '@/types'
-import { CashflowChart, buildMonthData } from '@/components/CashflowChart'
+import { CashflowChart } from '@/components/CashflowChart'
+import { buildMonthData } from '@/lib/utils'
 
 export default async function DashboardPage() {
   const { userId } = await auth()

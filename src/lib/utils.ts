@@ -25,6 +25,29 @@ export function generateInvoiceNumber(seq: number, year?: number): string {
   return `${y}${String(seq).padStart(4, '0')}`
 }
 
+export interface MonthData {
+  label: string
+  revenue: number
+  invoiced: number
+}
+
+export function buildMonthData(invoices: { status: string; total: number; issue_date: string }[]): MonthData[] {
+  const now = new Date()
+  const months: MonthData[] = []
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    const label = d.toLocaleString('cs-CZ', { month: 'short' })
+    const monthInvoices = invoices.filter(inv => inv.issue_date?.startsWith(key))
+    const revenue = monthInvoices.filter(i => i.status === 'paid').reduce((s, i) => s + Number(i.total), 0)
+    const invoiced = monthInvoices.reduce((s, i) => s + Number(i.total), 0)
+    months.push({ label, revenue, invoiced })
+  }
+
+  return months
+}
+
 export function calcTotals(
   items: { quantity: number; unit_price: number }[],
   vatRate: number
