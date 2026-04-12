@@ -2,56 +2,133 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { CheckCircle2, ArrowRight, Zap } from 'lucide-react'
+import { CheckCircle2, ArrowRight, Zap, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const freeFeatures = [
-  '3 faktury za měsíc',
-  'PDF export a odeslání emailem',
-  'Správa klientů',
-  'Evidence výdajů',
-  'Cashflow přehled',
-  'CZK / EUR / USD (live kurzy ČNB)',
-  'Doplnění z ARESu',
-]
+interface Plan {
+  id: string
+  name: string
+  badge?: string
+  badgeColor?: string
+  monthly: number
+  annual: number
+  annualTotal: number
+  subtitle: string
+  accentColor: string
+  cardClass: string
+  btnClass: string
+  checkColor: string
+  features: Array<{ text: string; included: boolean }>
+}
 
-const proFeatures = [
-  'Neomezené faktury',
-  'PDF export a odeslání emailem',
-  'Správa klientů',
-  'Evidence výdajů',
-  'Opakující se faktury',
-  'Automatické upomínky klientům',
-  'Finanční grafy a přehledy',
-  'Export Pohoda XML',
-  'Online platební odkaz (Stripe)',
-  'CZK / EUR / USD (live kurzy ČNB)',
-  'Doplnění z ARESu',
-  'Šablony položek',
-  'Více profilů dodavatele',
-  'Prioritní podpora',
+const plans: Plan[] = [
+  {
+    id: 'free',
+    name: 'Zdarma',
+    monthly: 0,
+    annual: 0,
+    annualTotal: 0,
+    subtitle: 'Pro první kroky a testování',
+    accentColor: 'text-slate-900',
+    cardClass: 'border border-slate-200 bg-white shadow-sm',
+    btnClass: 'border-2 border-slate-200 text-slate-700 hover:border-indigo-300 hover:text-indigo-600',
+    checkColor: 'text-slate-400',
+    features: [
+      { text: '3 faktury za měsíc', included: true },
+      { text: 'PDF export', included: true },
+      { text: 'Odeslání emailem', included: true },
+      { text: 'Správa klientů (5 klientů)', included: true },
+      { text: 'Doplnění z ARESu', included: true },
+      { text: 'CZK / EUR / USD', included: false },
+      { text: 'Evidence výdajů', included: false },
+      { text: 'Cashflow přehled', included: false },
+      { text: 'Opakující se faktury', included: false },
+      { text: 'Automatické upomínky', included: false },
+      { text: 'Finanční grafy', included: false },
+      { text: 'Export Pohoda XML', included: false },
+    ],
+  },
+  {
+    id: 'start',
+    name: 'Start',
+    badge: 'NEJOBLÍBENĚJŠÍ',
+    badgeColor: 'bg-indigo-600',
+    monthly: 99,
+    annual: 79,
+    annualTotal: 79 * 12,
+    subtitle: 'Pro aktivní freelancery',
+    accentColor: 'text-indigo-600',
+    cardClass: 'border-2 border-indigo-500 bg-gradient-to-b from-indigo-50 to-white shadow-xl shadow-indigo-100',
+    btnClass: 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200',
+    checkColor: 'text-indigo-500',
+    features: [
+      { text: '30 faktur za měsíc', included: true },
+      { text: 'PDF export', included: true },
+      { text: 'Odeslání emailem', included: true },
+      { text: 'Neomezení klienti', included: true },
+      { text: 'Doplnění z ARESu', included: true },
+      { text: 'CZK / EUR / USD (live ČNB)', included: true },
+      { text: 'Evidence výdajů', included: true },
+      { text: 'Cashflow přehled', included: true },
+      { text: 'Opakující se faktury', included: false },
+      { text: 'Automatické upomínky', included: false },
+      { text: 'Finanční grafy', included: false },
+      { text: 'Export Pohoda XML', included: false },
+    ],
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    badge: 'VŠE V JEDNOM',
+    badgeColor: 'bg-violet-600',
+    monthly: 249,
+    annual: 199,
+    annualTotal: 199 * 12,
+    subtitle: 'Pro profesionály a firmy',
+    accentColor: 'text-violet-600',
+    cardClass: 'border-2 border-violet-400 bg-gradient-to-b from-violet-50 to-white shadow-xl shadow-violet-100',
+    btnClass: 'bg-violet-600 text-white hover:bg-violet-700 shadow-lg shadow-violet-200',
+    checkColor: 'text-violet-500',
+    features: [
+      { text: 'Neomezené faktury', included: true },
+      { text: 'PDF export', included: true },
+      { text: 'Odeslání emailem', included: true },
+      { text: 'Neomezení klienti', included: true },
+      { text: 'Doplnění z ARESu', included: true },
+      { text: 'CZK / EUR / USD (live ČNB)', included: true },
+      { text: 'Evidence výdajů', included: true },
+      { text: 'Cashflow přehled', included: true },
+      { text: 'Opakující se faktury', included: true },
+      { text: 'Automatické upomínky', included: true },
+      { text: 'Finanční grafy a přehledy', included: true },
+      { text: 'Export Pohoda XML', included: true },
+      { text: 'Online platební odkaz', included: true },
+      { text: 'Šablony položek', included: true },
+      { text: 'Více profilů dodavatele', included: true },
+      { text: 'Cenové nabídky', included: true },
+      { text: 'Prioritní podpora', included: true },
+    ],
+  },
 ]
 
 export function PricingSection() {
   const [annual, setAnnual] = useState(true)
 
-  const monthlyPrice = annual ? 149 : 199
-  const annualTotal = 149 * 12 // 1788
-
   return (
     <section className="bg-white border-y border-slate-100 py-20" id="pricing">
-      <div className="max-w-5xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-6">
+
         {/* Header */}
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-slate-900 mb-3">Jednoduché ceny</h2>
           <p className="text-slate-400 mb-7">Začni zdarma, upgraduj až budeš potřebovat</p>
 
-          {/* Annual/monthly toggle */}
+          {/* Toggle */}
           <div className="inline-flex items-center gap-1 bg-slate-100 rounded-full p-1">
             <button
               onClick={() => setAnnual(false)}
               className={cn(
-                'text-sm font-medium px-4 py-1.5 rounded-full transition-all',
+                'text-sm font-medium px-5 py-1.5 rounded-full transition-all',
                 !annual ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700',
               )}
             >
@@ -60,113 +137,122 @@ export function PricingSection() {
             <button
               onClick={() => setAnnual(true)}
               className={cn(
-                'text-sm font-medium px-4 py-1.5 rounded-full transition-all flex items-center gap-2',
+                'text-sm font-medium px-5 py-1.5 rounded-full transition-all flex items-center gap-2',
                 annual ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700',
               )}
             >
               Ročně
               <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                −25 %
+                ušetři až 20 %
               </span>
             </button>
           </div>
         </div>
 
-        {/* Cards */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        {/* 3 cards */}
+        <div className="grid md:grid-cols-3 gap-5 items-start">
+          {plans.map(plan => {
+            const price = annual ? plan.annual : plan.monthly
+            const saving = plan.monthly > 0 ? (plan.monthly - plan.annual) * 12 : 0
 
-          {/* Free */}
-          <div className="p-8 rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col">
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Zdarma</p>
-              <div className="flex items-end gap-1 mb-1">
-                <span className="text-5xl font-bold text-slate-900">0</span>
-                <span className="text-2xl font-bold text-slate-900 mb-1">Kč</span>
-                <span className="text-slate-400 mb-1.5">/měs.</span>
+            return (
+              <div
+                key={plan.id}
+                className={cn('rounded-2xl p-7 flex flex-col relative', plan.cardClass)}
+              >
+                {plan.badge && (
+                  <div className={cn(
+                    'absolute -top-3.5 left-1/2 -translate-x-1/2 text-white text-[10px] font-bold px-4 py-1 rounded-full flex items-center gap-1.5 whitespace-nowrap',
+                    plan.badgeColor,
+                  )}>
+                    <Zap className="h-2.5 w-2.5" />
+                    {plan.badge}
+                  </div>
+                )}
+
+                {/* Price */}
+                <div className="mb-5">
+                  <p className={cn('text-xs font-bold uppercase tracking-widest mb-3', plan.accentColor)}>
+                    {plan.name}
+                  </p>
+                  <div className="flex items-end gap-1">
+                    <span className="text-4xl font-bold text-slate-900 tabular-nums">{price}</span>
+                    <span className="text-lg font-bold text-slate-900 mb-0.5">Kč</span>
+                    <span className="text-slate-400 mb-0.5 text-sm">/měs.</span>
+                  </div>
+                  {plan.id === 'free' ? (
+                    <p className="text-sm text-slate-400 mt-1.5">Navždy zdarma, bez karty</p>
+                  ) : annual && saving > 0 ? (
+                    <p className="text-sm text-slate-400 mt-1.5">
+                      {(price * 12).toLocaleString('cs-CZ')} Kč/rok ·{' '}
+                      <span className="text-emerald-600 font-medium">ušetříš {saving} Kč</span>
+                    </p>
+                  ) : (
+                    <p className="text-sm text-slate-400 mt-1.5">
+                      {plan.subtitle}
+                    </p>
+                  )}
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-2 text-sm mb-7 flex-1">
+                  {plan.features.map(f => (
+                    <li key={f.text} className={cn('flex items-center gap-2', f.included ? 'text-slate-600' : 'text-slate-300')}>
+                      {f.included
+                        ? <CheckCircle2 className={cn('h-4 w-4 shrink-0', plan.checkColor)} />
+                        : <Minus className="h-4 w-4 shrink-0 text-slate-200" />
+                      }
+                      {f.text}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <Link
+                  href="/sign-up"
+                  className={cn(
+                    'flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-medium transition text-sm',
+                    plan.btnClass,
+                  )}
+                >
+                  {plan.id === 'free' ? 'Začít zdarma' : `Vybrat ${plan.name}`}
+                  {plan.id !== 'free' && <ArrowRight className="h-4 w-4" />}
+                </Link>
               </div>
-              <p className="text-sm text-slate-400 mb-6">Pro první kroky a testování</p>
-              <ul className="space-y-2.5 text-sm text-slate-500 mb-8">
-                {freeFeatures.map(f => (
-                  <li key={f} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <Link
-              href="/sign-up"
-              className="mt-auto block text-center border-2 border-slate-200 text-slate-700 px-6 py-3 rounded-xl font-medium hover:border-indigo-300 hover:text-indigo-600 transition"
-            >
-              Začít zdarma
-            </Link>
-          </div>
-
-          {/* Pro */}
-          <div className="p-8 rounded-2xl border-2 border-indigo-500 bg-gradient-to-b from-indigo-50 to-white relative flex flex-col shadow-lg shadow-indigo-100">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full flex items-center gap-1.5 whitespace-nowrap">
-              <Zap className="h-3 w-3" />
-              NEJOBLÍBENĚJŠÍ
-            </div>
-
-            <div>
-              <p className="text-xs font-semibold text-indigo-400 uppercase tracking-widest mb-2">Pro</p>
-              <div className="flex items-end gap-1 mb-1">
-                <span className="text-5xl font-bold text-slate-900">{monthlyPrice}</span>
-                <span className="text-2xl font-bold text-slate-900 mb-1">Kč</span>
-                <span className="text-slate-400 mb-1.5">/měs.</span>
-              </div>
-              {annual ? (
-                <p className="text-sm text-slate-400 mb-6">
-                  Fakturováno ročně · <span className="font-medium text-slate-600">{annualTotal.toLocaleString('cs-CZ')} Kč/rok</span>
-                  <span className="ml-2 text-emerald-600 font-medium">ušetříš 600 Kč</span>
-                </p>
-              ) : (
-                <p className="text-sm text-slate-400 mb-6">
-                  Fakturováno měsíčně · ročně jen{' '}
-                  <button onClick={() => setAnnual(true)} className="text-indigo-600 font-medium hover:underline">
-                    149 Kč/měs.
-                  </button>
-                </p>
-              )}
-              <ul className="space-y-2.5 text-sm text-slate-500 mb-8">
-                {proFeatures.map(f => (
-                  <li key={f} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-indigo-500 shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <Link
-              href="/sign-up"
-              className="mt-auto flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-200"
-            >
-              Vyzkoušet Pro <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+            )
+          })}
         </div>
 
         {/* Competitor comparison */}
-        <div className="mt-10 max-w-3xl mx-auto">
+        <div className="mt-12">
           <p className="text-center text-xs text-slate-400 mb-4 uppercase tracking-widest">Srovnání s konkurencí</p>
-          <div className="grid grid-cols-3 gap-3 text-center text-sm">
+          <div className="grid grid-cols-4 gap-3 max-w-2xl mx-auto text-center text-sm">
             {[
-              { name: 'Fakturo Pro', price: '199 Kč', color: 'text-indigo-600 font-bold', bg: 'bg-indigo-50 border-indigo-100' },
-              { name: 'Fakturoid', price: 'od 182 Kč', color: 'text-slate-500', bg: 'bg-white border-slate-100' },
-              { name: 'iDoklad', price: 'od 240 Kč', color: 'text-slate-500', bg: 'bg-white border-slate-100' },
+              { name: 'Fakturo Start', price: annual ? '79' : '99', highlight: true },
+              { name: 'Fakturo Pro', price: annual ? '199' : '249', highlight: true },
+              { name: 'Fakturoid', price: 'od 182', highlight: false },
+              { name: 'iDoklad', price: 'od 240', highlight: false },
             ].map(c => (
-              <div key={c.name} className={cn('rounded-xl border p-3', c.bg)}>
-                <p className="text-xs text-slate-400 mb-1">{c.name}</p>
-                <p className={cn('text-base', c.color)}>{c.price}</p>
+              <div
+                key={c.name}
+                className={cn(
+                  'rounded-xl border p-3',
+                  c.highlight ? 'bg-indigo-50 border-indigo-100' : 'bg-white border-slate-100',
+                )}
+              >
+                <p className="text-[10px] text-slate-400 mb-1">{c.name}</p>
+                <p className={cn('text-base font-semibold', c.highlight ? 'text-indigo-600' : 'text-slate-400')}>
+                  {c.price} Kč
+                </p>
                 <p className="text-[10px] text-slate-400 mt-0.5">/měs.</p>
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-slate-400 mt-4">
-            * Ceny konkurence jsou za měsíční platbu. Roční plán Fakturo Pro vychází na <strong className="text-slate-600">149 Kč/měs.</strong>
-          </p>
+          {annual && (
+            <p className="text-center text-xs text-slate-400 mt-3">
+              * Fakturo ceny jsou při ročním předplatném. Konkurence za měsíční platbu.
+            </p>
+          )}
         </div>
       </div>
     </section>
