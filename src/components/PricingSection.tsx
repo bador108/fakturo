@@ -239,37 +239,6 @@ export function PricingSection() {
           })}
         </div>
 
-        {/* Competitor comparison */}
-        <div className="mt-12">
-          <p className="text-center text-xs text-slate-400 mb-4 uppercase tracking-widest">Srovnání s konkurencí</p>
-          <div className="grid grid-cols-4 gap-3 max-w-2xl mx-auto text-center text-sm">
-            {[
-              { name: 'Fakturo Start', price: annual ? '79' : '99', highlight: true },
-              { name: 'Fakturo Pro', price: annual ? '199' : '249', highlight: true },
-              { name: 'Fakturoid', price: 'od 182', highlight: false },
-              { name: 'iDoklad', price: 'od 240', highlight: false },
-            ].map(c => (
-              <div
-                key={c.name}
-                className={cn(
-                  'rounded-xl border p-3',
-                  c.highlight ? 'bg-indigo-50 border-indigo-100' : 'bg-white border-slate-100',
-                )}
-              >
-                <p className="text-[10px] text-slate-400 mb-1">{c.name}</p>
-                <p className={cn('text-base font-semibold', c.highlight ? 'text-indigo-600' : 'text-slate-400')}>
-                  {c.price} Kč
-                </p>
-                <p className="text-[10px] text-slate-400 mt-0.5">/měs.</p>
-              </div>
-            ))}
-          </div>
-          {annual && (
-            <p className="text-center text-xs text-slate-400 mt-3">
-              * Fakturo ceny jsou při ročním předplatném. Konkurence za měsíční platbu.
-            </p>
-          )}
-        </div>
       </div>
     </section>
   )
