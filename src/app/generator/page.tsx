@@ -21,7 +21,7 @@ const defaultForm: InvoiceFormData = {
   client_name: '', client_address: '', client_city: '', client_zip: '', client_country: 'CZ', client_ico: '',
   client_email: '',
   invoice_number: `${year}0001`, issue_date: today, due_date: due,
-  currency: 'CZK', vat_rate: 21, notes: '', items: [{ ...DEFAULT_ITEM }],
+  currency: 'CZK', vat_rate: 21, vat_payer: true, reverse_charge: false, notes: '', items: [{ ...DEFAULT_ITEM }],
 }
 
 export default function GeneratorPage() {
