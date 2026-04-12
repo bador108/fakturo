@@ -1,7 +1,7 @@
 export type Plan = 'free' | 'pro'
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'cancelled'
 export type InvoiceFilter = 'all' | 'sent' | 'paid' | 'overdue' | 'draft'
-export type InvoiceType = 'faktura' | 'zalohova' | 'opravny'
+export type InvoiceType = 'faktura' | 'zalohova' | 'opravny' | 'nabidka'
 export type VatRate = 0 | 15 | 21
 export type Currency = 'CZK' | 'EUR' | 'USD'
 export type RecurrenceType = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
@@ -149,6 +149,16 @@ export interface Invoice {
   updated_at: string
 
   invoice_items?: InvoiceItem[]
+}
+
+export interface ItemTemplate {
+  id: string
+  user_id: string
+  name: string
+  description: string
+  unit: string
+  unit_price: number
+  created_at: string
 }
 
 // Form types (before save)

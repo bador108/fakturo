@@ -3,6 +3,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { formatCurrency } from '@/lib/utils'
 import { BarChart2, TrendingUp, Receipt, AlertCircle } from 'lucide-react'
 import type { Invoice } from '@/types'
+import { PohodaExportButton } from '@/components/PohodaExportButton'
 
 interface MonthRow {
   month: string
@@ -62,9 +63,12 @@ export default async function FinancePage() {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Finance</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Přehled příjmů a DPH</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-900">Finance</h1>
+          <p className="text-sm text-slate-400 mt-0.5">Přehled příjmů a DPH</p>
+        </div>
+        <PohodaExportButton />
       </div>
 
       {/* Summary cards */}

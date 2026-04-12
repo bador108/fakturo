@@ -1,6 +1,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { createServiceClient } from '@/lib/supabase'
-import { SenderProfileForm } from '@/components/SenderProfileForm'
+import { SenderProfilesManager } from '@/components/SenderProfilesManager'
+import { ItemTemplatesManager } from '@/components/ItemTemplatesManager'
+import { ReminderSettings } from '@/components/ReminderSettings'
 import { UpgradeButton } from '@/components/UpgradeButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
 import { FREE_TIER_LIMIT } from '@/lib/stripe'
@@ -10,13 +12,14 @@ export default async function SettingsPage() {
   if (!userId) return null
 
   const db = createServiceClient()
-  const [{ data: profile }, { data: user }] = await Promise.all([
-    db.from('sender_profiles').select('*').eq('user_id', userId).eq('is_default', true).single(),
-    db.from('users').select('plan, invoice_count_this_month').eq('id', userId).single(),
+  const [{ data: profiles }, { data: user }] = await Promise.all([
+    db.from('sender_profiles').select('*').eq('user_id', userId).order('is_default', { ascending: false }),
+    db.from('users').select('plan, invoice_count_this_month, reminder_days').eq('id', userId).single(),
   ])
 
   const plan = user?.plan ?? 'free'
   const used = user?.invoice_count_this_month ?? 0
+  const reminderDays: number[] = user?.reminder_days ?? [3, 7, 14]
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -37,10 +40,24 @@ export default async function SettingsPage() {
         )}
       </div>
 
-      {/* Default sender profile */}
+      {/* Sender profiles */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
-        <h2 className="font-semibold mb-4">Výchozí údaje dodavatele</h2>
-        <SenderProfileForm userId={userId} profile={profile ?? undefined} />
+        <h2 className="font-semibold mb-1">Profily dodavatele</h2>
+        <p className="text-xs text-slate-400 mb-4">Uložte údaje pro různé firmy nebo živnosti. Vybraný profil se automaticky načte do nové faktury.</p>
+        <SenderProfilesManager userId={userId} profiles={profiles ?? []} />
+      </div>
+
+      {/* Item templates */}
+      <div className="p-5 bg-white rounded-xl border border-zinc-200">
+        <h2 className="font-semibold mb-1">Šablony položek</h2>
+        <p className="text-xs text-slate-400 mb-4">Uložte si oblíbené položky pro rychlé vyplnění faktury.</p>
+        <ItemTemplatesManager />
+      </div>
+
+      {/* Reminder settings */}
+      <div className="p-5 bg-white rounded-xl border border-zinc-200">
+        <h2 className="font-semibold mb-1">Upomínky</h2>
+        <ReminderSettings userId={userId} initialDays={reminderDays} />
       </div>
 
       {/* Bank statement upload */}

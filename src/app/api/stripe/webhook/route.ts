@@ -20,10 +20,16 @@ export async function POST(req: Request) {
 
   switch (event.type) {
     case 'checkout.session.completed': {
-      const userId = (obj.metadata as Record<string, string>)?.userId
+      const meta = obj.metadata as Record<string, string>
+      // Invoice payment
+      if (meta?.invoiceId) {
+        await db.from('invoices').update({ status: 'paid' }).eq('id', meta.invoiceId)
+        break
+      }
+      // Subscription upgrade
       const subscriptionId = obj.subscription as string
-      if (userId && subscriptionId) {
-        await db.from('users').update({ plan: 'pro', stripe_subscription_id: subscriptionId }).eq('id', userId)
+      if (meta?.userId && subscriptionId) {
+        await db.from('users').update({ plan: 'pro', stripe_subscription_id: subscriptionId }).eq('id', meta.userId)
       }
       break
     }

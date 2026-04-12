@@ -107,6 +107,7 @@ const invoiceTypeLabel: Record<string, string> = {
   faktura: 'FAKTURA',
   zalohova: 'ZÁLOHOVÁ FAKTURA',
   opravny: 'OPRAVNÝ DAŇOVÝ DOKLAD',
+  nabidka: 'CENOVÁ NABÍDKA',
 }
 
 interface Props {

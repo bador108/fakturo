@@ -3,12 +3,13 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import QRCode from 'qrcode'
-import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X } from 'lucide-react'
+import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X, Copy, FileText, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
+import { ItemTemplatesPicker } from '@/components/ItemTemplatesPicker'
 import { calcTotals, formatCurrency } from '@/lib/utils'
-import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate, InvoiceType } from '@/types'
+import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate, InvoiceType, SenderProfile } from '@/types'
 
 interface InvoiceFormProps {
   defaultValues?: Partial<InvoiceFormData>
@@ -26,14 +27,76 @@ const DEFAULT_ITEM: InvoiceItemDraft = {
 export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: InvoiceFormProps) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
+  const [copying, setCopying] = useState(false)
+  const [converting, setConverting] = useState(false)
   const [generatingPdf, setGeneratingPdf] = useState(false)
   const [sendModal, setSendModal] = useState(false)
   const [sendEmail, setSendEmail] = useState('')
+  const [includePaymentLink, setIncludePaymentLink] = useState(false)
   const [sending, setSending] = useState(false)
   const [sendResult, setSendResult] = useState<'ok' | 'err' | null>(null)
   const [aresLoading, setAresLoading] = useState<'sender' | 'client' | null>(null)
   const [aresError, setAresError] = useState<'sender' | 'client' | null>(null)
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
+  const [senderProfiles, setSenderProfiles] = useState<SenderProfile[]>([])
+  const [profilesLoaded, setProfilesLoaded] = useState(false)
+
+  useEffect(() => {
+    if (profilesLoaded) return
+    fetch('/api/sender-profiles')
+      .then(r => r.json())
+      .then(d => { if (Array.isArray(d)) setSenderProfiles(d) })
+      .finally(() => setProfilesLoaded(true))
+  }, [profilesLoaded])
+
+  function loadSenderProfile(profile: SenderProfile) {
+    setForm(f => ({
+      ...f,
+      sender_name: profile.name,
+      sender_address: profile.address ?? '',
+      sender_city: profile.city ?? '',
+      sender_zip: profile.zip ?? '',
+      sender_country: profile.country,
+      sender_ico: profile.ico ?? '',
+      sender_dic: profile.dic ?? '',
+      sender_bank: profile.bank_account ?? '',
+      sender_iban: profile.iban ?? '',
+      sender_email: profile.email ?? '',
+      sender_phone: profile.phone ?? '',
+    }))
+  }
+
+  async function copyInvoice() {
+    if (!invoiceId) return
+    setCopying(true)
+    try {
+      const res = await fetch(`/api/invoices/${invoiceId}/copy`, { method: 'POST' })
+      if (res.ok) {
+        const data = await res.json()
+        router.push(`/invoices/${data.id}`)
+      }
+    } finally {
+      setCopying(false)
+    }
+  }
+
+  async function convertToInvoice() {
+    if (!invoiceId) return
+    setConverting(true)
+    try {
+      const res = await fetch(`/api/invoices/${invoiceId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ invoice_type: 'faktura', status: 'draft' }),
+      })
+      if (res.ok) {
+        setForm(f => ({ ...f, invoice_type: 'faktura' }))
+        router.refresh()
+      }
+    } finally {
+      setConverting(false)
+    }
+  }
 
   async function lookupAres(type: 'sender' | 'client') {
     const ico = type === 'sender' ? form.sender_ico : form.client_ico
@@ -77,7 +140,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       const res = await fetch(`/api/invoices/${invoiceId}/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: sendEmail }),
+        body: JSON.stringify({ email: sendEmail, includePaymentLink }),
       })
       setSendResult(res.ok ? 'ok' : 'err')
     } catch {
@@ -194,9 +257,13 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
           </h1>
           <p className="text-sm text-slate-400 mt-0.5">Vyplňte údaje níže</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {invoiceId && (
             <>
+              <Button variant="secondary" size="sm" onClick={copyInvoice} loading={copying}>
+                <Copy className="h-4 w-4" />
+                Kopírovat
+              </Button>
               <Button variant="secondary" size="sm" onClick={downloadPdf} loading={generatingPdf}>
                 <FileDown className="h-4 w-4" />
                 PDF
@@ -205,6 +272,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
                 <Mail className="h-4 w-4" />
                 Email
               </Button>
+              {form.invoice_type === 'nabidka' && (
+                <Button variant="secondary" size="sm" onClick={convertToInvoice} loading={converting}>
+                  <FileText className="h-4 w-4" />
+                  Převést na fakturu
+                </Button>
+              )}
             </>
           )}
           <Button variant="secondary" size="sm" onClick={() => save('draft')} loading={saving}>
@@ -223,6 +296,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         <Select label="Typ dokladu" value={form.invoice_type} onChange={e => set('invoice_type', e.target.value as InvoiceType)}>
           <option value="faktura">Faktura</option>
           <option value="zalohova">Zálohová faktura</option>
+          <option value="nabidka">Cenová nabídka</option>
           <option value="opravny">Opravný daňový doklad</option>
         </Select>
         <Input label="Číslo faktury" value={form.invoice_number} onChange={e => set('invoice_number', e.target.value)} />
@@ -238,7 +312,27 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       {/* Sender + Client */}
       <div className="grid md:grid-cols-2 gap-5">
         <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm space-y-4">
-          <h2 className="font-semibold text-slate-800">Dodavatel</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-slate-800">Dodavatel</h2>
+            {senderProfiles.length > 1 && (
+              <div className="flex items-center gap-1.5">
+                <User className="h-3.5 w-3.5 text-slate-400" />
+                <select
+                  className="text-xs text-indigo-600 bg-transparent border-0 focus:outline-none cursor-pointer"
+                  defaultValue=""
+                  onChange={e => {
+                    const p = senderProfiles.find(x => x.id === e.target.value)
+                    if (p) loadSenderProfile(p)
+                  }}
+                >
+                  <option value="" disabled>Načíst profil…</option>
+                  {senderProfiles.map(p => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
           <Input label="Jméno / firma" value={form.sender_name} onChange={e => set('sender_name', e.target.value)} />
           <Input label="Adresa" value={form.sender_address} onChange={e => set('sender_address', e.target.value)} />
           <div className="grid grid-cols-2 gap-3">
@@ -296,7 +390,13 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       {/* Line items */}
       <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-slate-800">Položky</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="font-semibold text-slate-800">Položky</h2>
+            <ItemTemplatesPicker
+              onAdd={item => setForm(f => ({ ...f, items: [...f.items, item] }))}
+              currentItems={form.items}
+            />
+          </div>
           <Select label="" className="w-40" value={form.vat_rate} onChange={e => set('vat_rate', Number(e.target.value) as VatRate)}>
             <option value={0}>DPH 0 %</option>
             <option value={15}>DPH 15 %</option>
@@ -403,6 +503,15 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
+                <label className="flex items-center gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={includePaymentLink}
+                    onChange={e => setIncludePaymentLink(e.target.checked)}
+                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-sm text-slate-600">Přidat tlačítko pro online platbu kartou</span>
+                </label>
                 {sendResult === 'err' && <p className="text-xs text-red-500">Nepodařilo se odeslat. Zkontroluj RESEND_API_KEY.</p>}
                 <div className="flex gap-2 justify-end">
                   <Button variant="secondary" size="sm" onClick={() => setSendModal(false)}>Zrušit</Button>

@@ -7,24 +7,27 @@ import { StatusBadge } from '@/components/ui/badge'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Invoice, InvoiceFilter } from '@/types'
 
-const filters: { key: InvoiceFilter; label: string }[] = [
+type ExtendedFilter = InvoiceFilter | 'nabidka'
+
+const filters: { key: ExtendedFilter; label: string }[] = [
   { key: 'all', label: 'Vše' },
   { key: 'sent', label: 'Odesláno' },
   { key: 'paid', label: 'Zaplaceno' },
   { key: 'overdue', label: 'Po splatnosti' },
   { key: 'draft', label: 'Koncepty' },
+  { key: 'nabidka', label: 'Nabídky' },
 ]
 
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState<InvoiceFilter>('all')
+  const [filter, setFilter] = useState<ExtendedFilter>('all')
   const [search, setSearch] = useState('')
 
   useEffect(() => {
     // Read filter from URL
     const params = new URLSearchParams(window.location.search)
-    const f = params.get('filter') as InvoiceFilter | null
+    const f = params.get('filter') as ExtendedFilter | null
     if (f && filters.some(x => x.key === f)) setFilter(f)
 
     fetch('/api/invoices')
@@ -42,19 +45,21 @@ export default function InvoicesPage() {
 
     if (!matchSearch) return false
 
-    if (filter === 'overdue') return inv.status === 'sent' && inv.due_date < today
-    if (filter === 'sent') return inv.status === 'sent' && inv.due_date >= today
+    if (filter === 'overdue') return inv.status === 'sent' && inv.due_date < today && inv.invoice_type !== 'nabidka'
+    if (filter === 'sent') return inv.status === 'sent' && inv.due_date >= today && inv.invoice_type !== 'nabidka'
     if (filter === 'paid') return inv.status === 'paid'
-    if (filter === 'draft') return inv.status === 'draft'
+    if (filter === 'draft') return inv.status === 'draft' && inv.invoice_type !== 'nabidka'
+    if (filter === 'nabidka') return inv.invoice_type === 'nabidka'
     return true
   })
 
-  const counts: Record<InvoiceFilter, number> = {
+  const counts: Record<ExtendedFilter, number> = {
     all: invoices.length,
-    sent: invoices.filter(i => i.status === 'sent' && i.due_date >= today).length,
+    sent: invoices.filter(i => i.status === 'sent' && i.due_date >= today && i.invoice_type !== 'nabidka').length,
     paid: invoices.filter(i => i.status === 'paid').length,
-    overdue: invoices.filter(i => i.status === 'sent' && i.due_date < today).length,
-    draft: invoices.filter(i => i.status === 'draft').length,
+    overdue: invoices.filter(i => i.status === 'sent' && i.due_date < today && i.invoice_type !== 'nabidka').length,
+    draft: invoices.filter(i => i.status === 'draft' && i.invoice_type !== 'nabidka').length,
+    nabidka: invoices.filter(i => i.invoice_type === 'nabidka').length,
   }
 
   return (

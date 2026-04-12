@@ -11,7 +11,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const { userId } = await auth()
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { email } = await req.json()
+  const { email, includePaymentLink } = await req.json()
   if (!email) return NextResponse.json({ error: 'Chybí email' }, { status: 400 })
 
   const db = createServiceClient()
@@ -37,6 +37,23 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const element = React.createElement(InvoicePDF as any, { invoice, items, qrCode }) as any
   const pdfBuffer = await renderToBuffer(element)
 
+  // Optionally create Stripe payment link
+  let paymentUrl: string | null = null
+  if (includePaymentLink && process.env.STRIPE_SECRET_KEY) {
+    try {
+      const linkRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/api/invoices/${params.id}/payment-link`, {
+        method: 'POST',
+        headers: { Cookie: req.headers.get('cookie') ?? '' },
+      })
+      if (linkRes.ok) {
+        const linkData = await linkRes.json()
+        paymentUrl = linkData.url
+      }
+    } catch {
+      // Payment link is optional, continue without it
+    }
+  }
+
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   const { error: mailErr } = await resend.emails.send({
@@ -55,6 +72,13 @@ export async function POST(req: Request, { params }: { params: { id: string } })
           <tr><td style="color:#64748b;padding:4px 0">Datum splatnosti</td><td style="text-align:right;font-weight:600">${invoice.due_date}</td></tr>
           <tr><td style="color:#64748b;padding:4px 0">K úhradě</td><td style="text-align:right;font-weight:700;font-size:16px;color:#4f46e5">${new Intl.NumberFormat('cs-CZ',{style:'currency',currency:invoice.currency}).format(invoice.total)}</td></tr>
         </table>
+        ${paymentUrl ? `
+        <div style="text-align:center;margin:24px 0">
+          <a href="${paymentUrl}" style="display:inline-block;background:#4f46e5;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">
+            Zaplatit online kartou
+          </a>
+          <p style="color:#94a3b8;font-size:11px;margin-top:8px">Bezpečná platba kartou přes Stripe</p>
+        </div>` : ''}
         <p style="color:#94a3b8;font-size:12px;">Faktura je přiložena jako PDF. Vystaveno přes <a href="https://fakturo-seven.vercel.app" style="color:#4f46e5">Fakturo</a>.</p>
       </div>
     `,
