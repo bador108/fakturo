@@ -5,6 +5,7 @@ import {
   FileText, Zap, Shield, Globe, CheckCircle2, Users, Receipt,
   RefreshCw, BarChart2, TrendingUp, Send, ArrowRight
 } from 'lucide-react'
+import { LandingChat } from '@/components/LandingChat'
 
 export default async function HomePage() {
   const { userId } = await auth()
@@ -288,6 +289,8 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      <LandingChat />
 
       <footer className="bg-white border-t border-slate-100 py-8 text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
