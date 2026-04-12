@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import QRCode from 'qrcode'
 import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -32,6 +33,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   const [sendResult, setSendResult] = useState<'ok' | 'err' | null>(null)
   const [aresLoading, setAresLoading] = useState<'sender' | 'client' | null>(null)
   const [aresError, setAresError] = useState<'sender' | 'client' | null>(null)
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
 
   async function lookupAres(type: 'sender' | 'client') {
     const ico = type === 'sender' ? form.sender_ico : form.client_ico
@@ -132,6 +134,15 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   const removeItem = (i: number) => setForm(f => ({ ...f, items: f.items.filter((_, idx) => idx !== i) }))
 
   const { subtotal, vat_amount, total } = calcTotals(form.items, form.vat_rate)
+
+  useEffect(() => {
+    if (!form.sender_iban || !total) { setQrDataUrl(null); return }
+    const iban = form.sender_iban.replace(/\s/g, '')
+    const payload = `SPD*1.0*ACC:${iban}*AM:${total.toFixed(2)}*CC:${form.currency}*MSG:Faktura ${form.invoice_number}`
+    QRCode.toDataURL(payload, { width: 140, margin: 1 })
+      .then(url => setQrDataUrl(url))
+      .catch(() => setQrDataUrl(null))
+  }, [form.sender_iban, form.currency, form.invoice_number, total])
 
   async function save(status: 'draft' | 'sent') {
     setSaving(true)
@@ -333,6 +344,18 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             <span className="w-32 text-right font-mono">{formatCurrency(total, form.currency)}</span>
           </div>
         </div>
+
+        {/* QR platba */}
+        {qrDataUrl && (
+          <div className="mt-5 pt-5 border-t border-slate-100 flex items-center gap-5">
+            <img src={qrDataUrl} alt="QR platba" width={100} height={100} className="rounded-lg border border-slate-100" />
+            <div>
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1">QR platba</p>
+              <p className="text-xs text-slate-400">Naskenujte kód v mobilní bance</p>
+              {form.sender_iban && <p className="text-xs text-slate-500 mt-1 font-mono">{form.sender_iban}</p>}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Notes */}
