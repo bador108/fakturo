@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { Upload, CheckCircle2, FileText, Loader2, AlertCircle, Check } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
+import type { Currency } from '@/types'
 
 interface Match {
   invoiceId: string
@@ -154,7 +155,7 @@ export function BankStatementUpload() {
                       <p className="text-xs text-slate-400">#{m.invoiceNumber} · {m.txDate}</p>
                     </div>
                     <span className="text-sm font-semibold text-emerald-600">
-                      {formatCurrency(m.amount, m.currency)}
+                      {formatCurrency(m.amount, m.currency as Currency)}
                     </span>
                     <Check className="h-4 w-4 text-emerald-500 shrink-0" />
                   </div>
