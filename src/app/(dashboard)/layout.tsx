@@ -28,7 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {children}
       </main>
       <SupportButton />
-      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="8ff07e98-f810-45d1-8277-147771fb02dd" strategy="lazyOnload" />
+      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="add6320a-56c9-4b1d-a967-befe4e994508" strategy="lazyOnload" />
     </div>
   )
 }

@@ -290,7 +290,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="8ff07e98-f810-45d1-8277-147771fb02dd" strategy="lazyOnload" />
+      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="6523f5b5-fa53-4d8a-b0d2-214c90693499" strategy="lazyOnload" />
 
       <footer className="bg-white border-t border-slate-100 py-8 text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
