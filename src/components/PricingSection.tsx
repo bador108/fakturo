@@ -5,17 +5,6 @@ import Link from 'next/link'
 import { CheckCircle2, ArrowRight, Zap, Minus, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-async function startCheckout(plan: 'start' | 'pro', billing: 'monthly' | 'annual') {
-  const res = await fetch('/api/stripe/create-checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ plan, billing }),
-  })
-  if (res.status === 401) { window.location.href = '/sign-up'; return }
-  const { url } = await res.json()
-  if (url) window.location.href = url
-}
-
 interface Plan {
   id: string
   name: string
@@ -125,11 +114,11 @@ const plans: Plan[] = [
 export function PricingSection() {
   const [annual, setAnnual] = useState(true)
   const [loading, setLoading] = useState<string | null>(null)
-
-  async function handleUpgrade(plan: 'start' | 'pro') {
+  function handleUpgrade(plan: 'start' | 'pro') {
+    const billing = annual ? 'annual' : 'monthly'
     setLoading(plan)
-    await startCheckout(plan, annual ? 'annual' : 'monthly')
-    setLoading(null)
+    // Always go through /checkout — it handles auth + Stripe redirect
+    window.location.href = `/checkout?plan=${plan}&billing=${billing}`
   }
 
   return (
