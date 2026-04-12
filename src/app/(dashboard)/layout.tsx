@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/Sidebar'
 import { SupportButton } from '@/components/SupportButton'
 import { createServiceClient } from '@/lib/supabase'
+import Script from 'next/script'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { userId } = await auth()
@@ -27,6 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {children}
       </main>
       <SupportButton />
+      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="8ff07e98-f810-45d1-8277-147771fb02dd" strategy="lazyOnload" />
     </div>
   )
 }

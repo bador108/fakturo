@@ -84,7 +84,7 @@ export function SupportButton() {
   const meta = contactType ? TYPE_META[contactType] : null
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-24 right-6 z-50">
       {open && (
         <div className="absolute bottom-14 right-0 w-72 bg-white rounded-2xl border border-slate-100 shadow-2xl overflow-hidden mb-2">
 

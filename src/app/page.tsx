@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import Script from 'next/script'
 import { auth } from '@clerk/nextjs/server'
 import {
   FileText, Zap, Shield, Globe, CheckCircle2, Users, Receipt,
@@ -288,6 +289,8 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="8ff07e98-f810-45d1-8277-147771fb02dd" strategy="lazyOnload" />
 
       <footer className="bg-white border-t border-slate-100 py-8 text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
