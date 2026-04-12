@@ -7,6 +7,7 @@ import {
   TrendingUp, ArrowRight, Sparkles,
 } from 'lucide-react'
 import { FeatureShowcase } from '@/components/FeatureShowcase'
+import { ScreenshotZoom } from '@/components/ScreenshotZoom'
 
 export default async function HomePage() {
   const { userId } = await auth()
@@ -62,27 +63,8 @@ export default async function HomePage() {
           <p className="mt-4 text-sm text-slate-400">Zdarma 30 faktur/měsíc · Pro neomezeně za 500 Kč/měs.</p>
         </div>
 
-        {/* Hero screenshot */}
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-slate-200">
-          <div className="bg-slate-800 flex items-center gap-2 px-4 py-2.5">
-            <span className="h-3 w-3 rounded-full bg-red-400" />
-            <span className="h-3 w-3 rounded-full bg-yellow-400" />
-            <span className="h-3 w-3 rounded-full bg-emerald-400" />
-            <div className="ml-3 flex-1 bg-slate-700 rounded-md h-5 flex items-center px-3">
-              <span className="text-[10px] text-slate-400 font-mono">fakturo.vercel.app/dashboard</span>
-            </div>
-          </div>
-          <div className="relative aspect-[1200/740]">
-            <Image
-              src="/screenshots/dashboard.png"
-              alt="Fakturo dashboard"
-              fill
-              className="object-cover object-top"
-              priority
-              sizes="(max-width: 768px) 100vw, 600px"
-            />
-          </div>
-        </div>
+        {/* Hero screenshot — clickable */}
+        <ScreenshotZoom src="/screenshots/dashboard.png" alt="Fakturo dashboard" aspectRatio="1200/836" />
       </section>
 
       {/* Social proof */}
@@ -162,16 +144,8 @@ export default async function HomePage() {
             },
           ].map(({ step, title, desc, img }) => (
             <div key={step} className="flex flex-col items-center text-center">
-              <div className="relative w-full rounded-2xl overflow-hidden shadow-lg mb-6 ring-1 ring-slate-200">
-                <div className="bg-slate-800 flex items-center gap-1.5 px-3 py-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                  <div className="absolute top-1.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">{step}</div>
-                </div>
-                <div className="relative aspect-[1200/740]">
-                  <Image src={img} alt={title} fill className="object-cover object-top" sizes="400px" />
-                </div>
+              <div className="w-full mb-6">
+                <ScreenshotZoom src={img} alt={title} step={step} />
               </div>
               <h3 className="font-semibold text-slate-800 text-lg mb-2">{title}</h3>
               <p className="text-sm text-slate-400 max-w-xs">{desc}</p>
