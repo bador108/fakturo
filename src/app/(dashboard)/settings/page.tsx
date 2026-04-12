@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import { createServiceClient } from '@/lib/supabase'
 import { SenderProfileForm } from '@/components/SenderProfileForm'
 import { UpgradeButton } from '@/components/UpgradeButton'
+import { BankConnect } from '@/components/BankConnect'
 import { FREE_TIER_LIMIT } from '@/lib/stripe'
 
 export default async function SettingsPage() {
@@ -16,6 +17,13 @@ export default async function SettingsPage() {
 
   const plan = user?.plan ?? 'free'
   const used = user?.invoice_count_this_month ?? 0
+
+  const { data: bankConnection } = await db
+    .from('bank_connections')
+    .select('institution_name, institution_logo, status, last_synced_at')
+    .eq('user_id', userId)
+    .eq('status', 'active')
+    .single()
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -40,6 +48,13 @@ export default async function SettingsPage() {
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-4">Výchozí údaje dodavatele</h2>
         <SenderProfileForm userId={userId} profile={profile ?? undefined} />
+      </div>
+
+      {/* Bank connection */}
+      <div className="p-5 bg-white rounded-xl border border-zinc-200">
+        <h2 className="font-semibold mb-1">Propojení s bankou</h2>
+        <p className="text-xs text-slate-400 mb-4">Automatické označování faktur jako zaplacených · Podporuje všechny české banky</p>
+        <BankConnect connection={bankConnection ?? null} />
       </div>
     </div>
   )
