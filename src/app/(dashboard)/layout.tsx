@@ -2,8 +2,8 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/Sidebar'
 import { SupportButton } from '@/components/SupportButton'
+import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { createServiceClient } from '@/lib/supabase'
-import Script from 'next/script'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { userId } = await auth()
@@ -28,7 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {children}
       </main>
       <SupportButton />
-      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="add6320a-56c9-4b1d-a967-befe4e994508" strategy="lazyOnload" />
+      <BotcraftWidget botId="add6320a-56c9-4b1d-a967-befe4e994508" />
     </div>
   )
 }
