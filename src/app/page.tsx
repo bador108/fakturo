@@ -3,11 +3,12 @@ import Image from 'next/image'
 import Script from 'next/script'
 import { auth } from '@clerk/nextjs/server'
 import {
-  Zap, Shield, Globe, CheckCircle2,
-  TrendingUp, ArrowRight, Sparkles,
+  Zap, Shield, Globe,
+  TrendingUp, Sparkles,
 } from 'lucide-react'
 import { FeatureShowcase } from '@/components/FeatureShowcase'
 import { ScreenshotZoom } from '@/components/ScreenshotZoom'
+import { PricingSection } from '@/components/PricingSection'
 
 export default async function HomePage() {
   const { userId } = await auth()
@@ -154,67 +155,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="bg-white border-y border-slate-100 py-20">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-slate-900 mb-3">Jednoduché ceny</h2>
-          <p className="text-slate-400 mb-12">Začni zdarma, upgraduj až budeš potřebovat</p>
-          <div className="grid md:grid-cols-2 gap-6 text-left">
-            {/* Free */}
-            <div className="p-8 rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <div className="text-lg font-bold mb-1 text-slate-900">Zdarma</div>
-              <div className="text-4xl font-bold mb-2 text-slate-900">0 Kč<span className="text-lg font-normal text-slate-400">/měs.</span></div>
-              <p className="text-sm text-slate-400 mb-6">Pro začínající freelancery</p>
-              <ul className="space-y-3 text-sm text-slate-500">
-                {[
-                  '30 faktur za měsíc',
-                  'PDF export + odeslání emailem',
-                  'Správa klientů',
-                  'Evidence výdajů',
-                  'Cashflow přehled',
-                  'CZK / EUR / USD (live kurzy ČNB)',
-                  'Základní podpora',
-                ].map(f => (
-                  <li key={f} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />{f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/sign-up" className="mt-8 block text-center border-2 border-indigo-600 text-indigo-600 px-6 py-3 rounded-xl font-medium hover:bg-indigo-50 transition">
-                Začít zdarma
-              </Link>
-            </div>
-            {/* Pro */}
-            <div className="p-8 rounded-2xl border-2 border-indigo-500 bg-indigo-50 relative">
-              <div className="absolute -top-3 left-6 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">NEJOBLÍBENĚJŠÍ</div>
-              <div className="text-lg font-bold mb-1 text-slate-900">Pro</div>
-              <div className="text-4xl font-bold mb-2 text-slate-900">500 Kč<span className="text-lg font-normal text-slate-400">/měs.</span></div>
-              <p className="text-sm text-slate-400 mb-6">Pro aktivní freelancery a firmy</p>
-              <ul className="space-y-3 text-sm text-slate-500">
-                {[
-                  'Neomezené faktury',
-                  'PDF export + odeslání emailem',
-                  'Správa klientů',
-                  'Evidence výdajů',
-                  'Opakující se faktury',
-                  'Upomínky automaticky',
-                  'Export Pohoda XML',
-                  'Cashflow přehled + grafy',
-                  'CZK / EUR / USD (live kurzy ČNB)',
-                  'Prioritní podpora',
-                ].map(f => (
-                  <li key={f} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />{f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/sign-up" className="mt-8 flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
-                Vyzkoušet Pro <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PricingSection />
 
       {/* CTA */}
       <section className="bg-indigo-600 py-16">
