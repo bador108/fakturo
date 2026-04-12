@@ -2,8 +2,19 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { CheckCircle2, ArrowRight, Zap, Minus } from 'lucide-react'
+import { CheckCircle2, ArrowRight, Zap, Minus, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+async function startCheckout(plan: 'start' | 'pro', billing: 'monthly' | 'annual') {
+  const res = await fetch('/api/stripe/create-checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ plan, billing }),
+  })
+  if (res.status === 401) { window.location.href = '/sign-up'; return }
+  const { url } = await res.json()
+  if (url) window.location.href = url
+}
 
 interface Plan {
   id: string
@@ -113,6 +124,13 @@ const plans: Plan[] = [
 
 export function PricingSection() {
   const [annual, setAnnual] = useState(true)
+  const [loading, setLoading] = useState<string | null>(null)
+
+  async function handleUpgrade(plan: 'start' | 'pro') {
+    setLoading(plan)
+    await startCheckout(plan, annual ? 'annual' : 'monthly')
+    setLoading(null)
+  }
 
   return (
     <section className="bg-white border-y border-slate-100 py-20" id="pricing">
@@ -208,16 +226,25 @@ export function PricingSection() {
                 </ul>
 
                 {/* CTA */}
-                <Link
-                  href="/sign-up"
-                  className={cn(
-                    'flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-medium transition text-sm',
-                    plan.btnClass,
-                  )}
-                >
-                  {plan.id === 'free' ? 'Začít zdarma' : `Vybrat ${plan.name}`}
-                  {plan.id !== 'free' && <ArrowRight className="h-4 w-4" />}
-                </Link>
+                {plan.id === 'free' ? (
+                  <Link
+                    href="/sign-up"
+                    className={cn('flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-medium transition text-sm', plan.btnClass)}
+                  >
+                    Začít zdarma
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => handleUpgrade(plan.id as 'start' | 'pro')}
+                    disabled={loading === plan.id}
+                    className={cn('flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-medium transition text-sm w-full disabled:opacity-70', plan.btnClass)}
+                  >
+                    {loading === plan.id
+                      ? <><Loader2 className="h-4 w-4 animate-spin" /> Načítám...</>
+                      : <>{`Vybrat ${plan.name}`} <ArrowRight className="h-4 w-4" /></>
+                    }
+                  </button>
+                )}
               </div>
             )
           })}

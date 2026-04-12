@@ -1,4 +1,4 @@
-export type Plan = 'free' | 'pro'
+export type Plan = 'free' | 'start' | 'pro'
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'cancelled'
 export type InvoiceFilter = 'all' | 'sent' | 'paid' | 'overdue' | 'draft'
 export type InvoiceType = 'faktura' | 'zalohova' | 'opravny' | 'nabidka'

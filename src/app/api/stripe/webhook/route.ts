@@ -29,7 +29,8 @@ export async function POST(req: Request) {
       // Subscription upgrade
       const subscriptionId = obj.subscription as string
       if (meta?.userId && subscriptionId) {
-        await db.from('users').update({ plan: 'pro', stripe_subscription_id: subscriptionId }).eq('id', meta.userId)
+        const plan = meta.plan === 'start' ? 'start' : 'pro'
+        await db.from('users').update({ plan, stripe_subscription_id: subscriptionId }).eq('id', meta.userId)
       }
       break
     }

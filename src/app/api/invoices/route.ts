@@ -55,7 +55,7 @@ export async function POST(req: Request) {
 
   if (user.plan === 'free' && count >= FREE_TIER_LIMIT) {
     return NextResponse.json(
-      { error: `Dosáhli jste limitu ${FREE_TIER_LIMIT} faktur/měsíc (Free plán). Upgradujte na Pro.`, code: 'LIMIT_REACHED' },
+      { error: `Dosáhli jste limitu ${FREE_TIER_LIMIT} faktur/měsíc (Free plán). Upgradujte na Start nebo Pro.`, code: 'LIMIT_REACHED' },
       { status: 403 }
     )
   }
