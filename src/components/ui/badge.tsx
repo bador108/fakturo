@@ -8,8 +8,14 @@ const statusConfig: Record<InvoiceStatus, { label: string; classes: string }> = 
   cancelled: { label: 'Storno',    classes: 'bg-red-50 text-red-500' },
 }
 
-export function StatusBadge({ status }: { status: InvoiceStatus }) {
-  const { label, classes } = statusConfig[status]
+const today = () => new Date().toISOString().slice(0, 10)
+
+export function StatusBadge({ status, dueDate }: { status: InvoiceStatus; dueDate?: string }) {
+  const isOverdue = status === 'sent' && dueDate && dueDate < today()
+  const { label, classes } = isOverdue
+    ? { label: 'Po splatnosti', classes: 'bg-red-50 text-red-600' }
+    : statusConfig[status]
+
   return (
     <span className={cn('inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium', classes)}>
       {label}

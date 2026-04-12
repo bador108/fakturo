@@ -1,7 +1,53 @@
 export type Plan = 'free' | 'pro'
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'cancelled'
+export type InvoiceFilter = 'all' | 'sent' | 'paid' | 'overdue' | 'draft'
 export type VatRate = 0 | 15 | 21
 export type Currency = 'CZK' | 'EUR' | 'USD'
+export type RecurrenceType = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
+
+export interface Notification {
+  id: string
+  user_id: string
+  type: 'overdue' | 'reminder' | 'paid' | 'system'
+  title: string
+  message: string
+  invoice_id: string | null
+  read: boolean
+  created_at: string
+}
+
+export interface RecurringInvoice {
+  id: string
+  user_id: string
+  name: string
+  recurrence: RecurrenceType
+  next_date: string
+  is_active: boolean
+  sender_name: string
+  sender_address: string | null
+  sender_city: string | null
+  sender_zip: string | null
+  sender_country: string
+  sender_ico: string | null
+  sender_dic: string | null
+  sender_bank: string | null
+  sender_iban: string | null
+  sender_email: string | null
+  sender_phone: string | null
+  client_name: string
+  client_address: string | null
+  client_city: string | null
+  client_zip: string | null
+  client_country: string
+  client_ico: string | null
+  currency: Currency
+  vat_rate: VatRate
+  notes: string | null
+  due_days: number
+  items: Array<{ description: string; quantity: number; unit: string; unit_price: number }>
+  created_at: string
+  updated_at: string
+}
 
 export interface User {
   id: string
