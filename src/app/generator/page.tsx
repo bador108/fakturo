@@ -15,9 +15,11 @@ const due = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10)
 const year = new Date().getFullYear()
 
 const defaultForm: InvoiceFormData = {
+  invoice_type: 'faktura',
   sender_name: '', sender_address: '', sender_city: '', sender_zip: '', sender_country: 'CZ',
   sender_ico: '', sender_dic: '', sender_bank: '', sender_iban: '', sender_email: '', sender_phone: '',
   client_name: '', client_address: '', client_city: '', client_zip: '', client_country: 'CZ', client_ico: '',
+  client_email: '',
   invoice_number: `${year}0001`, issue_date: today, due_date: due,
   currency: 'CZK', vat_rate: 21, notes: '', items: [{ ...DEFAULT_ITEM }],
 }

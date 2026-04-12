@@ -1,9 +1,11 @@
 export type Plan = 'free' | 'pro'
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'cancelled'
 export type InvoiceFilter = 'all' | 'sent' | 'paid' | 'overdue' | 'draft'
+export type InvoiceType = 'faktura' | 'zalohova' | 'opravny'
 export type VatRate = 0 | 15 | 21
 export type Currency = 'CZK' | 'EUR' | 'USD'
 export type RecurrenceType = 'weekly' | 'monthly' | 'quarterly' | 'yearly'
+export type ExpenseCategory = 'kancelar' | 'cestovne' | 'software' | 'hardware' | 'marketing' | 'ostatni'
 
 export interface Notification {
   id: string
@@ -91,10 +93,25 @@ export interface InvoiceItem {
   total: number
 }
 
+export interface Expense {
+  id: string
+  user_id: string
+  date: string
+  vendor: string
+  description: string | null
+  amount: number
+  currency: Currency
+  category: ExpenseCategory
+  vat_claimable: boolean
+  receipt_url: string | null
+  created_at: string
+}
+
 export interface Invoice {
   id: string
   user_id: string
   invoice_number: string
+  invoice_type: InvoiceType
   status: InvoiceStatus
 
   sender_name: string
@@ -115,6 +132,7 @@ export interface Invoice {
   client_zip: string | null
   client_country: string
   client_ico: string | null
+  client_email: string | null
 
   issue_date: string
   due_date: string
@@ -143,6 +161,8 @@ export interface InvoiceItemDraft {
 }
 
 export interface InvoiceFormData {
+  invoice_type: InvoiceType
+
   // Sender
   sender_name: string
   sender_address: string
@@ -163,6 +183,7 @@ export interface InvoiceFormData {
   client_zip: string
   client_country: string
   client_ico: string
+  client_email: string
 
   // Meta
   invoice_number: string

@@ -2,12 +2,12 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, Trash2, Save, Send, FileDown, Search } from 'lucide-react'
+import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { calcTotals, formatCurrency } from '@/lib/utils'
-import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate } from '@/types'
+import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate, InvoiceType } from '@/types'
 
 interface InvoiceFormProps {
   defaultValues?: Partial<InvoiceFormData>
@@ -26,6 +26,10 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [generatingPdf, setGeneratingPdf] = useState(false)
+  const [sendModal, setSendModal] = useState(false)
+  const [sendEmail, setSendEmail] = useState('')
+  const [sending, setSending] = useState(false)
+  const [sendResult, setSendResult] = useState<'ok' | 'err' | null>(null)
   const [aresLoading, setAresLoading] = useState<'sender' | 'client' | null>(null)
   const [aresError, setAresError] = useState<'sender' | 'client' | null>(null)
 
@@ -63,7 +67,26 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     }
   }
 
+  async function sendInvoiceEmail() {
+    if (!invoiceId || !sendEmail) return
+    setSending(true)
+    setSendResult(null)
+    try {
+      const res = await fetch(`/api/invoices/${invoiceId}/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: sendEmail }),
+      })
+      setSendResult(res.ok ? 'ok' : 'err')
+    } catch {
+      setSendResult('err')
+    } finally {
+      setSending(false)
+    }
+  }
+
   const [form, setForm] = useState<InvoiceFormData>({
+    invoice_type: 'faktura',
     sender_name: '',
     sender_address: '',
     sender_city: '',
@@ -81,6 +104,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     client_zip: '',
     client_country: 'CZ',
     client_ico: '',
+    client_email: '',
     invoice_number: nextInvoiceNumber,
     issue_date: new Date().toISOString().slice(0, 10),
     due_date: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
@@ -161,10 +185,16 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         </div>
         <div className="flex gap-2">
           {invoiceId && (
-            <Button variant="secondary" size="sm" onClick={downloadPdf} loading={generatingPdf}>
-              <FileDown className="h-4 w-4" />
-              PDF
-            </Button>
+            <>
+              <Button variant="secondary" size="sm" onClick={downloadPdf} loading={generatingPdf}>
+                <FileDown className="h-4 w-4" />
+                PDF
+              </Button>
+              <Button variant="secondary" size="sm" onClick={() => { setSendEmail(form.client_email || ''); setSendModal(true); setSendResult(null) }}>
+                <Mail className="h-4 w-4" />
+                Email
+              </Button>
+            </>
           )}
           <Button variant="secondary" size="sm" onClick={() => save('draft')} loading={saving}>
             <Save className="h-4 w-4" />
@@ -178,7 +208,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       </div>
 
       {/* Meta row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 bg-white rounded-xl border border-slate-100 shadow-sm">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-5 bg-white rounded-xl border border-slate-100 shadow-sm">
+        <Select label="Typ dokladu" value={form.invoice_type} onChange={e => set('invoice_type', e.target.value as InvoiceType)}>
+          <option value="faktura">Faktura</option>
+          <option value="zalohova">Zálohová faktura</option>
+          <option value="opravny">Opravný daňový doklad</option>
+        </Select>
         <Input label="Číslo faktury" value={form.invoice_number} onChange={e => set('invoice_number', e.target.value)} />
         <Select label="Měna" value={form.currency} onChange={e => set('currency', e.target.value as Currency)}>
           <option value="CZK">CZK – Česká koruna</option>
@@ -232,6 +267,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
           </div>
           <div className="space-y-1">
             <Input label="IČO" value={form.client_ico} onChange={e => set('client_ico', e.target.value)} />
+          <Input label="E-mail klienta" type="email" value={form.client_email} onChange={e => set('client_email', e.target.value)} />
             <button
               type="button"
               onClick={() => lookupAres('client')}
@@ -310,6 +346,52 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
           className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
         />
       </section>
+
+      {/* Email modal */}
+      {sendModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-800">Odeslat fakturu emailem</h3>
+              <button onClick={() => setSendModal(false)} className="text-slate-400 hover:text-slate-700">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            {sendResult === 'ok' ? (
+              <div className="text-center py-4">
+                <div className="h-12 w-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Mail className="h-5 w-5 text-emerald-600" />
+                </div>
+                <p className="font-medium text-slate-800">Faktura odeslána!</p>
+                <p className="text-sm text-slate-400 mt-1">Email byl doručen na {sendEmail}</p>
+                <button onClick={() => setSendModal(false)} className="mt-4 text-sm text-indigo-600 hover:underline">Zavřít</button>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-slate-500">Faktura bude odeslána jako PDF příloha.</p>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600 mb-1.5">E-mail příjemce</label>
+                  <input
+                    type="email"
+                    value={sendEmail}
+                    onChange={e => setSendEmail(e.target.value)}
+                    placeholder="klient@firma.cz"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                {sendResult === 'err' && <p className="text-xs text-red-500">Nepodařilo se odeslat. Zkontroluj RESEND_API_KEY.</p>}
+                <div className="flex gap-2 justify-end">
+                  <Button variant="secondary" size="sm" onClick={() => setSendModal(false)}>Zrušit</Button>
+                  <Button size="sm" onClick={sendInvoiceEmail} loading={sending} disabled={!sendEmail}>
+                    <Mail className="h-4 w-4" />
+                    Odeslat
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Bottom actions */}
       <div className="flex justify-end gap-3 pb-8">

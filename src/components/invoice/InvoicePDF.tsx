@@ -103,6 +103,12 @@ const styles = StyleSheet.create({
   footerText: { fontSize: 8, color: c.muted },
 })
 
+const invoiceTypeLabel: Record<string, string> = {
+  faktura: 'FAKTURA',
+  zalohova: 'ZÁLOHOVÁ FAKTURA',
+  opravny: 'OPRAVNÝ DAŇOVÝ DOKLAD',
+}
+
 interface Props {
   invoice: Invoice
   items: InvoiceItem[]
@@ -120,7 +126,7 @@ export function InvoicePDF({ invoice, items, qrCode }: Props) {
         <View style={styles.header}>
           <View style={styles.brandBlock}>
             <Text style={styles.brandName}>Fakturo</Text>
-            <Text style={styles.invoiceLabel}>FAKTURA</Text>
+            <Text style={styles.invoiceLabel}>{invoiceTypeLabel[invoice.invoice_type ?? 'faktura'] ?? 'FAKTURA'}</Text>
             <Text style={styles.invoiceNumber}>{invoice.invoice_number}</Text>
           </View>
           <View>

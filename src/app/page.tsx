@@ -54,7 +54,7 @@ export default async function HomePage() {
               Přihlásit se
             </Link>
           </div>
-          <p className="mt-4 text-sm text-slate-400">Zdarma 3 faktury/měsíc · Pro neomezeně za 150 Kč/měs.</p>
+          <p className="mt-4 text-sm text-slate-400">Zdarma 3 faktury/měsíc · Pro neomezeně za 500 Kč/měs.</p>
         </div>
 
         <div className="relative rounded-2xl overflow-hidden shadow-2xl h-80 md:h-96">
@@ -166,7 +166,7 @@ export default async function HomePage() {
           <div className="p-8 rounded-2xl border-2 border-indigo-500 bg-indigo-50 relative">
             <div className="absolute -top-3 left-6 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">NEJOBLÍBENĚJŠÍ</div>
             <div className="text-lg font-bold mb-1 text-slate-900">Pro</div>
-            <div className="text-4xl font-bold mb-2 text-slate-900">150 Kč<span className="text-lg font-normal text-slate-400">/měs.</span></div>
+            <div className="text-4xl font-bold mb-2 text-slate-900">500 Kč<span className="text-lg font-normal text-slate-400">/měs.</span></div>
             <p className="text-sm text-slate-400 mb-6">Pro aktivní freelancery a firmy</p>
             <ul className="space-y-3 text-sm text-slate-500">
               {['Neomezené faktury', 'PDF export', 'CZK / EUR / USD', 'Prioritní podpora'].map(f => (

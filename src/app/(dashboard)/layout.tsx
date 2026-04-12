@@ -1,6 +1,7 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/Sidebar'
+import { SupportButton } from '@/components/SupportButton'
 import { createServiceClient } from '@/lib/supabase'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -25,6 +26,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <main className="flex-1 p-6 md:p-10 overflow-auto">
         {children}
       </main>
+      <SupportButton />
     </div>
   )
 }

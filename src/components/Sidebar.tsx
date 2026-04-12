@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { UserButton } from '@clerk/nextjs'
-import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, BarChart2 } from 'lucide-react'
+import { UserButton, useUser } from '@clerk/nextjs'
+import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, BarChart2, Receipt, Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { NotificationBell } from '@/components/NotificationBell'
 
@@ -12,6 +12,7 @@ const links = [
   { href: '/invoices', label: 'Faktury', icon: FileText },
   { href: '/invoices/new', label: 'Nová faktura', icon: Plus },
   { href: '/clients', label: 'Klienti', icon: Users },
+  { href: '/expenses', label: 'Výdaje', icon: Receipt },
   { href: '/recurring', label: 'Opakující se', icon: RefreshCw },
   { href: '/finance', label: 'Finance', icon: BarChart2 },
   { href: '/settings', label: 'Nastavení', icon: Settings },
@@ -19,6 +20,7 @@ const links = [
 
 export function Sidebar() {
   const path = usePathname()
+  const { user } = useUser()
 
   const isActive = (href: string) =>
     href === '/dashboard' ? path === href : path.startsWith(href)
@@ -58,10 +60,28 @@ export function Sidebar() {
         })}
       </nav>
 
+      {/* Feedback link */}
+      <a
+        href="mailto:napad@fakturo.cz?subject=Nápad na zlepšení Fakturo"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition mx-0"
+      >
+        <Lightbulb className="h-3.5 w-3.5 shrink-0" />
+        Navrhnout zlepšení
+      </a>
+
       {/* User */}
-      <div className="border-t border-slate-100 pt-4 mt-2 flex items-center gap-3 px-3">
-        <UserButton />
-        <span className="text-sm text-slate-500 truncate">Účet</span>
+      <div className="border-t border-slate-100 pt-4 mt-1">
+        <div className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 transition">
+          <UserButton />
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-slate-700 truncate">
+              {user?.firstName ?? user?.emailAddresses[0]?.emailAddress ?? 'Účet'}
+            </p>
+            <p className="text-xs text-slate-400 truncate">
+              {user?.emailAddresses[0]?.emailAddress}
+            </p>
+          </div>
+        </div>
       </div>
     </aside>
   )
