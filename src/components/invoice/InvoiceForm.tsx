@@ -40,6 +40,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
   const [senderProfiles, setSenderProfiles] = useState<SenderProfile[]>([])
   const [profilesLoaded, setProfilesLoaded] = useState(false)
+  const [cnbRates, setCnbRates] = useState<Record<string, number>>({})
 
   useEffect(() => {
     if (profilesLoaded) return
@@ -48,6 +49,13 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       .then(d => { if (Array.isArray(d)) setSenderProfiles(d) })
       .finally(() => setProfilesLoaded(true))
   }, [profilesLoaded])
+
+  useEffect(() => {
+    fetch('/api/cnb-rates')
+      .then(r => r.json())
+      .then(d => { if (d && typeof d === 'object') setCnbRates(d) })
+      .catch(() => {})
+  }, [])
 
   function loadSenderProfile(profile: SenderProfile) {
     setForm(f => ({
@@ -443,6 +451,14 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             <span>Celkem</span>
             <span className="w-32 text-right font-mono">{formatCurrency(total, form.currency)}</span>
           </div>
+          {form.currency !== 'CZK' && cnbRates[form.currency] && (
+            <div className="flex gap-8 text-xs text-slate-400 mt-1">
+              <span>≈ v CZK (kurz ČNB {cnbRates[form.currency].toFixed(3)})</span>
+              <span className="w-32 text-right font-mono">
+                {formatCurrency(total * cnbRates[form.currency], 'CZK')}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* QR platba */}

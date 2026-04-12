@@ -4,6 +4,7 @@ import { SenderProfilesManager } from '@/components/SenderProfilesManager'
 import { ItemTemplatesManager } from '@/components/ItemTemplatesManager'
 import { ReminderSettings } from '@/components/ReminderSettings'
 import { UpgradeButton } from '@/components/UpgradeButton'
+import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
 import { FREE_TIER_LIMIT } from '@/lib/stripe'
 
@@ -29,7 +30,10 @@ export default async function SettingsPage() {
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-3">Plán</h2>
         {plan === 'pro' ? (
-          <p className="text-sm text-green-600 font-medium">✓ Pro plán aktivní – neomezené faktury</p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-green-600 font-medium">✓ Pro plán aktivní – neomezené faktury</p>
+            <ManageSubscriptionButton />
+          </div>
         ) : (
           <div className="flex items-center justify-between">
             <p className="text-sm text-zinc-600">

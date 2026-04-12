@@ -52,11 +52,23 @@ export default async function FinancePage() {
   const invoices = (data ?? []) as Invoice[]
   const today = new Date().toISOString().slice(0, 10)
 
+  // Fetch ČNB rates for currency conversion
+  let cnbRates: Record<string, number> = {}
+  try {
+    const ratesRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/api/cnb-rates`, { next: { revalidate: 14400 } })
+    if (ratesRes.ok) cnbRates = await ratesRes.json()
+  } catch { /* use empty rates */ }
+
+  function toCZK(amount: number, currency: string): number {
+    if (currency === 'CZK') return amount
+    return amount * (cnbRates[currency] ?? 1)
+  }
+
   const totals = {
-    revenue: invoices.filter(i => i.status === 'paid').reduce((s, i) => s + Number(i.total), 0),
-    vat: invoices.filter(i => i.status === 'paid').reduce((s, i) => s + Number(i.vat_amount), 0),
-    pending: invoices.filter(i => i.status === 'sent' && i.due_date >= today).reduce((s, i) => s + Number(i.total), 0),
-    overdue: invoices.filter(i => i.status === 'sent' && i.due_date < today).reduce((s, i) => s + Number(i.total), 0),
+    revenue: invoices.filter(i => i.status === 'paid').reduce((s, i) => s + toCZK(Number(i.total), i.currency), 0),
+    vat: invoices.filter(i => i.status === 'paid').reduce((s, i) => s + toCZK(Number(i.vat_amount), i.currency), 0),
+    pending: invoices.filter(i => i.status === 'sent' && i.due_date >= today).reduce((s, i) => s + toCZK(Number(i.total), i.currency), 0),
+    overdue: invoices.filter(i => i.status === 'sent' && i.due_date < today).reduce((s, i) => s + toCZK(Number(i.total), i.currency), 0),
   }
 
   const monthRows = buildMonthRows(invoices)
