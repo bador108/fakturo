@@ -111,7 +111,7 @@ export function Sidebar() {
             onClick={() => setMobileOpen(false)}
           />
           {/* Drawer */}
-          <aside className="relative w-72 bg-white flex flex-col px-4 py-6 gap-2 shadow-2xl h-full">
+          <aside className="relative w-[80vw] max-w-[18rem] bg-white flex flex-col px-4 py-6 gap-2 shadow-2xl h-full">
             <div className="px-3 mb-6 flex items-center justify-between">
               <div>
                 <Link href="/" className="text-xl font-bold text-indigo-600 tracking-tight">

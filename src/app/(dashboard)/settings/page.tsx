@@ -30,17 +30,17 @@ export default async function SettingsPage() {
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-3">Plán</h2>
         {plan === 'pro' ? (
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-green-600 font-medium">✓ Pro plán aktivní – neomezené faktury + všechny funkce</p>
             <ManageSubscriptionButton />
           </div>
         ) : plan === 'start' ? (
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-indigo-600 font-medium">✓ Start plán aktivní – neomezené faktury</p>
             <ManageSubscriptionButton />
           </div>
         ) : (
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-zinc-600">
               Free plán · {used} / {FREE_TIER_LIMIT} faktur tento měsíc
             </p>

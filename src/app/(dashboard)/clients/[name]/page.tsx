@@ -42,7 +42,7 @@ export default async function ClientDetailPage({ params }: { params: { name: str
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
           <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-emerald-50 mb-3">
             <CheckCircle className="h-4 w-4 text-emerald-600" />
@@ -82,7 +82,7 @@ export default async function ClientDetailPage({ params }: { params: { name: str
             <Link
               key={inv.id}
               href={`/invoices/${inv.id}`}
-              className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition group"
+              className="flex items-center gap-3 px-4 md:px-6 py-4 hover:bg-slate-50 transition group"
             >
               <div className="h-9 w-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
                 <FileText className="h-4 w-4 text-indigo-400" />
@@ -91,12 +91,12 @@ export default async function ClientDetailPage({ params }: { params: { name: str
                 <p className="font-medium text-slate-800 text-sm group-hover:text-indigo-600 transition">
                   #{inv.invoice_number}
                 </p>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-400 mt-0.5 truncate">
                   Vystaven {formatDate(inv.issue_date)} · splatnost {formatDate(inv.due_date)}
                 </p>
               </div>
               <StatusBadge status={inv.status} dueDate={inv.due_date} />
-              <span className="font-semibold text-slate-800 text-sm w-28 text-right tabular-nums">
+              <span className="font-semibold text-slate-800 text-sm shrink-0 text-right tabular-nums">
                 {formatCurrency(inv.total, inv.currency)}
               </span>
             </Link>

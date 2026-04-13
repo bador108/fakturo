@@ -136,7 +136,7 @@ export function FeatureShowcase() {
 
   return (
     <>
-      <div className="grid lg:grid-cols-[300px_1fr] gap-6 items-start">
+      <div className="grid md:grid-cols-[260px_1fr] gap-6 items-start">
         {/* Tab list */}
         <div className="space-y-1">
           {features.map(f => {

@@ -49,7 +49,7 @@ export default async function DashboardPage() {
     <div className="space-y-8 max-w-5xl">
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Přehled</h1>
           <p className="text-sm text-slate-400 mt-0.5">
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
               <Link
                 key={inv.id}
                 href={`/invoices/${inv.id}`}
-                className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition group"
+                className="flex items-center gap-3 px-4 md:px-6 py-4 hover:bg-slate-50 transition group"
               >
                 <div className="h-9 w-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
                   <FileText className="h-4 w-4 text-indigo-400" />
@@ -136,12 +136,12 @@ export default async function DashboardPage() {
                   <p className="font-medium text-slate-800 text-sm group-hover:text-indigo-600 transition truncate">
                     {inv.client_name}
                   </p>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-slate-400 mt-0.5 truncate">
                     #{inv.invoice_number} · splatnost {formatDate(inv.due_date)}
                   </p>
                 </div>
                 <StatusBadge status={inv.status} dueDate={inv.due_date} />
-                <span className="font-semibold text-slate-800 text-sm w-28 text-right tabular-nums">
+                <span className="font-semibold text-slate-800 text-sm shrink-0 text-right tabular-nums">
                   {formatCurrency(inv.total, inv.currency)}
                 </span>
               </Link>

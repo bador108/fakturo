@@ -189,26 +189,26 @@ export default function ExpensesPage() {
         ) : (
           <div className="divide-y divide-slate-50">
             {expenses.map(e => (
-              <div key={e.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50/50 group">
+              <div key={e.id} className="flex items-center gap-3 px-4 md:px-6 py-4 hover:bg-slate-50/50 group">
                 <div className="h-9 w-9 bg-slate-50 rounded-xl flex items-center justify-center shrink-0">
                   <Receipt className="h-4 w-4 text-slate-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-slate-800 text-sm truncate">{e.vendor}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-slate-400 mt-0.5 truncate">
                     {formatDate(e.date)}{e.description ? ` · ${e.description}` : ''}
                   </p>
                 </div>
-                <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${catColors[e.category]}`}>
+                <span className={`hidden sm:inline text-xs px-2.5 py-1 rounded-full font-medium ${catColors[e.category]}`}>
                   {categories.find(c => c.key === e.category)?.label}
                 </span>
                 {e.vat_claimable && (
-                  <span className="text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">DPH</span>
+                  <span className="hidden sm:inline text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">DPH</span>
                 )}
-                <span className="font-semibold text-slate-800 text-sm w-28 text-right tabular-nums">
+                <span className="font-semibold text-slate-800 text-sm shrink-0 text-right tabular-nums">
                   {formatCurrency(e.amount, e.currency)}
                 </span>
-                <button onClick={() => deleteExpense(e.id)} className="text-slate-300 hover:text-red-400 transition opacity-0 group-hover:opacity-100">
+                <button onClick={() => deleteExpense(e.id)} className="text-slate-300 hover:text-red-400 transition opacity-0 group-hover:opacity-100 shrink-0">
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>

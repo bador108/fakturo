@@ -264,7 +264,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">
             {invoiceId ? `Faktura ${form.invoice_number}` : 'Nová faktura'}
@@ -457,12 +457,26 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         </div>
 
         {form.items.map((item, i) => (
-          <div key={i} className="grid md:grid-cols-[1fr_80px_90px_110px_40px] gap-3 items-end">
+          <div key={i} className="space-y-2 md:space-y-0 md:grid md:grid-cols-[1fr_80px_90px_110px_40px] md:gap-3 md:items-end border border-slate-100 rounded-lg p-3 md:border-0 md:rounded-none md:p-0">
             <Input placeholder="Popis položky" value={item.description} onChange={e => setItem(i, 'description', e.target.value)} />
-            <Input type="number" min={0} step="0.001" value={item.quantity} onChange={e => setItem(i, 'quantity', e.target.value)} />
-            <Input placeholder="ks" value={item.unit} onChange={e => setItem(i, 'unit', e.target.value)} />
-            <Input type="number" min={0} step="0.01" className="text-right" value={item.unit_price} onChange={e => setItem(i, 'unit_price', e.target.value)} />
-            <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} className="p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
+            <div className="grid grid-cols-[1fr_1fr_auto] gap-2 md:contents">
+              <div>
+                <p className="text-xs text-slate-400 mb-1 md:hidden">Množství</p>
+                <Input type="number" min={0} step="0.001" value={item.quantity} onChange={e => setItem(i, 'quantity', e.target.value)} />
+              </div>
+              <div>
+                <p className="text-xs text-slate-400 mb-1 md:hidden">Jednotka</p>
+                <Input placeholder="ks" value={item.unit} onChange={e => setItem(i, 'unit', e.target.value)} />
+              </div>
+              <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} className="md:hidden self-end p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="md:contents">
+              <p className="text-xs text-slate-400 mb-1 md:hidden">Cena / jednotku</p>
+              <Input type="number" min={0} step="0.01" className="text-right" value={item.unit_price} onChange={e => setItem(i, 'unit_price', e.target.value)} />
+            </div>
+            <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} className="hidden md:flex p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
               <Trash2 className="h-4 w-4" />
             </button>
           </div>
@@ -477,31 +491,31 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         <div className="mt-4 flex flex-col items-end gap-1 text-sm">
           {form.vat_payer && (
             <>
-              <div className="flex gap-8 text-slate-400">
+              <div className="flex gap-4 text-slate-400">
                 <span>Základ DPH</span>
-                <span className="w-32 text-right font-mono">{formatCurrency(subtotal, form.currency)}</span>
+                <span className="min-w-[7rem] text-right font-mono">{formatCurrency(subtotal, form.currency)}</span>
               </div>
               {form.reverse_charge ? (
-                <div className="flex gap-8 text-amber-600 text-xs">
+                <div className="flex gap-4 text-amber-600 text-xs">
                   <span>Přenesená daňová povinnost</span>
-                  <span className="w-32 text-right">§ 92a ZDPH</span>
+                  <span className="min-w-[7rem] text-right">§ 92a ZDPH</span>
                 </div>
               ) : (
-                <div className="flex gap-8 text-slate-400">
+                <div className="flex gap-4 text-slate-400">
                   <span>DPH ({form.vat_rate} %)</span>
-                  <span className="w-32 text-right font-mono">{formatCurrency(vat_amount, form.currency)}</span>
+                  <span className="min-w-[7rem] text-right font-mono">{formatCurrency(vat_amount, form.currency)}</span>
                 </div>
               )}
             </>
           )}
-          <div className="flex gap-8 font-bold text-slate-900 text-base border-t border-slate-100 pt-2 mt-1">
+          <div className="flex gap-4 font-bold text-slate-900 text-base border-t border-slate-100 pt-2 mt-1">
             <span>Celkem</span>
-            <span className="w-32 text-right font-mono">{formatCurrency(form.vat_payer && !form.reverse_charge ? total : subtotal, form.currency)}</span>
+            <span className="min-w-[7rem] text-right font-mono">{formatCurrency(form.vat_payer && !form.reverse_charge ? total : subtotal, form.currency)}</span>
           </div>
           {form.currency !== 'CZK' && cnbRates[form.currency] && (
-            <div className="flex gap-8 text-xs text-slate-400 mt-1">
+            <div className="flex gap-4 text-xs text-slate-400 mt-1">
               <span>≈ v CZK (kurz ČNB {cnbRates[form.currency].toFixed(3)})</span>
-              <span className="w-32 text-right font-mono">
+              <span className="min-w-[7rem] text-right font-mono">
                 {formatCurrency(total * cnbRates[form.currency], 'CZK')}
               </span>
             </div>
@@ -510,7 +524,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
 
         {/* QR platba */}
         {qrDataUrl && (
-          <div className="mt-5 pt-5 border-t border-slate-100 flex items-center gap-5">
+          <div className="mt-5 pt-5 border-t border-slate-100 flex flex-wrap items-center gap-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={qrDataUrl} alt="QR platba" width={100} height={100} className="rounded-lg border border-slate-100" />
             <div>

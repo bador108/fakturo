@@ -18,7 +18,7 @@ export default async function HomePage() {
 
       {/* Nav */}
       <nav className="border-b border-slate-100 bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Image src="/logo.svg" alt="Fakturo" width={130} height={32} priority />
           <div className="flex gap-3 items-center">
             {userId ? (
@@ -40,7 +40,7 @@ export default async function HomePage() {
       </nav>
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-6 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
+      <section className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-28 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div>
           <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
             <Zap className="h-3.5 w-3.5" />
@@ -70,7 +70,7 @@ export default async function HomePage() {
 
       {/* Social proof */}
       <section className="bg-white border-y border-slate-100 py-10">
-        <div className="max-w-6xl mx-auto px-6 text-center">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 text-center">
           <p className="text-xs text-slate-400 uppercase tracking-widest mb-6">Používají freelanceři a firmy po celé ČR</p>
           <div className="flex flex-wrap justify-center gap-10">
             {['Grafici', 'Programátoři', 'Fotografové', 'Konzultanti', 'E-shopy', 'Řemeslníci'].map(r => (
@@ -81,7 +81,7 @@ export default async function HomePage() {
       </section>
 
       {/* Feature showcase with real screenshots */}
-      <section className="max-w-6xl mx-auto px-6 py-20">
+      <section className="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-20">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-violet-50 text-violet-600 text-sm font-medium px-4 py-1.5 rounded-full mb-4">
             <Sparkles className="h-3.5 w-3.5" />
@@ -96,9 +96,9 @@ export default async function HomePage() {
       </section>
 
       {/* Key benefits strip */}
-      <section className="bg-white border-y border-slate-100 py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-6">
+      <section className="bg-white border-y border-slate-100 py-12 md:py-16">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { icon: Globe, color: 'bg-indigo-50', iconColor: 'text-indigo-600', title: 'CZK · EUR · USD', desc: 'Fakturujte v libovolné měně s live kurzy ČNB.' },
               { icon: Shield, color: 'bg-emerald-50', iconColor: 'text-emerald-600', title: 'Bezpečné uložení', desc: 'Data v cloudu, přístupná odkudkoliv.' },
@@ -118,7 +118,7 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="max-w-6xl mx-auto px-6 py-20">
+      <section className="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-20">
         <div className="text-center mb-14">
           <h2 className="text-3xl font-bold text-slate-900">Jak to funguje?</h2>
           <p className="mt-3 text-slate-400">Faktura hotová za 3 kroky</p>
@@ -158,8 +158,8 @@ export default async function HomePage() {
       <PricingSection />
 
       {/* CTA */}
-      <section className="bg-indigo-600 py-16">
-        <div className="max-w-3xl mx-auto px-6 text-center">
+      <section className="bg-indigo-600 py-12 md:py-16">
+        <div className="max-w-3xl mx-auto px-4 md:px-6 text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Image src="/icon.svg" alt="Fakturo" width={40} height={40} className="rounded-xl" unoptimized />
             <span className="text-2xl font-bold text-white tracking-tight">Fakturo</span>

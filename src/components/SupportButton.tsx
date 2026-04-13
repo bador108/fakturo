@@ -86,7 +86,7 @@ export function SupportButton() {
   return (
     <div className="fixed bottom-24 right-6 z-50">
       {open && (
-        <div className="absolute bottom-14 right-0 w-72 bg-white rounded-2xl border border-slate-100 shadow-2xl overflow-hidden mb-2">
+        <div className="absolute bottom-14 right-0 w-[calc(100vw-3rem)] max-w-72 bg-white rounded-2xl border border-slate-100 shadow-2xl overflow-hidden mb-2">
 
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-50">

@@ -63,19 +63,19 @@ export default function RecurringPage() {
         ) : (
           <div className="divide-y divide-slate-50">
             {items.map(r => (
-              <div key={r.id} className="flex items-center gap-4 px-6 py-4">
+              <div key={r.id} className="flex items-center gap-3 px-4 md:px-6 py-4">
                 <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${r.is_active ? 'bg-indigo-50' : 'bg-slate-100'}`}>
                   <RefreshCw className={`h-4 w-4 ${r.is_active ? 'text-indigo-400' : 'text-slate-400'}`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`font-medium text-sm ${r.is_active ? 'text-slate-800' : 'text-slate-400'}`}>
+                  <p className={`font-medium text-sm ${r.is_active ? 'text-slate-800' : 'text-slate-400'} truncate`}>
                     {r.name}
                   </p>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    {r.client_name} · {recurrenceLabel[r.recurrence]} · další {formatDate(r.next_date)}
+                  <p className="text-xs text-slate-400 mt-0.5 truncate">
+                    {r.client_name} · {recurrenceLabel[r.recurrence]} · {formatDate(r.next_date)}
                   </p>
                 </div>
-                <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${r.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                <span className={`hidden sm:inline text-xs px-2.5 py-1 rounded-full font-medium ${r.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
                   {r.is_active ? 'Aktivní' : 'Pozastaveno'}
                 </span>
                 <button
