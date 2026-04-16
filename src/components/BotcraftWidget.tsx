@@ -81,7 +81,7 @@ export function BotcraftWidget({ botId }: Props) {
         className="fixed bottom-5 right-5 z-[9999] h-14 w-14 rounded-full border-none text-white flex items-center justify-center shadow-xl transition-colors"
         style={{ background: THEME, boxShadow: '0 4px 20px rgba(99,102,241,0.45)' }}
       >
-        {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        <MessageCircle className="h-6 w-6" />
       </button>
 
       {/* Chat panel */}
