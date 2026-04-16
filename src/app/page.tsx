@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Script from 'next/script'
 import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
 import {
   Zap, Shield, Globe,
   TrendingUp, Sparkles,
@@ -13,7 +12,6 @@ import { PricingSection } from '@/components/PricingSection'
 
 export default async function HomePage() {
   const { userId } = await auth()
-  if (userId) redirect('/dashboard')
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
@@ -23,12 +21,20 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Image src="/logo.svg" alt="Fakturo" width={130} height={32} priority />
           <div className="flex gap-3 items-center">
-            <Link href="/sign-in" className="text-sm text-slate-500 hover:text-slate-800 px-4 py-2 rounded-lg transition">
-              Přihlásit se
-            </Link>
-            <Link href="/sign-up" className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition shadow-sm">
-              Začít zdarma
-            </Link>
+            {userId ? (
+              <Link href="/dashboard" className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition shadow-sm">
+                Dashboard →
+              </Link>
+            ) : (
+              <>
+                <Link href="/sign-in" className="text-sm text-slate-500 hover:text-slate-800 px-4 py-2 rounded-lg transition">
+                  Přihlásit se
+                </Link>
+                <Link href="/sign-up" className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition shadow-sm">
+                  Začít zdarma
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
