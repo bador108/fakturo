@@ -3,40 +3,57 @@
 import { useState } from 'react'
 import { MessageCircle, X } from 'lucide-react'
 
-interface Props {
-  botId: string
-}
-
-export function BotcraftWidget({ botId }: Props) {
+export function BotcraftWidget({ botId }: { botId: string }) {
   const [open, setOpen] = useState(false)
 
   return (
     <>
-      {/* Floating button */}
+      {/* Toggle button */}
       <button
         onClick={() => setOpen(o => !o)}
         aria-label="AI Asistent"
-        className="fixed bottom-5 right-5 z-[9999] h-14 w-14 rounded-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white shadow-xl shadow-indigo-200 flex items-center justify-center transition-colors"
+        style={{
+          position: 'fixed',
+          bottom: 20,
+          right: 20,
+          zIndex: 9999,
+          width: 56,
+          height: 56,
+          borderRadius: '50%',
+          background: '#6366f1',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 20px rgba(99,102,241,0.5)',
+        }}
       >
         {open
-          ? <X className="h-6 w-6" />
-          : <MessageCircle className="h-6 w-6" />}
+          ? <X style={{ color: 'white', width: 24, height: 24 }} />
+          : <MessageCircle style={{ color: 'white', width: 24, height: 24 }} />}
       </button>
 
-      {/* Chat panel — fullscreen on mobile, floating on desktop */}
+      {/* Chat panel */}
       {open && (
-        <div className="
-          fixed z-[9998]
-          inset-0
-          md:inset-auto md:bottom-24 md:right-5
-          md:w-[380px] md:h-[600px] md:max-h-[80vh]
-          md:rounded-2xl md:border md:border-slate-100
-          overflow-hidden shadow-2xl bg-white
-        ">
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 9998,
+          background: 'white',
+        }}>
           <iframe
             src={`https://botcraft.vercel.app/widget/${botId}`}
-            className="w-full h-full border-0"
             allow="microphone"
+            style={{
+              display: 'block',
+              width: '100%',
+              height: '100%',
+              border: 'none',
+            }}
           />
         </div>
       )}
