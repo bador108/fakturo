@@ -95,7 +95,7 @@ export function Sidebar() {
           <NotificationBell />
           <button
             onClick={() => setMobileOpen(true)}
-            className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-slate-50 transition text-slate-600"
+            className="h-10 w-10 flex items-center justify-center rounded-lg hover:bg-slate-50 active:bg-slate-100 transition text-slate-600"
           >
             <Menu className="h-5 w-5" />
           </button>

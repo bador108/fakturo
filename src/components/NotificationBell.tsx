@@ -35,18 +35,23 @@ export function NotificationBell() {
     setOpen(o => !o)
   }
 
-  // Close on outside click
+  // Close on outside click/touch
   useEffect(() => {
     if (!open) return
-    const handler = (e: MouseEvent) => {
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = 'touches' in e ? e.touches[0]?.target : (e.target as Node)
       if (
-        btnRef.current?.contains(e.target as Node) ||
-        panelRef.current?.contains(e.target as Node)
+        btnRef.current?.contains(target as Node) ||
+        panelRef.current?.contains(target as Node)
       ) return
       setOpen(false)
     }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
+    document.addEventListener('mousedown', handler as EventListener)
+    document.addEventListener('touchstart', handler as EventListener, { passive: true })
+    return () => {
+      document.removeEventListener('mousedown', handler as EventListener)
+      document.removeEventListener('touchstart', handler as EventListener)
+    }
   }, [open])
 
   // Close on scroll / resize
@@ -84,8 +89,8 @@ export function NotificationBell() {
       {open && (
         <div
           ref={panelRef}
-          style={{ position: 'fixed', top: pos.top, left: pos.left, zIndex: 9999, width: 320 }}
-          className="bg-white rounded-xl border border-slate-100 shadow-2xl overflow-hidden"
+          style={{ position: 'fixed', top: pos.top, left: pos.left, zIndex: 9999 }}
+          className="w-[calc(100vw-16px)] max-w-[320px] bg-white rounded-xl border border-slate-100 shadow-2xl overflow-hidden"
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-50">
             <span className="text-sm font-semibold text-slate-800">Oznámení</span>

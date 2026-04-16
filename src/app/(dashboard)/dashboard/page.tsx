@@ -77,13 +77,13 @@ export default async function DashboardPage() {
       )}
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         {statCards.map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-            <div className={`inline-flex items-center justify-center h-9 w-9 rounded-xl ${bg} mb-3`}>
+          <div key={label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-3 md:p-5">
+            <div className={`inline-flex items-center justify-center h-8 w-8 md:h-9 md:w-9 rounded-xl ${bg} mb-2 md:mb-3`}>
               <Icon className={`h-4 w-4 ${color}`} />
             </div>
-            <p className="text-2xl font-bold text-slate-900">{value}</p>
+            <p className="text-lg md:text-2xl font-bold text-slate-900 leading-tight break-all">{value}</p>
             <p className="text-xs text-slate-400 mt-0.5">{label}</p>
           </div>
         ))}
