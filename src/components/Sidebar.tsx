@@ -75,7 +75,7 @@ export function Sidebar() {
       <aside className="w-64 hidden md:flex flex-col bg-white border-r border-slate-100 px-4 py-6 gap-2 shadow-sm shrink-0">
         <div className="px-3 mb-6 flex items-center justify-between">
           <div>
-            <Link href="/" className="text-xl font-bold text-indigo-600 hover:text-indigo-500 transition tracking-tight">
+            <Link href="/?home=1" className="text-xl font-bold text-indigo-600 hover:text-indigo-500 transition tracking-tight">
               Fakturo
             </Link>
             <p className="text-xs text-slate-400 mt-0.5">Fakturační systém</p>
@@ -88,7 +88,7 @@ export function Sidebar() {
 
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-slate-100 shadow-sm h-14 flex items-center justify-between px-4">
-        <Link href="/" className="text-lg font-bold text-indigo-600 tracking-tight">
+        <Link href="/?home=1" className="text-lg font-bold text-indigo-600 tracking-tight">
           Fakturo
         </Link>
         <div className="flex items-center gap-3">

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Script from 'next/script'
 import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 import {
   Zap, Shield, Globe,
   TrendingUp, Sparkles,
@@ -10,8 +11,10 @@ import { FeatureShowcase } from '@/components/FeatureShowcase'
 import { ScreenshotZoom } from '@/components/ScreenshotZoom'
 import { PricingSection } from '@/components/PricingSection'
 
-export default async function HomePage() {
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ home?: string }> }) {
   const { userId } = await auth()
+  const { home } = await searchParams
+  if (userId && !home) redirect('/dashboard')
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
@@ -54,12 +57,20 @@ export default async function HomePage() {
             Vytvářejte profesionální faktury, sledujte výdaje, spravujte klienty a mějte přehled o cashflow. Vše na jednom místě.
           </p>
           <div className="mt-8 flex gap-4 flex-wrap">
-            <Link href="/sign-up" className="bg-indigo-600 text-white px-7 py-3 rounded-xl font-medium text-base hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
-              Začít zdarma →
-            </Link>
-            <Link href="/sign-in" className="border border-slate-200 bg-white text-slate-600 px-7 py-3 rounded-xl font-medium text-base hover:bg-slate-50 transition">
-              Přihlásit se
-            </Link>
+            {userId ? (
+              <Link href="/dashboard" className="bg-indigo-600 text-white px-7 py-3 rounded-xl font-medium text-base hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
+                Přejít do dashboardu →
+              </Link>
+            ) : (
+              <>
+                <Link href="/sign-up" className="bg-indigo-600 text-white px-7 py-3 rounded-xl font-medium text-base hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
+                  Začít zdarma →
+                </Link>
+                <Link href="/sign-in" className="border border-slate-200 bg-white text-slate-600 px-7 py-3 rounded-xl font-medium text-base hover:bg-slate-50 transition">
+                  Přihlásit se
+                </Link>
+              </>
+            )}
           </div>
           <p className="mt-4 text-sm text-slate-400">Zdarma 15 faktur měsíčně · neomezené faktury od 99 Kč/měs.</p>
         </div>
