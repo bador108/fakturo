@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import Script from 'next/script'
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import { BotcraftWidget } from '@/components/BotcraftWidget'
 import {
   Zap, Shield, Globe,
   TrendingUp, Sparkles,
@@ -183,7 +183,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         </div>
       </section>
 
-      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="6523f5b5-fa53-4d8a-b0d2-214c90693499" strategy="lazyOnload" />
+      <BotcraftWidget botId="6523f5b5-fa53-4d8a-b0d2-214c90693499" />
 
       <footer className="bg-white border-t border-slate-100 py-8 text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
