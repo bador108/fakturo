@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
@@ -21,14 +22,7 @@ const pageStyle: React.CSSProperties = {
 }
 
 function Logo() {
-  return (
-    <div style={{ width: 28, height: 28, borderRadius: 7, background: C.fg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <rect x="2" y="2" width="10" height="10" rx="1.5" stroke="white" strokeWidth="1.5" />
-        <path d="M5 5h4M5 7.5h4M5 10h2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-    </div>
-  )
+  return <Image src="/icon.png" alt="Fakturo" width={28} height={28} style={{ borderRadius: 7, flexShrink: 0 }} />
 }
 
 function CheckIcon({ small }: { small?: boolean }) {
@@ -46,9 +40,8 @@ function Nav({ userId }: { userId: string | null }) {
     <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}>
       <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 32px', maxWidth: 1280, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', color: C.fg }}>
-            <Logo />
-            <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.4 }}>Fakturo</span>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <Image src="/logo.png" alt="Fakturo" width={110} height={29} />
           </Link>
           <div style={{ display: 'flex', gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
             {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ']] as [string,string][]).map(([href, label]) => (
@@ -81,7 +74,7 @@ function DashMock() {
       <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr' }}>
         <div style={{ borderRight: `1px solid ${C.border}`, padding: 16, background: C.bgSoft, minHeight: 480 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', marginBottom: 16 }}>
-            <Logo />
+            <Image src="/icon.png" alt="Fakturo" width={28} height={28} style={{ borderRadius: 7 }} />
             <div><div style={{ fontSize: 13, fontWeight: 600 }}>Jana Nováková</div><div style={{ fontSize: 11, color: C.muted }}>Pro plán</div></div>
           </div>
           {([['Přehled','🏠',false,null],['Faktury','📄',true,'24'],['Klienti','👥',false,'12'],['Platby','💳',false,null]] as [string,string,boolean,string|null][]).map(([n,ic,active,badge]) => (
@@ -386,7 +379,7 @@ function Footer() {
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: '64px 32px 32px', maxWidth: 1280, margin: '0 auto' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}><Logo /><span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.4 }}>Fakturo</span></div>
+          <div style={{ marginBottom: 16 }}><Image src="/logo.png" alt="Fakturo" width={110} height={29} /></div>
           <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.6, maxWidth: 280 }}>Fakturace pro OSVČ a freelancery.</div>
         </div>
         {cols.map(col => (

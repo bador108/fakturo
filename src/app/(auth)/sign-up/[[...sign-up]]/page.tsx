@@ -12,7 +12,7 @@ export default async function SignUpPage() {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <nav className="h-16 flex items-center px-8 border-b border-slate-100 bg-white">
         <Link href="/">
-          <Image src="/logo.svg" alt="Fakturo" width={110} height={28} />
+          <Image src="/logo.png" alt="Fakturo" width={120} height={32} />
         </Link>
       </nav>
       <div className="flex-1 flex items-center justify-center px-4 py-12">
@@ -21,7 +21,13 @@ export default async function SignUpPage() {
             <h1 className="text-2xl font-semibold text-slate-900">Vytvořte si účet</h1>
             <p className="text-slate-400 mt-1 text-sm">Zdarma · Bez kreditní karty</p>
           </div>
-          <SignUp forceRedirectUrl="/dashboard" />
+          <SignUp
+            forceRedirectUrl="/dashboard"
+            appearance={{
+              elements: { cardBox: 'shadow-sm' },
+              layout: { logoImageUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.cz'}/logo.png` },
+            }}
+          />
           <p className="text-center text-sm text-slate-400 mt-6">
             Již máte účet?{' '}
             <Link href="/sign-in" className="text-indigo-600 hover:underline font-medium">

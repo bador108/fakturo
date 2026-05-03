@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UserButton, useUser, useClerk } from '@clerk/nextjs'
 import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, BarChart2, Receipt, Menu, X, LogOut } from 'lucide-react'
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { NotificationBell } from '@/components/NotificationBell'
 
@@ -82,12 +83,9 @@ export function Sidebar() {
       {/* Desktop sidebar */}
       <aside className="w-64 hidden md:flex flex-col bg-white border-r border-slate-100 px-4 py-6 gap-2 shadow-sm shrink-0">
         <div className="px-3 mb-6 flex items-center justify-between">
-          <div>
-            <Link href="/?home=1" className="text-xl font-bold text-indigo-600 hover:text-indigo-500 transition tracking-tight">
-              Fakturo
-            </Link>
-            <p className="text-xs text-slate-400 mt-0.5">Fakturační systém</p>
-          </div>
+          <Link href="/?home=1" className="hover:opacity-80 transition-opacity">
+            <Image src="/logo.png" alt="Fakturo" width={100} height={27} />
+          </Link>
           <NotificationBell />
         </div>
         <NavLinks />
@@ -96,8 +94,8 @@ export function Sidebar() {
 
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-slate-100 shadow-sm h-14 flex items-center justify-between px-4">
-        <Link href="/?home=1" className="text-lg font-bold text-indigo-600 tracking-tight">
-          Fakturo
+        <Link href="/?home=1" className="hover:opacity-80 transition-opacity">
+          <Image src="/logo.png" alt="Fakturo" width={90} height={24} />
         </Link>
         <div className="flex items-center gap-3">
           <NotificationBell />
@@ -122,10 +120,9 @@ export function Sidebar() {
           <aside className="relative w-[80vw] max-w-[18rem] bg-white flex flex-col px-4 py-6 gap-2 shadow-2xl h-full">
             <div className="px-3 mb-6 flex items-center justify-between">
               <div>
-                <Link href="/" className="text-xl font-bold text-indigo-600 tracking-tight">
-                  Fakturo
+                <Link href="/" className="hover:opacity-80 transition-opacity">
+                  <Image src="/logo.png" alt="Fakturo" width={100} height={27} />
                 </Link>
-                <p className="text-xs text-slate-400 mt-0.5">Fakturační systém</p>
               </div>
               <button onClick={() => setMobileOpen(false)} className="text-slate-400 hover:text-slate-700">
                 <X className="h-5 w-5" />
