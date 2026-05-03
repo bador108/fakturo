@@ -117,7 +117,7 @@ export default function ReferencePage() {
             <div key={i} style={{ padding: 28, borderRadius: 16, border: `1px solid ${C.border}`, background: C.bg }}>
               <Stars />
               <p style={{ fontSize: 16, lineHeight: 1.65, color: C.fg2, margin: '0 0 24px' }}>
-                „{t.quote}"
+                &bdquo;{t.quote}&ldquo;
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{
