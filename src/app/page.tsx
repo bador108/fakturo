@@ -311,7 +311,7 @@ function Testimonials() {
       <div style={{ ...cont, textAlign: 'center', maxWidth: 800 }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Reference</div>
         <blockquote style={{ ...disp, fontSize: 'clamp(1.5rem,3vw,2.25rem)', lineHeight: 1.25, margin: 0, marginBottom: 32, letterSpacing: -1.2, fontWeight: 500 }}>
-          „Konečně nástroj, který nezatěžuje. Vystavím fakturu mezi dvěma e-maily, banka platby spáruje sama a já se nemusím starat. To mi vrátilo víkendy."
+          {`„Konečně nástroj, který nezatěžuje. Vystavím fakturu mezi dvěma e-maily, banka platby spáruje sama a já se nemusím starat. To mi vrátilo víkendy."`}
         </blockquote>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
           <div style={{ width: 44, height: 44, borderRadius: 999, background: `linear-gradient(135deg, ${C.primary}, ${C.primaryDark})`, color: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 16 }}>L</div>
