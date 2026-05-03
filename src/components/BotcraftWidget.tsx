@@ -86,6 +86,18 @@ export function BotcraftWidget({ botId }: Props) {
         </button>
       )}
 
+      {/* Close button — same position as toggle, visible on desktop when chat open */}
+      {open && (
+        <button
+          onClick={() => setOpen(false)}
+          aria-label="Zavřít"
+          className="fixed bottom-5 right-5 z-[10000] h-14 w-14 rounded-full border-none text-white hidden md:flex items-center justify-center shadow-xl"
+          style={{ background: THEME }}
+        >
+          <X className="h-6 w-6" />
+        </button>
+      )}
+
       {/* Chat panel */}
       {open && (
         <div
@@ -100,7 +112,7 @@ export function BotcraftWidget({ botId }: Props) {
               <p className="font-semibold text-white text-sm leading-tight">Fakturo AI</p>
               <p className="text-xs text-white/70">Powered by AI</p>
             </div>
-            <button onClick={() => setOpen(false)} className="ml-auto text-white/70 hover:text-white md:hidden">
+            <button onClick={() => setOpen(false)} className="ml-auto text-white/70 hover:text-white">
               <X className="h-5 w-5" />
             </button>
           </div>
