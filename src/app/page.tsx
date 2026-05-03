@@ -368,9 +368,9 @@ function CTA({ userId }: { userId: string | null }) {
 
 function Footer() {
   const cols = [
-    { title: 'Produkt', items: ['Funkce','Ceník','Pravidelné fakturace','API'] },
-    { title: 'Společnost', items: ['O nás','Kontakt','Blog','Reference'] },
-    { title: 'Pomoc', items: ['Nápověda','Stav služby','Bezpečnost','GDPR'] },
+    { title: 'Produkt', items: [['Funkce','/funkce'],['Ceník','/cenik'],['Pravidelné fakturace','/pravidelne-fakturace'],['API','/api-developers']] as [string,string][] },
+    { title: 'Společnost', items: [['O nás','/o-nas'],['Kontakt','/kontakt'],['Blog','/blog'],['Reference','/reference']] as [string,string][] },
+    { title: 'Pomoc', items: [['Nápověda','/napoveda'],['Stav služby','/stav-sluzby'],['Bezpečnost','/bezpecnost'],['GDPR','/gdpr']] as [string,string][] },
   ]
   return (
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: '64px 32px 32px', maxWidth: 1280, margin: '0 auto' }}>
@@ -383,7 +383,7 @@ function Footer() {
           <div key={col.title}>
             <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 14 }}>{col.title}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {col.items.map(it => <span key={it} style={{ fontSize: 14, color: C.muted }}>{it}</span>)}
+              {col.items.map(([label, href]) => <Link key={href} href={href} style={{ fontSize: 14, color: C.muted, textDecoration: 'none' }}>{label}</Link>)}
             </div>
           </div>
         ))}
@@ -391,8 +391,8 @@ function Footer() {
       <div style={{ paddingTop: 24, borderTop: `1px solid ${C.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: C.muted, flexWrap: 'wrap', gap: 12 }}>
         <span>© {new Date().getFullYear()} Fakturo · Fakturace pro freelancery</span>
         <div style={{ display: 'flex', gap: 24 }}>
-          <Link href="/terms" style={{ color: 'inherit', textDecoration: 'none' }}>Obchodní podmínky</Link>
-          <Link href="/privacy" style={{ color: 'inherit', textDecoration: 'none' }}>GDPR</Link>
+          <Link href="/gdpr" style={{ color: 'inherit', textDecoration: 'none' }}>GDPR</Link>
+          <Link href="/bezpecnost" style={{ color: 'inherit', textDecoration: 'none' }}>Bezpečnost</Link>
         </div>
       </div>
     </footer>
