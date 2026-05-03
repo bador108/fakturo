@@ -19,12 +19,12 @@ const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
 const disp = { letterSpacing: -2, fontWeight: 600 }
 
 const sectionIcons = [
-  <Lock size={22} color="#0c0c0e" />,
-  <ShieldCheck size={22} color="#0c0c0e" />,
-  <Server size={22} color="#0c0c0e" />,
-  <CreditCard size={22} color="#0c0c0e" />,
-  <Key size={22} color="#0c0c0e" />,
-  <Bug size={22} color="#0c0c0e" />,
+  <Lock key="lock" size={22} color="#0c0c0e" />,
+  <ShieldCheck key="shield" size={22} color="#0c0c0e" />,
+  <Server key="server" size={22} color="#0c0c0e" />,
+  <CreditCard key="card" size={22} color="#0c0c0e" />,
+  <Key key="key" size={22} color="#0c0c0e" />,
+  <Bug key="bug" size={22} color="#0c0c0e" />,
 ]
 
 const sections = [

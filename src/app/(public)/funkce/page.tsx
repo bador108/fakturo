@@ -31,12 +31,12 @@ function CheckItem({ text }: { text: string }) {
 }
 
 const featureIcons = [
-  <Zap size={22} color={C.fg} />,
-  <Users size={22} color={C.fg} />,
-  <Building2 size={22} color={C.fg} />,
-  <BarChart2 size={22} color={C.fg} />,
-  <Smartphone size={22} color={C.fg} />,
-  <Plug size={22} color={C.fg} />,
+  <Zap key="zap" size={22} color={C.fg} />,
+  <Users key="users" size={22} color={C.fg} />,
+  <Building2 key="building" size={22} color={C.fg} />,
+  <BarChart2 key="bar" size={22} color={C.fg} />,
+  <Smartphone key="phone" size={22} color={C.fg} />,
+  <Plug key="plug" size={22} color={C.fg} />,
 ]
 
 const features = [
