@@ -78,10 +78,10 @@ function DashMock() {
             <div><div style={{ fontSize: 13, fontWeight: 600 }}>Jana Nováková</div><div style={{ fontSize: 11, color: C.muted }}>Pro plán</div></div>
           </div>
           {([
-            ['Přehled', <LayoutDashboard size={14} />, false, null],
-            ['Faktury', <FileText size={14} />, true, '24'],
-            ['Klienti', <Users size={14} />, false, '12'],
-            ['Platby', <CreditCard size={14} />, false, null],
+            ['Přehled', <LayoutDashboard key="home" size={14} />, false, null],
+            ['Faktury', <FileText key="invoices" size={14} />, true, '24'],
+            ['Klienti', <Users key="clients" size={14} />, false, '12'],
+            ['Platby', <CreditCard key="payments" size={14} />, false, null],
           ] as [string, React.ReactNode, boolean, string | null][]).map(([n, ic, active, badge]) => (
             <div key={n as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, marginBottom: 2, background: active ? C.bg : 'transparent', border: active ? `1px solid ${C.border}` : '1px solid transparent', fontSize: 13, color: active ? C.fg : C.muted, fontWeight: active ? 600 : 500 }}>
               <span style={{ display: 'flex', alignItems: 'center' }}>{ic}</span>
