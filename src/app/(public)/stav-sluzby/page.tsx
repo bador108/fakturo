@@ -111,7 +111,7 @@ export default function StavSluzbyPage() {
           Fakturo běží stabilně. Případné incidenty budeme komunikovat zde a na emailu.
         </p>
         <a
-          href="mailto:status@fakturo.cz"
+          href="mailto:fakturosupport@gmail.com"
           style={{ fontSize: 14, color: C.primary, textDecoration: 'none', fontWeight: 500 }}
         >
           Odebírat aktualizace statusu →

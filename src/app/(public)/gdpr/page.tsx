@@ -56,7 +56,7 @@ export default function GdprPage() {
 
         <Section title="1. Správce osobních údajů">
           <p>Správcem osobních údajů je Václav Urbanec, provozovatel služby Fakturo (<strong>fakturo-seven.vercel.app</strong>), Česká republika.</p>
-          <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:gdpr@fakturo.cz" style={{ color: C.primary, textDecoration: 'none' }}>gdpr@fakturo.cz</a></p>
+          <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:fakturosupport@gmail.com" style={{ color: C.primary, textDecoration: 'none' }}>fakturosupport@gmail.com</a></p>
         </Section>
 
         <Section title="2. Jaké osobní údaje zpracováváme">
@@ -111,7 +111,7 @@ export default function GdprPage() {
             'Právo vznést námitku (čl. 21 GDPR)',
             'Právo podat stížnost u Úřadu pro ochranu osobních údajů (uoou.cz)',
           ]} />
-          <p style={{ marginTop: 12 }}>Žádost o uplatnění práv zasílejte na: <a href="mailto:gdpr@fakturo.cz" style={{ color: C.primary, textDecoration: 'none' }}>gdpr@fakturo.cz</a>. Odpovídáme do 30 dnů.</p>
+          <p style={{ marginTop: 12 }}>Žádost o uplatnění práv zasílejte na: <a href="mailto:fakturosupport@gmail.com" style={{ color: C.primary, textDecoration: 'none' }}>fakturosupport@gmail.com</a>. Odpovídáme do 30 dnů.</p>
         </Section>
 
         <Section title="7. Soubory cookies">
@@ -140,7 +140,7 @@ export default function GdprPage() {
         <Section title="10. Kontakt">
           <p>Pro jakékoli dotazy ke zpracování osobních údajů nás kontaktujte:</p>
           <BulletList items={[
-            'Email: gdpr@fakturo.cz',
+            'Email: fakturosupport@gmail.com',
             'Formulář: fakturo-seven.vercel.app/kontakt',
           ]} />
         </Section>

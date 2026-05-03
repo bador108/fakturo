@@ -79,7 +79,7 @@ const sections = [
     title: 'Bug bounty',
     items: [
       'Zodpovědné hlášení bezpečnostních zranitelností vítáme',
-      'Email: security@fakturo.cz',
+      'Email: fakturosupport@gmail.com',
       'Odpovídáme do 48 hodin od nahlášení',
       'Závažné nálezy jsou odměňovány kreditem nebo peněžní odměnou',
     ],
@@ -149,8 +149,8 @@ export default function BezpecnostPage() {
           </h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 24px', lineHeight: 1.6 }}>
             Nahlašuj zodpovědně na{' '}
-            <a href="mailto:security@fakturo.cz" style={{ color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
-              security@fakturo.cz
+            <a href="mailto:fakturosupport@gmail.com" style={{ color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
+              fakturosupport@gmail.com
             </a>.
             Odměňujeme závažné nálezy.
           </p>
