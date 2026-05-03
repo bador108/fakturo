@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react'
 
 const BOTCRAFT_API = 'https://botcraft.vercel.app/api/chat'
-const THEME = '#6366f1'
+const THEME = '#0c0c0e'
 
 interface Message {
   role: 'user' | 'assistant'

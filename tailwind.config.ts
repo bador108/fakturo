@@ -12,9 +12,9 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         brand: {
-          DEFAULT: '#3a59ff',
-          dark:    '#2a47e0',
-          soft:    '#eef0ff',
+          DEFAULT: '#0c0c0e',
+          dark:    '#1f1f23',
+          soft:    '#f0f0ef',
         },
         ink:    '#0c0c0e',
         paper:  '#fafafa',
