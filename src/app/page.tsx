@@ -185,12 +185,74 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
       <BotcraftWidget botId="6523f5b5-fa53-4d8a-b0d2-214c90693499" />
 
-      <footer className="bg-white border-t border-slate-100 py-8 text-center">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <Image src="/icon.svg" alt="Fakturo" width={24} height={24} className="rounded-md opacity-60" unoptimized />
-          <span className="text-sm font-semibold text-slate-400">Fakturo</span>
+      <footer className="bg-white border-t border-slate-100 py-12">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+            {/* Brand */}
+            <div className="col-span-2 md:col-span-1">
+              <div className="flex items-center gap-2 mb-3">
+                <Image src="/icon.svg" alt="Fakturo" width={24} height={24} className="rounded-md" unoptimized />
+                <span className="text-sm font-semibold text-slate-800">Fakturo</span>
+              </div>
+              <p className="text-sm text-slate-400 leading-relaxed">Fakturace pro OSVČ a freelancery.</p>
+            </div>
+
+            {/* Produkt */}
+            <div>
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Produkt</h4>
+              <ul className="space-y-2">
+                {[
+                  { label: 'Funkce', href: '#features' },
+                  { label: 'Ceník', href: '#pricing' },
+                  { label: 'Pravidelné fakturace', href: '#' },
+                  { label: 'API', href: '#' },
+                ].map(({ label, href }) => (
+                  <li key={label}>
+                    <Link href={href} className="text-sm text-slate-400 hover:text-slate-700 transition">{label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Společnost */}
+            <div>
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Společnost</h4>
+              <ul className="space-y-2">
+                {[
+                  { label: 'O nás', href: '#' },
+                  { label: 'Kontakt', href: '#' },
+                  { label: 'Blog', href: '#' },
+                  { label: 'Reference', href: '#' },
+                ].map(({ label, href }) => (
+                  <li key={label}>
+                    <Link href={href} className="text-sm text-slate-400 hover:text-slate-700 transition">{label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Pomoc */}
+            <div>
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Pomoc</h4>
+              <ul className="space-y-2">
+                {[
+                  { label: 'Nápověda', href: '#' },
+                  { label: 'Stav služby', href: '#' },
+                  { label: 'Bezpečnost', href: '#' },
+                  { label: 'GDPR', href: '#' },
+                ].map(({ label, href }) => (
+                  <li key={label}>
+                    <Link href={href} className="text-sm text-slate-400 hover:text-slate-700 transition">{label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-100 pt-6">
+            <p className="text-xs text-slate-400">© {new Date().getFullYear()} Fakturo. Všechna práva vyhrazena.</p>
+          </div>
         </div>
-        <p className="text-sm text-slate-400">© {new Date().getFullYear()} Fakturo · Fakturace pro freelancery</p>
       </footer>
     </div>
   )

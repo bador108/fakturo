@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { UserButton, useUser } from '@clerk/nextjs'
-import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, BarChart2, Receipt, Menu, X } from 'lucide-react'
+import { UserButton, useUser, useClerk } from '@clerk/nextjs'
+import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, BarChart2, Receipt, Menu, X, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { NotificationBell } from '@/components/NotificationBell'
 
@@ -49,8 +49,9 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
 function UserSection() {
   const { user } = useUser()
+  const { signOut } = useClerk()
   return (
-    <div className="border-t border-slate-100 pt-4 mt-1">
+    <div className="border-t border-slate-100 pt-4 mt-1 space-y-1">
       <div className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 transition">
         <UserButton />
         <div className="min-w-0">
@@ -62,6 +63,13 @@ function UserSection() {
           </p>
         </div>
       </div>
+      <button
+        onClick={() => signOut({ redirectUrl: '/sign-in' })}
+        className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all"
+      >
+        <LogOut className="h-4 w-4 shrink-0" />
+        Odhlásit se
+      </button>
     </div>
   )
 }
