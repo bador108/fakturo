@@ -15,7 +15,7 @@ export function PohodaExportButton() {
       <select
         value={year}
         onChange={e => setYear(Number(e.target.value))}
-        className="text-sm border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        className="text-sm border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-soft"
       >
         {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(y => (
           <option key={y} value={y}>{y}</option>

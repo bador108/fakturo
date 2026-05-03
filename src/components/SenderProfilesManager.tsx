@@ -85,7 +85,7 @@ function ProfileForm({
         </div>
         <div className="flex items-center gap-2">
           {profile?.is_default && (
-            <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">Výchozí</span>
+            <span className="text-xs bg-brand-soft text-brand px-2 py-0.5 rounded-full">Výchozí</span>
           )}
           {open ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
         </div>
@@ -155,7 +155,7 @@ export function SenderProfilesManager({ userId, profiles: initial }: Props) {
       ) : (
         <button
           onClick={() => setShowNew(true)}
-          className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 border-2 border-dashed border-indigo-200 hover:border-indigo-300 rounded-xl px-4 py-3 w-full transition"
+          className="flex items-center gap-2 text-sm text-brand hover:text-brand-dark border-2 border-dashed border-brand-soft hover:border-brand-soft rounded-xl px-4 py-3 w-full transition"
         >
           <Plus className="h-4 w-4" />
           Přidat profil dodavatele

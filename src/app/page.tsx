@@ -66,7 +66,7 @@ function DashMock() {
     <div style={{ maxWidth: 1100, margin: '0 auto', borderRadius: 16, overflow: 'hidden', background: C.bg, border: `1px solid ${C.border}`, boxShadow: '0 30px 80px rgba(15,15,30,0.12), 0 8px 24px rgba(15,15,30,0.05)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px', background: C.bgSoft, borderBottom: `1px solid ${C.border}` }}>
         {(['#ff5f57','#febc2e','#28c840'] as string[]).map(bg => <div key={bg} style={{ width: 11, height: 11, borderRadius: 999, background: bg }} />)}
-        <div style={{ flex: 1, textAlign: 'center', fontSize: 12, color: C.muted2, fontWeight: 500 }}>fakturo.cz/dashboard</div>
+        <div style={{ flex: 1, textAlign: 'center', fontSize: 12, color: C.muted2, fontWeight: 500 }}>fakturo-seven.vercel.app/dashboard</div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr' }}>
         <div style={{ borderRight: `1px solid ${C.border}`, padding: 16, background: C.bgSoft, minHeight: 480 }}>

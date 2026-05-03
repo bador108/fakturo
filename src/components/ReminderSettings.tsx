@@ -70,7 +70,7 @@ export function ReminderSettings({ userId, initialDays }: Props) {
               type="checkbox"
               checked={days.includes(opt.value)}
               onChange={() => toggle(opt.value)}
-              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+              className="rounded border-slate-300 text-brand focus:ring-brand"
             />
             <span className="text-sm text-slate-700">{opt.label}</span>
             {opt.value < 0 && <span className="text-xs text-red-500 ml-auto">po splatnosti</span>}

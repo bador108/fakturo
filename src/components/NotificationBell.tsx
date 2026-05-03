@@ -95,7 +95,7 @@ export function NotificationBell() {
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-50">
             <span className="text-sm font-semibold text-slate-800">Oznámení</span>
             {unread > 0 && (
-              <button onClick={markAllRead} className="text-xs text-indigo-600 hover:underline">
+              <button onClick={markAllRead} className="text-xs text-brand hover:underline">
                 Označit vše jako přečtené
               </button>
             )}
@@ -110,7 +110,7 @@ export function NotificationBell() {
               notifications.slice(0, 15).map(n => (
                 <div
                   key={n.id}
-                  className={cn('px-4 py-3', !n.read && 'bg-indigo-50/40')}
+                  className={cn('px-4 py-3', !n.read && 'bg-brand-soft/40')}
                 >
                   <div className="flex items-start gap-2">
                     <span className={cn(
@@ -126,7 +126,7 @@ export function NotificationBell() {
                         <Link
                           href={`/invoices/${n.invoice_id}`}
                           onClick={() => setOpen(false)}
-                          className="text-xs text-indigo-600 hover:underline mt-1 inline-block"
+                          className="text-xs text-brand hover:underline mt-1 inline-block"
                         >
                           Zobrazit fakturu →
                         </Link>

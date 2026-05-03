@@ -36,7 +36,7 @@ export default async function DashboardPage() {
   }
 
   const statCards = [
-    { label: 'Celkový příjem', value: formatCurrency(stats.revenue, 'CZK'), icon: TrendingUp, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Celkový příjem', value: formatCurrency(stats.revenue, 'CZK'), icon: TrendingUp, color: 'text-brand', bg: 'bg-brand-soft' },
     { label: 'Zaplaceno', value: stats.paid, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
     { label: 'Čeká na platbu', value: formatCurrency(stats.pending, 'CZK'), icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
     { label: 'Po splatnosti', value: stats.overdue, icon: AlertCircle, color: 'text-red-500', bg: 'bg-red-50' },
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
         </div>
         <Link
           href="/invoices/new"
-          className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition shadow-sm shadow-indigo-200"
+          className="inline-flex items-center gap-2 bg-brand text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm shadow-brand-soft"
         >
           <Plus className="h-4 w-4" />
           Nová faktura
@@ -101,7 +101,7 @@ export default async function DashboardPage() {
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-50 flex items-center justify-between">
           <h2 className="font-semibold text-slate-800">Poslední faktury</h2>
-          <Link href="/invoices" className="text-xs text-indigo-600 hover:underline">
+          <Link href="/invoices" className="text-xs text-brand hover:underline">
             Zobrazit vše →
           </Link>
         </div>
@@ -115,7 +115,7 @@ export default async function DashboardPage() {
             <p className="text-xs text-slate-400 mt-1">Vytvořte svoji první fakturu</p>
             <Link
               href="/invoices/new"
-              className="mt-5 inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition"
+              className="mt-5 inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-dark transition"
             >
               <Plus className="h-4 w-4" />
               Vytvořit fakturu
@@ -129,11 +129,11 @@ export default async function DashboardPage() {
                 href={`/invoices/${inv.id}`}
                 className="flex items-center gap-3 px-4 md:px-6 py-4 hover:bg-slate-50 transition group"
               >
-                <div className="h-9 w-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
+                <div className="h-9 w-9 bg-brand-soft rounded-xl flex items-center justify-center shrink-0">
                   <FileText className="h-4 w-4 text-indigo-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-slate-800 text-sm group-hover:text-indigo-600 transition truncate">
+                  <p className="font-medium text-slate-800 text-sm group-hover:text-brand transition truncate">
                     {inv.client_name}
                   </p>
                   <p className="text-xs text-slate-400 mt-0.5 truncate">

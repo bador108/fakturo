@@ -92,10 +92,10 @@ export default function GeneratorPage() {
       {/* Nav */}
       <header className="bg-white border-b border-slate-100 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-indigo-600 tracking-tight">Fakturo</Link>
+          <Link href="/" className="text-lg font-bold text-brand tracking-tight">Fakturo</Link>
           <div className="flex items-center gap-3">
             <span className="text-sm text-slate-500">Generátor zdarma · bez registrace</span>
-            <Link href="/sign-up" className="text-sm bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition font-medium">
+            <Link href="/sign-up" className="text-sm bg-brand text-white px-3 py-1.5 rounded-lg hover:bg-brand-dark transition font-medium">
               Registrovat zdarma
             </Link>
           </div>
@@ -111,7 +111,7 @@ export default function GeneratorPage() {
           <button
             onClick={downloadPdf}
             disabled={loading || !form.sender_name || !form.client_name}
-            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition shadow-sm shadow-indigo-200 disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-brand text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm shadow-brand-soft disabled:opacity-50"
           >
             <FileDown className="h-4 w-4" />
             {loading ? 'Generuji…' : 'Stáhnout PDF'}
@@ -136,7 +136,7 @@ export default function GeneratorPage() {
             <h2 className="font-semibold text-slate-800">Dodavatel (vy)</h2>
             <div className="space-y-1">
               <Input label="IČO" value={form.sender_ico} onChange={e => set('sender_ico', e.target.value)} />
-              <button type="button" onClick={() => lookupAres('sender')} disabled={!form.sender_ico || aresLoading === 'sender'} className="flex items-center gap-1 text-xs text-indigo-600 hover:underline disabled:opacity-40">
+              <button type="button" onClick={() => lookupAres('sender')} disabled={!form.sender_ico || aresLoading === 'sender'} className="flex items-center gap-1 text-xs text-brand hover:underline disabled:opacity-40">
                 <Search className="h-3 w-3" />{aresLoading === 'sender' ? 'Hledám…' : 'Doplnit z ARESu'}
               </button>
               {aresError === 'sender' && <p className="text-xs text-red-500">Firma nenalezena</p>}
@@ -159,7 +159,7 @@ export default function GeneratorPage() {
             <h2 className="font-semibold text-slate-800">Odběratel (klient)</h2>
             <div className="space-y-1">
               <Input label="IČO" value={form.client_ico} onChange={e => set('client_ico', e.target.value)} />
-              <button type="button" onClick={() => lookupAres('client')} disabled={!form.client_ico || aresLoading === 'client'} className="flex items-center gap-1 text-xs text-indigo-600 hover:underline disabled:opacity-40">
+              <button type="button" onClick={() => lookupAres('client')} disabled={!form.client_ico || aresLoading === 'client'} className="flex items-center gap-1 text-xs text-brand hover:underline disabled:opacity-40">
                 <Search className="h-3 w-3" />{aresLoading === 'client' ? 'Hledám…' : 'Doplnit z ARESu'}
               </button>
               {aresError === 'client' && <p className="text-xs text-red-500">Firma nenalezena</p>}
@@ -197,7 +197,7 @@ export default function GeneratorPage() {
               </button>
             </div>
           ))}
-          <button type="button" onClick={addItem} className="flex items-center gap-1.5 text-sm text-indigo-600 hover:underline">
+          <button type="button" onClick={addItem} className="flex items-center gap-1.5 text-sm text-brand hover:underline">
             <Plus className="h-4 w-4" />Přidat položku
           </button>
           <div className="mt-4 flex flex-col items-end gap-1 text-sm">
@@ -221,17 +221,17 @@ export default function GeneratorPage() {
           <label className="block text-sm font-medium text-slate-600 mb-2">Poznámky</label>
           <textarea rows={3} value={form.notes} onChange={e => set('notes', e.target.value)}
             placeholder="Platební podmínky, bankovní spojení, poděkování..."
-            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand resize-none"
           />
         </section>
 
         {/* CTA */}
-        <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 flex items-center justify-between">
+        <div className="bg-brand-soft border border-brand-soft rounded-2xl p-6 flex items-center justify-between">
           <div>
             <p className="font-semibold text-indigo-900">Chcete ukládat faktury a sledovat platby?</p>
-            <p className="text-sm text-indigo-600 mt-1">Registrace zdarma · 30 faktur měsíčně bez poplatku</p>
+            <p className="text-sm text-brand mt-1">Registrace zdarma · 30 faktur měsíčně bez poplatku</p>
           </div>
-          <Link href="/sign-up" className="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition shadow-sm">
+          <Link href="/sign-up" className="bg-brand text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm">
             Registrovat zdarma
           </Link>
         </div>
@@ -240,7 +240,7 @@ export default function GeneratorPage() {
           <button
             onClick={downloadPdf}
             disabled={loading || !form.sender_name || !form.client_name}
-            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl text-sm font-medium hover:bg-indigo-700 transition shadow-sm shadow-indigo-200 disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-brand text-white px-6 py-3 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm shadow-brand-soft disabled:opacity-50"
           >
             <FileDown className="h-4 w-4" />
             {loading ? 'Generuji PDF…' : 'Stáhnout PDF zdarma'}

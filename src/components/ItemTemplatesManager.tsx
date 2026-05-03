@@ -68,8 +68,8 @@ export function ItemTemplatesManager() {
 
       {templates.map(t => (
         <div key={t.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-          <div className="h-8 w-8 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0">
-            <Bookmark className="h-3.5 w-3.5 text-indigo-500" />
+          <div className="h-8 w-8 bg-brand-soft rounded-lg flex items-center justify-center shrink-0">
+            <Bookmark className="h-3.5 w-3.5 text-brand" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-slate-800 truncate">{t.name}</p>
@@ -101,7 +101,7 @@ export function ItemTemplatesManager() {
       ) : (
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 border-2 border-dashed border-indigo-200 hover:border-indigo-300 rounded-xl px-4 py-3 w-full transition"
+          className="flex items-center gap-2 text-sm text-brand hover:text-brand-dark border-2 border-dashed border-brand-soft hover:border-brand-soft rounded-xl px-4 py-3 w-full transition"
         >
           <Plus className="h-4 w-4" />
           Přidat šablonu položky

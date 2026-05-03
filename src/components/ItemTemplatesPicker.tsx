@@ -61,7 +61,7 @@ export function ItemTemplatesPicker({ onAdd, currentItems }: Props) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-700 border border-indigo-200 hover:border-indigo-300 bg-indigo-50 hover:bg-indigo-100 rounded-lg px-2.5 py-1.5 transition"
+        className="flex items-center gap-1.5 text-xs text-brand hover:text-brand-dark border border-brand-soft hover:border-brand-soft bg-brand-soft hover:bg-brand-soft rounded-lg px-2.5 py-1.5 transition"
       >
         <Bookmark className="h-3.5 w-3.5" />
         Šablony
@@ -98,7 +98,7 @@ export function ItemTemplatesPicker({ onAdd, currentItems }: Props) {
                           onAdd({ description: t.description, quantity: 1, unit: t.unit, unit_price: t.unit_price })
                           setOpen(false)
                         }}
-                        className="h-7 w-7 rounded-lg bg-indigo-600 hover:bg-indigo-700 flex items-center justify-center text-white shrink-0"
+                        className="h-7 w-7 rounded-lg bg-brand hover:bg-brand-dark flex items-center justify-center text-white shrink-0"
                       >
                         <Plus className="h-3.5 w-3.5" />
                       </button>
@@ -130,7 +130,7 @@ export function ItemTemplatesPicker({ onAdd, currentItems }: Props) {
                       }
                       setShowSaveForm(true)
                     }}
-                    className="text-xs text-indigo-600 hover:underline"
+                    className="text-xs text-brand hover:underline"
                   >
                     + Uložit první položku jako šablonu
                   </button>
@@ -141,13 +141,13 @@ export function ItemTemplatesPicker({ onAdd, currentItems }: Props) {
                       placeholder="Název šablony"
                       value={saveForm.name}
                       onChange={e => setSaveForm(f => ({ ...f, name: e.target.value }))}
-                      className="w-full text-sm border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      className="w-full text-sm border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     />
                     <div className="flex gap-2">
                       <button
                         onClick={saveTemplate}
                         disabled={saving || !saveForm.name}
-                        className="flex items-center gap-1 text-xs bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg"
+                        className="flex items-center gap-1 text-xs bg-brand hover:bg-brand-dark disabled:opacity-50 text-white px-3 py-1.5 rounded-lg"
                       >
                         <Check className="h-3 w-3" />
                         {saving ? 'Ukládám…' : 'Uložit'}

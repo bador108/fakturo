@@ -58,8 +58,8 @@ export default async function ClientDetailPage({ params }: { params: { name: str
           <p className="text-xs text-slate-400 mt-0.5">Čeká na platbu</p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-          <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-indigo-50 mb-3">
-            <TrendingUp className="h-4 w-4 text-indigo-600" />
+          <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-brand-soft mb-3">
+            <TrendingUp className="h-4 w-4 text-brand" />
           </div>
           <p className="text-xl font-bold text-slate-900">{invoices.length}</p>
           <p className="text-xs text-slate-400 mt-0.5">Faktur celkem</p>
@@ -72,7 +72,7 @@ export default async function ClientDetailPage({ params }: { params: { name: str
           <h2 className="font-semibold text-slate-800">Faktury</h2>
           <Link
             href={`/invoices/new`}
-            className="text-xs text-indigo-600 hover:underline"
+            className="text-xs text-brand hover:underline"
           >
             + Nová faktura
           </Link>
@@ -84,11 +84,11 @@ export default async function ClientDetailPage({ params }: { params: { name: str
               href={`/invoices/${inv.id}`}
               className="flex items-center gap-3 px-4 md:px-6 py-4 hover:bg-slate-50 transition group"
             >
-              <div className="h-9 w-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
+              <div className="h-9 w-9 bg-brand-soft rounded-xl flex items-center justify-center shrink-0">
                 <FileText className="h-4 w-4 text-indigo-400" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-slate-800 text-sm group-hover:text-indigo-600 transition">
+                <p className="font-medium text-slate-800 text-sm group-hover:text-brand transition">
                   #{inv.invoice_number}
                 </p>
                 <p className="text-xs text-slate-400 mt-0.5 truncate">

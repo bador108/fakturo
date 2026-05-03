@@ -144,7 +144,7 @@ export function BotcraftWidget({ botId }: Props) {
                 onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
                 placeholder="Napište zprávu..."
                 disabled={loading}
-                className="flex-1 px-3.5 py-2.5 rounded-full border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-300 placeholder:text-gray-400 disabled:opacity-50"
+                className="flex-1 px-3.5 py-2.5 rounded-full border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-soft placeholder:text-gray-400 disabled:opacity-50"
               />
               <button
                 onClick={send}

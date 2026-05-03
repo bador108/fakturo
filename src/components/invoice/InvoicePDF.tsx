@@ -14,7 +14,7 @@ import { formatDate, formatCurrency } from '@/lib/utils'
 Font.registerHyphenationCallback(w => [w])
 
 const c = {
-  primary: '#4F46E5',   // indigo-600
+  primary: '#4F46E5',   // brand
   text: '#18181B',      // zinc-900
   muted: '#71717A',     // zinc-500
   border: '#E4E4E7',    // zinc-200

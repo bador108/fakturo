@@ -36,7 +36,7 @@ export function UpgradeButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium flex items-center gap-1.5"
+        className="text-sm bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-dark transition font-medium flex items-center gap-1.5"
       >
         <Zap className="h-3.5 w-3.5" />
         Upgradovat
@@ -94,7 +94,7 @@ export function UpgradeButton() {
                       'rounded-xl border-2 p-4 text-left transition-all',
                       isSelected
                         ? plan.color === 'indigo'
-                          ? 'border-indigo-500 bg-indigo-50'
+                          ? 'border-brand bg-brand-soft'
                           : 'border-violet-500 bg-violet-50'
                         : 'border-slate-200 bg-white hover:border-slate-300',
                     )}
@@ -103,7 +103,7 @@ export function UpgradeButton() {
                       <span className={cn(
                         'text-xs font-bold uppercase tracking-wide',
                         isSelected
-                          ? plan.color === 'indigo' ? 'text-indigo-600' : 'text-violet-600'
+                          ? plan.color === 'indigo' ? 'text-brand' : 'text-violet-600'
                           : 'text-slate-500',
                       )}>
                         {plan.name}
@@ -111,7 +111,7 @@ export function UpgradeButton() {
                       {isSelected && (
                         <span className={cn(
                           'h-4 w-4 rounded-full flex items-center justify-center',
-                          plan.color === 'indigo' ? 'bg-indigo-500' : 'bg-violet-500',
+                          plan.color === 'indigo' ? 'bg-brand' : 'bg-violet-500',
                         )}>
                           <CheckCircle2 className="h-3 w-3 text-white" />
                         </span>
@@ -159,7 +159,7 @@ export function UpgradeButton() {
               className={cn(
                 'w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium text-white transition',
                 selected === 'start'
-                  ? 'bg-indigo-600 hover:bg-indigo-700'
+                  ? 'bg-brand hover:bg-brand-dark'
                   : 'bg-violet-600 hover:bg-violet-700',
               )}
             >

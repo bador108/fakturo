@@ -36,7 +36,7 @@ export default async function SettingsPage() {
           </div>
         ) : plan === 'start' ? (
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-indigo-600 font-medium">✓ Start plán aktivní – neomezené faktury</p>
+            <p className="text-sm text-brand font-medium">✓ Start plán aktivní – neomezené faktury</p>
             <ManageSubscriptionButton />
           </div>
         ) : (

@@ -60,7 +60,7 @@ export function ScreenshotZoom({ src, alt, step, aspectRatio = '1200/836' }: Scr
           <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
           <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
           {step && (
-            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 bg-brand text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">
               {step}
             </div>
           )}

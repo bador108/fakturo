@@ -25,7 +25,7 @@ export function RevenueExpensesChart({ months }: { months: MonthBar[] }) {
     <div>
       <div className="flex gap-4 mb-3 text-xs text-slate-500">
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-indigo-500 inline-block" />
+          <span className="h-2.5 w-2.5 rounded-sm bg-brand inline-block" />
           Příjmy
         </span>
         <span className="flex items-center gap-1.5">

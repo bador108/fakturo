@@ -64,7 +64,7 @@ export default function RecurringPage() {
           <div className="divide-y divide-slate-50">
             {items.map(r => (
               <div key={r.id} className="flex items-center gap-3 px-4 md:px-6 py-4">
-                <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${r.is_active ? 'bg-indigo-50' : 'bg-slate-100'}`}>
+                <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${r.is_active ? 'bg-brand-soft' : 'bg-slate-100'}`}>
                   <RefreshCw className={`h-4 w-4 ${r.is_active ? 'text-indigo-400' : 'text-slate-400'}`} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -80,10 +80,10 @@ export default function RecurringPage() {
                 </span>
                 <button
                   onClick={() => toggleActive(r.id, r.is_active)}
-                  className="text-slate-400 hover:text-indigo-600 transition"
+                  className="text-slate-400 hover:text-brand transition"
                   title={r.is_active ? 'Pozastavit' : 'Aktivovat'}
                 >
-                  {r.is_active ? <ToggleRight className="h-5 w-5 text-indigo-500" /> : <ToggleLeft className="h-5 w-5" />}
+                  {r.is_active ? <ToggleRight className="h-5 w-5 text-brand" /> : <ToggleLeft className="h-5 w-5" />}
                 </button>
                 <button
                   onClick={() => deleteRecurring(r.id)}
@@ -98,14 +98,14 @@ export default function RecurringPage() {
         )}
       </div>
 
-      <div className="bg-indigo-50 rounded-2xl border border-indigo-100 p-5">
+      <div className="bg-brand-soft rounded-2xl border border-brand-soft p-5">
         <div className="flex items-start gap-3">
-          <div className="h-8 w-8 bg-indigo-100 rounded-lg flex items-center justify-center shrink-0">
-            <Plus className="h-4 w-4 text-indigo-600" />
+          <div className="h-8 w-8 bg-brand-soft rounded-lg flex items-center justify-center shrink-0">
+            <Plus className="h-4 w-4 text-brand" />
           </div>
           <div>
             <p className="text-sm font-semibold text-indigo-900">Přidat opakující se fakturu</p>
-            <p className="text-xs text-indigo-600 mt-1">
+            <p className="text-xs text-brand mt-1">
               Funkce plánování opakujících se faktur bude brzy dostupná. Faktura se automaticky vytvoří v nastavený den a odešle klientovi.
             </p>
           </div>

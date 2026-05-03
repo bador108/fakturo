@@ -8,7 +8,7 @@ type ContactType = 'support' | 'idea' | 'feedback'
 const TYPE_META: Record<ContactType, { label: string; icon: React.ReactNode; defaultSubject: string; placeholder: string }> = {
   support: {
     label: 'Napsat podporu',
-    icon: <Mail className="h-4 w-4 text-indigo-600" />,
+    icon: <Mail className="h-4 w-4 text-brand" />,
     defaultSubject: '',
     placeholder: 'Popište váš problém co nejpodrobněji...',
   },
@@ -108,7 +108,7 @@ export function SupportButton() {
               <div className="p-2 space-y-1">
                 {(['support', 'idea', 'feedback'] as ContactType[]).map((type) => {
                   const m = TYPE_META[type]
-                  const bg = type === 'support' ? 'bg-indigo-50' : type === 'idea' ? 'bg-amber-50' : 'bg-emerald-50'
+                  const bg = type === 'support' ? 'bg-brand-soft' : type === 'idea' ? 'bg-amber-50' : 'bg-emerald-50'
                   const sub = type === 'support' ? 'fakturosupport@gmail.com' : type === 'idea' ? 'Váš nápad nás posouvá dál' : 'Řekněte nám co si myslíte'
                   return (
                     <button
@@ -144,7 +144,7 @@ export function SupportButton() {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Předmět zprávy"
-                  className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                 />
               </div>
               <div>
@@ -154,14 +154,14 @@ export function SupportButton() {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={meta.placeholder}
                   rows={4}
-                  className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
+                  className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-soft resize-none"
                 />
               </div>
               {error && <p className="text-xs text-red-500">{error}</p>}
               <button
                 onClick={handleSend}
                 disabled={sending}
-                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-medium py-2 rounded-lg transition"
+                className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark disabled:opacity-50 text-white text-sm font-medium py-2 rounded-lg transition"
               >
                 <Send className="h-3.5 w-3.5" />
                 {sending ? 'Odesílám...' : 'Odeslat'}
@@ -177,7 +177,7 @@ export function SupportButton() {
               </div>
               <p className="text-sm font-semibold text-slate-800">Zpráva odeslána!</p>
               <p className="text-xs text-slate-400">Odpovídáme do 24 hodin.</p>
-              <button onClick={backToMenu} className="text-xs text-indigo-600 hover:underline mt-1">Zpět na menu</button>
+              <button onClick={backToMenu} className="text-xs text-brand hover:underline mt-1">Zpět na menu</button>
             </div>
           )}
         </div>
@@ -185,7 +185,7 @@ export function SupportButton() {
 
       <button
         onClick={() => { setOpen(o => !o); if (open) { setContactType(null); setSent(false) } }}
-        className="h-12 w-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg shadow-indigo-200 flex items-center justify-center transition"
+        className="h-12 w-12 bg-brand hover:bg-brand-dark text-white rounded-full shadow-lg shadow-brand-soft flex items-center justify-center transition"
         title="Podpora"
       >
         {open ? <X className="h-5 w-5" /> : <HelpCircle className="h-5 w-5" />}

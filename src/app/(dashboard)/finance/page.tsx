@@ -126,8 +126,8 @@ export default async function FinancePage() {
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-          <div className="h-8 w-8 rounded-xl bg-indigo-50 flex items-center justify-center mb-3">
-            <TrendingUp className="h-4 w-4 text-indigo-600" />
+          <div className="h-8 w-8 rounded-xl bg-brand-soft flex items-center justify-center mb-3">
+            <TrendingUp className="h-4 w-4 text-brand" />
           </div>
           <p className="text-lg font-bold text-slate-900 tabular-nums">{formatCurrency(totalRevenue, 'CZK')}</p>
           <p className="text-xs text-slate-400 mt-0.5">Celkové příjmy</p>

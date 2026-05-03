@@ -81,7 +81,7 @@ export async function GET(req: Request) {
             <tr><td style="color:#64748b;padding:4px 0">Datum splatnosti</td><td style="text-align:right;font-weight:600">${inv.due_date}</td></tr>
             <tr><td style="color:#64748b;padding:4px 0">K úhradě</td><td style="text-align:right;font-weight:700;font-size:16px;color:#dc2626">${new Intl.NumberFormat('cs-CZ',{style:'currency',currency:inv.currency}).format(inv.total)}</td></tr>
           </table>
-          <p style="color:#94a3b8;font-size:12px">Vystaveno přes <a href="https://fakturo.cz" style="color:#4f46e5">Fakturo</a>.</p>
+          <p style="color:#94a3b8;font-size:12px">Vystaveno přes <a href="https://fakturo-seven.vercel.app" style="color:#4f46e5">Fakturo</a>.</p>
         </div>
       `,
     })

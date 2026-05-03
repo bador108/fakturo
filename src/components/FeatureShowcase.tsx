@@ -65,7 +65,7 @@ const features = [
 ]
 
 const colorMap: Record<string, { bg: string; text: string; ring: string; dot: string }> = {
-  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', ring: 'ring-indigo-200', dot: 'bg-indigo-500' },
+  indigo: { bg: 'bg-brand-soft', text: 'text-brand', ring: 'ring-brand-soft', dot: 'bg-brand' },
   violet: { bg: 'bg-violet-50', text: 'text-violet-600', ring: 'ring-violet-200', dot: 'bg-violet-500' },
   sky:    { bg: 'bg-sky-50',    text: 'text-sky-600',    ring: 'ring-sky-200',    dot: 'bg-sky-500'    },
   emerald:{ bg: 'bg-emerald-50',text: 'text-emerald-600',ring: 'ring-emerald-200',dot: 'bg-emerald-500'},

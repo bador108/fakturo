@@ -81,7 +81,7 @@ export default function ExpensesPage() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition shadow-sm shadow-indigo-200"
+          className="inline-flex items-center gap-2 bg-brand text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm shadow-brand-soft"
         >
           <Plus className="h-4 w-4" />
           Přidat výdaj
@@ -115,12 +115,12 @@ export default function ExpensesPage() {
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">Datum</label>
                 <input type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">Kategorie</label>
                 <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value as ExpenseCategory }))}
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
                   {categories.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
                 </select>
               </div>
@@ -130,26 +130,26 @@ export default function ExpensesPage() {
               <label className="block text-xs font-medium text-slate-600 mb-1">Dodavatel / název</label>
               <input value={form.vendor} onChange={e => setForm(f => ({ ...f, vendor: e.target.value }))}
                 placeholder="např. Adobe, Bolt, Alza..."
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
             </div>
 
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Popis (volitelné)</label>
               <input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 placeholder="Předplatné, letenka Praha-Berlín..."
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">Částka</label>
                 <input type="number" min={0} step="0.01" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">Měna</label>
                 <select value={form.currency} onChange={e => setForm(f => ({ ...f, currency: e.target.value as Currency }))}
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
                   <option value="CZK">CZK</option>
                   <option value="EUR">EUR</option>
                   <option value="USD">USD</option>
@@ -159,14 +159,14 @@ export default function ExpensesPage() {
 
             <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
               <input type="checkbox" checked={form.vat_claimable} onChange={e => setForm(f => ({ ...f, vat_claimable: e.target.checked }))}
-                className="rounded border-slate-300 text-indigo-600" />
+                className="rounded border-slate-300 text-brand" />
               Uplatnitelné DPH
             </label>
 
             <div className="flex gap-2 justify-end pt-2">
               <button onClick={() => setShowForm(false)} className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg transition">Zrušit</button>
               <button onClick={addExpense} disabled={!form.vendor || !form.amount || saving}
-                className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 font-medium">
+                className="px-4 py-2 text-sm bg-brand text-white rounded-lg hover:bg-brand-dark transition disabled:opacity-50 font-medium">
                 {saving ? 'Ukládám…' : 'Uložit'}
               </button>
             </div>

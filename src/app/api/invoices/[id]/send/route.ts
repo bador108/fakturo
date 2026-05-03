@@ -57,7 +57,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   const { error: mailErr } = await resend.emails.send({
-    from: 'Fakturo <faktury@fakturo.cz>',
+    from: 'Fakturo <faktury@fakturo-seven.vercel.app>',
     to: email,
     subject: `Faktura č. ${invoice.invoice_number} od ${invoice.sender_name}`,
     html: `

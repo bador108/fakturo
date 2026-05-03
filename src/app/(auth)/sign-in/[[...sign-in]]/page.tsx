@@ -9,7 +9,7 @@ export default async function SignInPage() {
   if (userId) redirect('/dashboard')
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-paper flex flex-col">
       <nav className="h-16 flex items-center px-8 border-b border-slate-100 bg-white">
         <Link href="/">
           <Image src="/logo.png" alt="Fakturo" width={120} height={32} />
@@ -25,12 +25,12 @@ export default async function SignInPage() {
             forceRedirectUrl="/dashboard"
             appearance={{
               elements: { cardBox: 'shadow-sm' },
-              layout: { logoImageUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.cz'}/logo.png` },
+              layout: { logoImageUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/logo.png` },
             }}
           />
           <p className="text-center text-sm text-slate-400 mt-6">
             Nemáte účet?{' '}
-            <Link href="/sign-up" className="text-indigo-600 hover:underline font-medium">
+            <Link href="/sign-up" className="text-brand hover:underline font-medium">
               Zaregistrujte se zdarma
             </Link>
           </p>

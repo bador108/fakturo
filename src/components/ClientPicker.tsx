@@ -48,7 +48,7 @@ export function ClientPicker({ onSelect }: Props) {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-700 border border-indigo-200 hover:border-indigo-300 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition"
+        className="inline-flex items-center gap-1.5 text-xs text-brand hover:text-brand-dark border border-brand-soft hover:border-brand-soft bg-brand-soft hover:bg-brand-soft px-3 py-1.5 rounded-lg transition"
       >
         <UserCheck className="h-3.5 w-3.5" />
         Vybrat klienta
@@ -65,7 +65,7 @@ export function ClientPicker({ onSelect }: Props) {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Hledat klienta…"
-                className="w-full pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                className="w-full pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-soft"
               />
             </div>
           </div>
@@ -94,7 +94,7 @@ export function ClientPicker({ onSelect }: Props) {
           </div>
           {clients.length === 0 && loaded && (
             <div className="px-3 py-2 border-t border-slate-100">
-              <a href="/clients" className="text-xs text-indigo-600 hover:underline">+ Přidat klienta do adresáře →</a>
+              <a href="/clients" className="text-xs text-brand hover:underline">+ Přidat klienta do adresáře →</a>
             </div>
           )}
         </div>

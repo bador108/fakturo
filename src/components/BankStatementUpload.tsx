@@ -72,7 +72,7 @@ export function BankStatementUpload() {
         </div>
         <p className="font-semibold text-slate-800">Hotovo!</p>
         <p className="text-sm text-slate-400">{result?.matches.length} faktur označeno jako zaplaceno.</p>
-        <button onClick={() => { setResult(null); setConfirmed(false) }} className="text-xs text-indigo-600 hover:underline mt-1">
+        <button onClick={() => { setResult(null); setConfirmed(false) }} className="text-xs text-brand hover:underline mt-1">
           Nahrát další výpis
         </button>
       </div>
@@ -100,7 +100,7 @@ export function BankStatementUpload() {
           onDrop={onDrop}
           onClick={() => inputRef.current?.click()}
           className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition ${
-            dragging ? 'border-indigo-400 bg-indigo-50' : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'
+            dragging ? 'border-indigo-400 bg-brand-soft' : 'border-slate-200 hover:border-brand-soft hover:bg-slate-50'
           }`}
         >
           <input
@@ -112,7 +112,7 @@ export function BankStatementUpload() {
           />
           {uploading ? (
             <div className="flex flex-col items-center gap-2 text-slate-400">
-              <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
+              <Loader2 className="h-8 w-8 animate-spin text-brand" />
               <p className="text-sm">Zpracovávám výpis...</p>
             </div>
           ) : (
@@ -177,7 +177,7 @@ export function BankStatementUpload() {
               </div>
             </>
           ) : (
-            <button onClick={() => setResult(null)} className="text-sm text-indigo-600 hover:underline">
+            <button onClick={() => setResult(null)} className="text-sm text-brand hover:underline">
               Nahrát jiný výpis
             </button>
           )}

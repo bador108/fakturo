@@ -69,7 +69,7 @@ export default function InvoicesPage() {
         <h1 className="text-2xl font-semibold text-slate-900">Faktury</h1>
         <Link
           href="/invoices/new"
-          className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition shadow-sm shadow-indigo-200"
+          className="inline-flex items-center gap-2 bg-brand text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm shadow-brand-soft"
         >
           <Plus className="h-4 w-4" />
           Nová faktura
@@ -85,14 +85,14 @@ export default function InvoicesPage() {
               onClick={() => setFilter(f.key)}
               className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-t-lg border-b-2 transition whitespace-nowrap ${
                 filter === f.key
-                  ? 'border-indigo-600 text-indigo-600'
+                  ? 'border-brand text-brand'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
               {f.label}
               {counts[f.key] > 0 && (
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                  filter === f.key ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-400'
+                  filter === f.key ? 'bg-brand-soft text-brand' : 'bg-slate-100 text-slate-400'
                 }`}>
                   {counts[f.key]}
                 </span>
@@ -109,7 +109,7 @@ export default function InvoicesPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Hledat klienta nebo číslo faktury…"
-              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-lg text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-lg text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-soft"
             />
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function InvoicesPage() {
             <FileText className="h-10 w-10 text-slate-200 mb-3" />
             <p className="text-sm text-slate-500">Žádné faktury</p>
             {filter !== 'all' && (
-              <button onClick={() => setFilter('all')} className="mt-2 text-xs text-indigo-600 hover:underline">
+              <button onClick={() => setFilter('all')} className="mt-2 text-xs text-brand hover:underline">
                 Zobrazit vše
               </button>
             )}
@@ -135,11 +135,11 @@ export default function InvoicesPage() {
                 href={`/invoices/${inv.id}`}
                 className="flex items-center gap-3 px-4 md:px-6 py-4 hover:bg-slate-50 transition group"
               >
-                <div className="h-9 w-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
+                <div className="h-9 w-9 bg-brand-soft rounded-xl flex items-center justify-center shrink-0">
                   <FileText className="h-4 w-4 text-indigo-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-slate-800 text-sm group-hover:text-indigo-600 transition truncate">
+                  <p className="font-medium text-slate-800 text-sm group-hover:text-brand transition truncate">
                     {inv.client_name}
                   </p>
                   <p className="text-xs text-slate-400 mt-0.5 truncate">

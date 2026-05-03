@@ -22,11 +22,11 @@ export function CashflowChart({ months }: CashflowChartProps) {
     <div className="w-full overflow-x-auto">
       <div className="flex gap-4 mb-3 text-xs text-slate-500">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-indigo-500" />
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-brand" />
           Zaplaceno
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-indigo-200" />
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-brand-soft" />
           Fakturováno
         </span>
       </div>

@@ -336,7 +336,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
               <div className="flex items-center gap-1.5">
                 <User className="h-3.5 w-3.5 text-slate-400" />
                 <select
-                  className="text-xs text-indigo-600 bg-transparent border-0 focus:outline-none cursor-pointer"
+                  className="text-xs text-brand bg-transparent border-0 focus:outline-none cursor-pointer"
                   defaultValue=""
                   onChange={e => {
                     const p = senderProfiles.find(x => x.id === e.target.value)
@@ -364,7 +364,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
                 type="button"
                 onClick={() => lookupAres('sender')}
                 disabled={!form.sender_ico || aresLoading === 'sender'}
-                className="flex items-center gap-1 text-xs text-indigo-600 hover:underline disabled:opacity-40 disabled:no-underline"
+                className="flex items-center gap-1 text-xs text-brand hover:underline disabled:opacity-40 disabled:no-underline"
               >
                 <Search className="h-3 w-3" />
                 {aresLoading === 'sender' ? 'Hledám…' : 'Doplnit z ARESu'}
@@ -407,7 +407,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
               type="button"
               onClick={() => lookupAres('client')}
               disabled={!form.client_ico || aresLoading === 'client'}
-              className="flex items-center gap-1 text-xs text-indigo-600 hover:underline disabled:opacity-40 disabled:no-underline"
+              className="flex items-center gap-1 text-xs text-brand hover:underline disabled:opacity-40 disabled:no-underline"
             >
               <Search className="h-3 w-3" />
               {aresLoading === 'client' ? 'Hledám…' : 'Doplnit z ARESu'}
@@ -545,7 +545,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             value={form.notes}
             onChange={e => set('notes', e.target.value)}
             placeholder="Platební podmínky, bankovní spojení, poděkování..."
-            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand resize-none"
           />
         </div>
         {form.vat_payer && (
@@ -578,7 +578,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
                 </div>
                 <p className="font-medium text-slate-800">Faktura odeslána!</p>
                 <p className="text-sm text-slate-400 mt-1">Email byl doručen na {sendEmail}</p>
-                <button onClick={() => setSendModal(false)} className="mt-4 text-sm text-indigo-600 hover:underline">Zavřít</button>
+                <button onClick={() => setSendModal(false)} className="mt-4 text-sm text-brand hover:underline">Zavřít</button>
               </div>
             ) : (
               <>
@@ -590,7 +590,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
                     value={sendEmail}
                     onChange={e => setSendEmail(e.target.value)}
                     placeholder="klient@firma.cz"
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
                   />
                 </div>
                 <label className="flex items-center gap-2.5 cursor-pointer">
@@ -598,7 +598,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
                     type="checkbox"
                     checked={includePaymentLink}
                     onChange={e => setIncludePaymentLink(e.target.checked)}
-                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    className="rounded border-slate-300 text-brand focus:ring-brand"
                   />
                   <span className="text-sm text-slate-600">Přidat tlačítko pro online platbu kartou</span>
                 </label>

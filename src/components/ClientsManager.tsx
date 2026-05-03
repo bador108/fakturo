@@ -122,7 +122,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
         </div>
         <button
           onClick={openAdd}
-          className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 transition shadow-sm"
+          className="inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm"
         >
           <Plus className="h-4 w-4" />
           Nový klient
@@ -137,7 +137,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Hledat klienta, IČO, email…"
-            className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-soft"
           />
         </div>
       )}
@@ -153,7 +153,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
               {search ? 'Žádný klient nenalezen' : 'Zatím žádní klienti'}
             </p>
             {!search && (
-              <button onClick={openAdd} className="mt-4 text-sm text-indigo-600 hover:underline">
+              <button onClick={openAdd} className="mt-4 text-sm text-brand hover:underline">
                 + Přidat prvního klienta
               </button>
             )}
@@ -162,7 +162,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
           <div className="divide-y divide-slate-50">
             {filtered.map(c => (
               <div key={c.id} className="flex items-center gap-4 px-5 py-4 hover:bg-slate-50/50 transition group">
-                <div className="h-10 w-10 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0 text-indigo-600 font-bold text-sm">
+                <div className="h-10 w-10 bg-brand-soft rounded-xl flex items-center justify-center shrink-0 text-brand font-bold text-sm">
                   {c.name.slice(0, 1).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -192,7 +192,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   </Link>
                   <button
                     onClick={() => openEdit(c)}
-                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                    className="p-1.5 text-slate-400 hover:text-brand hover:bg-brand-soft rounded-lg transition"
                     title="Upravit"
                   >
                     <Pencil className="h-4 w-4" />
@@ -234,7 +234,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                 <input
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
                   placeholder="Firma s.r.o."
                 />
               </div>
@@ -246,13 +246,13 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                     <input
                       value={form.ico}
                       onChange={e => setForm(f => ({ ...f, ico: e.target.value }))}
-                      className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
                       placeholder="12345678"
                     />
                     <button
                       onClick={lookupAres}
                       disabled={!form.ico || aresLoading}
-                      className="text-xs text-indigo-600 hover:text-indigo-700 px-2 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition disabled:opacity-40 whitespace-nowrap"
+                      className="text-xs text-brand hover:text-brand-dark px-2 border border-brand-soft rounded-lg hover:bg-brand-soft transition disabled:opacity-40 whitespace-nowrap"
                     >
                       {aresLoading ? '…' : 'ARES'}
                     </button>
@@ -263,7 +263,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   <input
                     value={form.dic}
                     onChange={e => setForm(f => ({ ...f, dic: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="CZ12345678"
                   />
                 </div>
@@ -274,7 +274,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                 <input
                   value={form.address}
                   onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
                   placeholder="Ulice 123"
                 />
               </div>
@@ -285,7 +285,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   <input
                     value={form.city}
                     onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="Praha"
                   />
                 </div>
@@ -294,7 +294,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   <input
                     value={form.zip}
                     onChange={e => setForm(f => ({ ...f, zip: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="11000"
                   />
                 </div>
@@ -309,7 +309,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                     type="email"
                     value={form.email}
                     onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="info@firma.cz"
                   />
                 </div>
@@ -320,7 +320,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   <input
                     value={form.phone}
                     onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="+420 777 000 000"
                   />
                 </div>
@@ -332,7 +332,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   value={form.notes}
                   onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                   rows={2}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft resize-none"
                   placeholder="Interní poznámky ke klientovi…"
                 />
               </div>
@@ -348,7 +348,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
               <button
                 onClick={save}
                 disabled={saving || !form.name.trim()}
-                className="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+                className="flex-1 bg-brand text-white py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition disabled:opacity-50"
               >
                 {saving ? 'Ukládám…' : modal === 'edit' ? 'Uložit změny' : 'Přidat klienta'}
               </button>
