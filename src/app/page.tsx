@@ -21,9 +21,6 @@ const pageStyle: React.CSSProperties = {
   width: '100%', minHeight: '100%', WebkitFontSmoothing: 'antialiased',
 }
 
-function Logo() {
-  return <Image src="/icon.png" alt="Fakturo" width={28} height={28} style={{ borderRadius: 7, flexShrink: 0 }} />
-}
 
 function CheckIcon({ small }: { small?: boolean }) {
   const s = small ? 14 : 16
