@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import { BotcraftWidget } from '@/components/BotcraftWidget'
+import Script from 'next/script'
 import { PricingSection } from '@/components/PricingSection'
 import { PhoneMockup } from '@/components/PhoneMockup'
 import { LayoutDashboard, FileText, Users, CreditCard } from 'lucide-react'
@@ -444,7 +444,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       <FAQ />
       <CTA userId={userId} />
       <Footer />
-      <BotcraftWidget botId="6523f5b5-fa53-4d8a-b0d2-214c90693499" />
+      <Script src="https://botcraft.vercel.app/widget.js" data-bot-id="59438a4b-6478-4993-b935-081e4a7d5aea" strategy="lazyOnload" />
     </div>
   )
 }
