@@ -86,7 +86,7 @@ export default function ONasPage() {
       <section style={{ ...cont, padding: '96px 32px' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Naše hodnoty</div>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Čtyři principy, kterými se řídíme.</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Čtyři principy, kterými se řídíme</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
           {principles.map(p => (
@@ -104,7 +104,7 @@ export default function ONasPage() {
         <div style={{ ...cont }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Tým</div>
-            <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Kdo za tím stojí.</h2>
+            <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Kdo za tím stojí</h2>
           </div>
           <div style={{ maxWidth: 480, margin: '0 auto' }}>
             <div style={{ padding: 32, borderRadius: 16, background: C.bg, border: `1px solid ${C.border}`, display: 'flex', gap: 24, alignItems: 'flex-start' }}>

@@ -164,7 +164,7 @@ export default function CenikPage() {
       <section style={{ ...cont, padding: '0 32px 96px', maxWidth: 880 }}>
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>FAQ</div>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', margin: 0 }}>Časté otázky.</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', margin: 0 }}>Časté otázky</h2>
         </div>
         {faqItems.map(([q, a], i) => (
           <details key={i} style={{ borderTop: `1px solid ${C.border}`, borderBottom: i === faqItems.length - 1 ? `1px solid ${C.border}` : 'none', padding: '20px 0' }}>
@@ -179,7 +179,7 @@ export default function CenikPage() {
       {/* Bottom CTA */}
       <section style={{ padding: '0 32px 96px' }}>
         <div style={{ ...cont, background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 20, padding: '64px 48px', textAlign: 'center' }}>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px' }}>Začni ještě dnes.</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px' }}>Začni ještě dnes</h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
             14 dní zdarma, bez kreditní karty. Zruš kdykoliv.
           </p>

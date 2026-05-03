@@ -105,7 +105,7 @@ export default function ApiDevelopersPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }}>
           <div>
             <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Možnosti</div>
-            <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 32px', letterSpacing: -1.5 }}>Co přes API umíš.</h2>
+            <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 32px', letterSpacing: -1.5 }}>Co přes API umíš</h2>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
               {capabilities.map(item => (
                 <li key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
@@ -120,7 +120,7 @@ export default function ApiDevelopersPage() {
           </div>
           <div>
             <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Tech specs</div>
-            <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 32px', letterSpacing: -1.5 }}>Technické parametry.</h2>
+            <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 32px', letterSpacing: -1.5 }}>Technické parametry</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
               {techSpecs.map((spec, i) => (
                 <div key={spec.label} style={{
@@ -164,7 +164,7 @@ export default function ApiDevelopersPage() {
       {/* CTA */}
       <section style={{ padding: '96px 32px' }}>
         <div style={{ ...cont, background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 20, padding: '64px 48px', textAlign: 'center' }}>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px' }}>API je ve vývoji.</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px' }}>API je ve vývoji</h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
             Přidej se na waitlist. Dáme ti vědět jako prvním a dostaneš early access.
           </p>

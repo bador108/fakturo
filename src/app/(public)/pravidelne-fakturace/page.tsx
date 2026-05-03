@@ -96,7 +96,7 @@ export default function PravidelneFacturacePage() {
       <section style={{ ...cont, padding: '96px 32px' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Jak to funguje</div>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Tři kroky, pak klid.</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Tři kroky, pak klid</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 28 }}>
           {steps.map(step => (
@@ -115,7 +115,7 @@ export default function PravidelneFacturacePage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Co umí</div>
-              <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 32px', letterSpacing: -1.5 }}>Pravidelné fakturace v Fakturo.</h2>
+              <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 32px', letterSpacing: -1.5 }}>Pravidelné fakturace v Fakturo</h2>
               <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
                 {capabilities.map(item => (
                   <li key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>

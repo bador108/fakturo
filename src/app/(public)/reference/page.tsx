@@ -81,7 +81,7 @@ export default function ReferencePage() {
       <section style={{ ...cont, padding: '96px 32px 72px', textAlign: 'center' }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Reference</div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 760 }}>
-          Důvěřuje nám přes 4 200 freelancerů a firem.
+          Co říkají lidé, kteří to používají
         </h1>
         <p style={{ fontSize: 18, lineHeight: 1.65, color: C.muted, margin: '0 auto', maxWidth: 520 }}>
           Přečti si, co říkají ti, kteří fakturují s Fakturo každý den.
@@ -93,10 +93,10 @@ export default function ReferencePage() {
         <div style={{ ...cont }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0 }}>
             {[
-              { num: '4 200+', label: 'Aktivních uživatelů' },
-              { num: '4.9 / 5', label: 'Průměrné hodnocení' },
-              { num: '1.2M', label: 'Vystavených faktur' },
-              { num: '98 %', label: 'Spokojených zákazníků' },
+              { num: '47', label: 'Aktivních uživatelů' },
+              { num: '4.8 / 5', label: 'Průměrné hodnocení' },
+              { num: '1 200+', label: 'Vystavených faktur' },
+              { num: 'Beta', label: 'Fáze produktu' },
             ].map((stat, i, arr) => (
               <div key={stat.label} style={{
                 padding: '0 24px', textAlign: 'center',
@@ -142,7 +142,7 @@ export default function ReferencePage() {
       <section style={{ padding: '0 32px 96px' }}>
         <div style={{ ...cont, background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 20, padding: '64px 48px', textAlign: 'center' }}>
           <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px' }}>
-            Přidej se k nim.
+            Přidej se k nim
           </h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
             14 dní zdarma, bez kreditní karty.
