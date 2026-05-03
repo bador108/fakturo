@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { CheckCircle2 } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Stav služby – Fakturo',
@@ -103,7 +104,7 @@ export default function StavSluzbyPage() {
 
       {/* No incidents */}
       <section style={{ ...cont, padding: '80px 32px', textAlign: 'center', maxWidth: 640 }}>
-        <div style={{ fontSize: 32, marginBottom: 16 }}>🎉</div>
+        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'center' }}><CheckCircle2 size={40} color="#16a34a" /></div>
         <h2 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 12px' }}>
           Posledních 90 dní bez incidentů.
         </h2>

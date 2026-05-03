@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react'
+import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react'
 
 const BOTCRAFT_API = 'https://botcraft.vercel.app/api/chat'
 const THEME = '#0c0c0e'
@@ -95,7 +95,7 @@ export function BotcraftWidget({ botId }: Props) {
         >
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 shrink-0 rounded-t-2xl" style={{ background: THEME }}>
-            <div className="h-8 w-8 bg-white/20 rounded-full flex items-center justify-center text-lg">🤖</div>
+            <div className="h-8 w-8 bg-white/20 rounded-full flex items-center justify-center"><Bot className="h-4 w-4 text-white" /></div>
             <div>
               <p className="font-semibold text-white text-sm leading-tight">Fakturo AI</p>
               <p className="text-xs text-white/70">Powered by AI</p>
@@ -110,8 +110,8 @@ export function BotcraftWidget({ botId }: Props) {
             {messages.map((msg, i) => (
               <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'assistant' && (
-                  <div className="h-7 w-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm" style={{ background: THEME + '20' }}>
-                    🤖
+                  <div className="h-7 w-7 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: THEME + '20' }}>
+                    <Bot className="h-3.5 w-3.5" style={{ color: THEME }} />
                   </div>
                 )}
                 <div

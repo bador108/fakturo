@@ -1,3 +1,4 @@
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { auth } from '@clerk/nextjs/server'
@@ -5,6 +6,7 @@ import { redirect } from 'next/navigation'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PricingSection } from '@/components/PricingSection'
 import { PhoneMockup } from '@/components/PhoneMockup'
+import { LayoutDashboard, FileText, Users, CreditCard } from 'lucide-react'
 
 const C = {
   bg: '#ffffff', bgSoft: '#fafafa', bgDark: '#0c0c0e',
@@ -75,9 +77,14 @@ function DashMock() {
             <Image src="/icon.png" alt="Fakturo" width={28} height={28} style={{ borderRadius: 7 }} />
             <div><div style={{ fontSize: 13, fontWeight: 600 }}>Jana Nováková</div><div style={{ fontSize: 11, color: C.muted }}>Pro plán</div></div>
           </div>
-          {([['Přehled','🏠',false,null],['Faktury','📄',true,'24'],['Klienti','👥',false,'12'],['Platby','💳',false,null]] as [string,string,boolean,string|null][]).map(([n,ic,active,badge]) => (
-            <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, marginBottom: 2, background: active ? C.bg : 'transparent', border: active ? `1px solid ${C.border}` : '1px solid transparent', fontSize: 13, color: active ? C.fg : C.muted, fontWeight: active ? 600 : 500 }}>
-              <span style={{ fontSize: 14 }}>{ic}</span>
+          {([
+            ['Přehled', <LayoutDashboard size={14} />, false, null],
+            ['Faktury', <FileText size={14} />, true, '24'],
+            ['Klienti', <Users size={14} />, false, '12'],
+            ['Platby', <CreditCard size={14} />, false, null],
+          ] as [string, React.ReactNode, boolean, string | null][]).map(([n, ic, active, badge]) => (
+            <div key={n as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, marginBottom: 2, background: active ? C.bg : 'transparent', border: active ? `1px solid ${C.border}` : '1px solid transparent', fontSize: 13, color: active ? C.fg : C.muted, fontWeight: active ? 600 : 500 }}>
+              <span style={{ display: 'flex', alignItems: 'center' }}>{ic}</span>
               <span style={{ flex: 1 }}>{n}</span>
               {badge && <span style={{ background: active ? C.primarySoft : 'transparent', color: active ? C.primary : C.muted2, padding: '1px 6px', borderRadius: 999, fontSize: 10, fontWeight: 600 }}>{badge}</span>}
             </div>

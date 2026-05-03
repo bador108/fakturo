@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Zap, Scissors, Globe2, Lock } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'O nás – Fakturo',
@@ -19,22 +20,22 @@ const disp = { letterSpacing: -2, fontWeight: 600 }
 
 const principles = [
   {
-    icon: '⚡',
+    icon: <Zap size={24} color={C.fg} />,
     title: 'Rychlost nade vše',
     text: 'Každá sekunda navíc strávená v aplikaci je sekunda, která tě odvádí od skutečné práce. Proto je naším cílem faktura za 30 sekund.',
   },
   {
-    icon: '✂️',
+    icon: <Scissors size={24} color={C.fg} />,
     title: 'Méně je víc',
     text: 'Nepřidáváme funkce jen proto, abychom měli co ukázat. Přidáváme je, protože řeší skutečné problémy skutečných lidí.',
   },
   {
-    icon: '🇨🇿',
+    icon: <Globe2 size={24} color={C.fg} />,
     title: 'Česká realita',
     text: 'IČO, DIČ, DPH, OSVČ — Czech first. Nejedná se o port zahraniční aplikace, ale o produkt postavený pro českou legislativu.',
   },
   {
-    icon: '🔒',
+    icon: <Lock size={24} color={C.fg} />,
     title: 'Tvoje data patří tobě',
     text: 'Žádný vendor lock-in. Export kdykoliv, v otevřených formátech. Data máš vždy pod kontrolou.',
   },
@@ -91,7 +92,7 @@ export default function ONasPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
           {principles.map(p => (
             <div key={p.title} style={{ padding: 32, borderRadius: 16, border: `1px solid ${C.border}`, background: C.bg }}>
-              <div style={{ fontSize: 28, marginBottom: 16 }}>{p.icon}</div>
+              <div style={{ marginBottom: 16 }}>{p.icon}</div>
               <h3 style={{ fontSize: 18, fontWeight: 700, margin: '0 0 12px', letterSpacing: -0.3 }}>{p.title}</h3>
               <p style={{ fontSize: 15, color: C.muted, margin: 0, lineHeight: 1.65 }}>{p.text}</p>
             </div>

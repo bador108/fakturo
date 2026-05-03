@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { CheckCircle2 } from 'lucide-react'
 
 const C = {
   bg: '#ffffff', bgSoft: '#fafafa',
@@ -37,7 +38,7 @@ export function ContactForm() {
   if (submitted) {
     return (
       <div style={{ textAlign: 'center', padding: '48px 0' }}>
-        <div style={{ fontSize: 48, marginBottom: 20 }}>✅</div>
+        <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}><CheckCircle2 size={52} color="#16a34a" /></div>
         <h2 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 12px' }}>Zpráva odeslána!</h2>
         <p style={{ fontSize: 16, color: C.muted, margin: 0, lineHeight: 1.6 }}>
           Ozveme se ti na <strong>{form.email}</strong> co nejdříve. Obvykle do 24 hodin.

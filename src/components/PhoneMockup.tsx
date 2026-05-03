@@ -95,7 +95,9 @@ function Screen2() {
 function Screen3() {
   return (
     <div style={{ padding: '32px 16px', fontFamily: 'system-ui, sans-serif', textAlign: 'center' }}>
-      <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
+      <div style={{ width: 52, height: 52, borderRadius: 999, background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17L4 12" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </div>
       <div style={{ fontSize: 15, fontWeight: 700, color: C.fg, marginBottom: 20 }}>Platba přijata!</div>
       <div style={{ background: C.greenSoft, borderRadius: 12, padding: '16px 14px', marginBottom: 20, textAlign: 'left' }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: C.green, marginBottom: 4 }}>Alza.cz a.s.</div>

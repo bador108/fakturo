@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Code2, Palette, PenLine, Camera } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Pravidelné fakturace – Fakturo',
@@ -77,13 +78,13 @@ export default function PravidelneFacturacePage() {
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20, maxWidth: 960, margin: '0 auto' }}>
             {[
-              { icon: '💻', label: 'Vývojáři', desc: 'Měsíční retainery a maintenance' },
-              { icon: '🎨', label: 'Designéři', desc: 'Opakované projekty a brandové smlouvy' },
-              { icon: '✍️', label: 'Copywriteři', desc: 'Pravidelné obsahové zakázky' },
-              { icon: '📸', label: 'Fotografové', desc: 'Roční smlouvy a předplatné' },
+              { icon: <Code2 size={24} color={C.fg} />, label: 'Vývojáři', desc: 'Měsíční retainery a maintenance' },
+              { icon: <Palette size={24} color={C.fg} />, label: 'Designéři', desc: 'Opakované projekty a brandové smlouvy' },
+              { icon: <PenLine size={24} color={C.fg} />, label: 'Copywriteři', desc: 'Pravidelné obsahové zakázky' },
+              { icon: <Camera size={24} color={C.fg} />, label: 'Fotografové', desc: 'Roční smlouvy a předplatné' },
             ].map(item => (
               <div key={item.label} style={{ padding: 28, borderRadius: 14, background: C.bg, border: `1px solid ${C.border}` }}>
-                <div style={{ fontSize: 28, marginBottom: 12 }}>{item.icon}</div>
+                <div style={{ marginBottom: 14 }}>{item.icon}</div>
                 <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>{item.label}</div>
                 <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.5 }}>{item.desc}</div>
               </div>
