@@ -2,6 +2,14 @@ import Stripe from 'stripe'
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
+export const OWNER_EMAIL = 'vaclav.urbanec2@gmail.com'
+
+/** Vlastník má vždy pro plán bez ohledu na Stripe */
+export function getEffectivePlan(plan: string, email?: string | null): string {
+  if (email === OWNER_EMAIL) return 'pro'
+  return plan
+}
+
 export const FREE_TIER_LIMIT = 15
 export const START_TIER_LIMIT = 999999 // unlimited in practice
 

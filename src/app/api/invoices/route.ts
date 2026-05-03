@@ -1,11 +1,11 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
-import { FREE_TIER_LIMIT } from '@/lib/stripe'
+import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
 import type { InvoiceFormData } from '@/types'
 
 async function ensureUser(userId: string, db: ReturnType<typeof createServiceClient>) {
-  const { data: existing } = await db.from('users').select('id, plan, invoice_count_this_month, invoice_count_reset_at').eq('id', userId).single()
+  const { data: existing } = await db.from('users').select('id, plan, email, invoice_count_this_month, invoice_count_reset_at').eq('id', userId).single()
   if (existing) return existing
 
   // Auto-create user if missing
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     await db.from('users').update({ invoice_count_this_month: 0, invoice_count_reset_at: now.toISOString() }).eq('id', userId)
   }
 
-  if (user.plan === 'free' && count >= FREE_TIER_LIMIT) {
+  if (getEffectivePlan(user.plan, user.email) === 'free' && count >= FREE_TIER_LIMIT) {
     return NextResponse.json(
       { error: `Dosáhli jste limitu ${FREE_TIER_LIMIT} faktur/měsíc (Free plán). Upgradujte na Start nebo Pro.`, code: 'LIMIT_REACHED' },
       { status: 403 }
