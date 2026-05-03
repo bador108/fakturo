@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PricingSection } from '@/components/PricingSection'
+import { PhoneMockup } from '@/components/PhoneMockup'
 
 const C = {
   bg: '#ffffff', bgSoft: '#fafafa', bgDark: '#0c0c0e',
@@ -410,6 +411,18 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       <Hero userId={userId} />
       <TrustBar />
       <Metrics />
+      <section style={{ ...cont, padding: '80px 32px', textAlign: 'center' }}>
+        <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Demo</div>
+        <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', margin: '0 auto 16px', maxWidth: 600 }}>
+          Faktura za 30 sekund
+        </h2>
+        <p style={{ fontSize: 17, color: C.muted, margin: '0 auto 56px', maxWidth: 460, lineHeight: 1.6 }}>
+          Od dashboardu po platbu. Podívej se, jak to celé funguje.
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <PhoneMockup />
+        </div>
+      </section>
       <Features />
       <FeatureGrid />
       <Testimonials />

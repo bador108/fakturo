@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Zap, Users, Building2, BarChart2, Smartphone, Plug } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Funkce – Fakturo',
@@ -29,9 +30,17 @@ function CheckItem({ text }: { text: string }) {
   )
 }
 
+const featureIcons = [
+  <Zap size={22} color={C.fg} />,
+  <Users size={22} color={C.fg} />,
+  <Building2 size={22} color={C.fg} />,
+  <BarChart2 size={22} color={C.fg} />,
+  <Smartphone size={22} color={C.fg} />,
+  <Plug size={22} color={C.fg} />,
+]
+
 const features = [
   {
-    icon: '⚡',
     title: 'Vystavování faktur',
     desc: 'Faktura za 30 sekund — žádné zbytečné klikání.',
     items: [
@@ -45,7 +54,6 @@ const features = [
     ],
   },
   {
-    icon: '👥',
     title: 'Klienti a databáze',
     desc: 'Vše o klientovi na jednom místě.',
     items: [
@@ -57,7 +65,6 @@ const features = [
     ],
   },
   {
-    icon: '🏦',
     title: 'Sledování plateb',
     desc: 'Víš, co je zaplacené a co čeká — bez Excelu.',
     items: [
@@ -69,7 +76,6 @@ const features = [
     ],
   },
   {
-    icon: '📊',
     title: 'Pro účetní',
     desc: 'Předej podklady účetní jedním kliknutím.',
     items: [
@@ -81,7 +87,6 @@ const features = [
     ],
   },
   {
-    icon: '📱',
     title: 'Mobilní přístup',
     desc: 'Fakturuj odkudkoliv — i z telefonu.',
     items: [
@@ -92,7 +97,6 @@ const features = [
     ],
   },
   {
-    icon: '🔌',
     title: 'API a integrace',
     desc: 'Napoj Fakturo na vlastní systémy.',
     items: [
@@ -129,7 +133,7 @@ export default function FunkcePage() {
       {/* Feature grid */}
       <section style={{ ...cont, padding: '0 32px 96px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 28 }}>
-          {features.map(f => (
+          {features.map((f, idx) => (
             <div key={f.title} style={{
               padding: 32, borderRadius: 16,
               border: `1px solid ${C.border}`, background: C.bg,
@@ -138,9 +142,9 @@ export default function FunkcePage() {
                 width: 44, height: 44, borderRadius: 12,
                 background: C.bgSoft, border: `1px solid ${C.border}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 20, marginBottom: 20,
+                marginBottom: 20,
               }}>
-                {f.icon}
+                {featureIcons[idx]}
               </div>
               <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px', letterSpacing: -0.4 }}>{f.title}</h2>
               <p style={{ fontSize: 14, color: C.muted, margin: '0 0 20px', lineHeight: 1.5 }}>{f.desc}</p>

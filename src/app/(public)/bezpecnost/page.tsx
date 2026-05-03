@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Lock, ShieldCheck, Server, CreditCard, Key, Bug } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Bezpečnost – Fakturo',
@@ -17,9 +18,17 @@ const C = {
 const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
 const disp = { letterSpacing: -2, fontWeight: 600 }
 
+const sectionIcons = [
+  <Lock size={22} color="#0c0c0e" />,
+  <ShieldCheck size={22} color="#0c0c0e" />,
+  <Server size={22} color="#0c0c0e" />,
+  <CreditCard size={22} color="#0c0c0e" />,
+  <Key size={22} color="#0c0c0e" />,
+  <Bug size={22} color="#0c0c0e" />,
+]
+
 const sections = [
   {
-    icon: '🔐',
     title: 'Šifrování',
     items: [
       'Veškerá data přenášena přes TLS 1.3',
@@ -29,7 +38,6 @@ const sections = [
     ],
   },
   {
-    icon: '🪪',
     title: 'Autentizace',
     items: [
       'Dvoufaktorová autentizace (2FA) pro všechny účty',
@@ -40,7 +48,6 @@ const sections = [
     ],
   },
   {
-    icon: '🏗️',
     title: 'Infrastruktura',
     items: [
       'Hosting na Vercel (Edge Network) a Supabase',
@@ -51,7 +58,6 @@ const sections = [
     ],
   },
   {
-    icon: '💳',
     title: 'Platby',
     items: [
       'Platby zpracovává Stripe — PCI DSS Level 1',
@@ -61,7 +67,6 @@ const sections = [
     ],
   },
   {
-    icon: '🔑',
     title: 'Řízení přístupu',
     items: [
       'Princip nejnižších oprávnění pro interní přístupy',
@@ -71,7 +76,6 @@ const sections = [
     ],
   },
   {
-    icon: '🐛',
     title: 'Bug bounty',
     items: [
       'Zodpovědné hlášení bezpečnostních zranitelností vítáme',
@@ -111,14 +115,14 @@ export default function BezpecnostPage() {
       {/* Sections grid */}
       <section style={{ ...cont, padding: '0 32px 96px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
-          {sections.map(section => (
+          {sections.map((section, idx) => (
             <div key={section.title} style={{ padding: 32, borderRadius: 16, border: `1px solid ${C.border}`, background: C.bg }}>
               <div style={{
                 width: 44, height: 44, borderRadius: 12, background: C.bgSoft,
                 border: `1px solid ${C.border}`, display: 'flex', alignItems: 'center',
-                justifyContent: 'center', fontSize: 20, marginBottom: 20,
+                justifyContent: 'center', marginBottom: 20,
               }}>
-                {section.icon}
+                {sectionIcons[idx]}
               </div>
               <h2 style={{ fontSize: 19, fontWeight: 700, margin: '0 0 16px', letterSpacing: -0.4 }}>{section.title}</h2>
               <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>

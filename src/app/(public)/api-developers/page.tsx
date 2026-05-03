@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Plug, ShoppingCart, Building2, Wrench, Handshake } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'API pro vývojáře – Fakturo',
@@ -50,7 +51,7 @@ export default function ApiDevelopersPage() {
       {/* Hero */}
       <section style={{ ...cont, padding: '96px 32px 80px', textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 12px', borderRadius: 999, background: C.primarySoft, border: `1px solid ${C.primary}33`, fontSize: 12, fontWeight: 600, color: C.primary, marginBottom: 24 }}>
-          🔌 REST API · v1
+          <Plug size={14} color={C.primary} /> REST API · v1
         </div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 820 }}>
           Fakturo API. Pro vývojáře, kteří potřebují víc.
@@ -146,13 +147,13 @@ export default function ApiDevelopersPage() {
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20, maxWidth: 960, margin: '0 auto' }}>
             {[
-              { icon: '🛒', label: 'E-shopy', desc: 'Automatická faktura po každé objednávce' },
-              { icon: '🏢', label: 'SaaS firmy', desc: 'Fakturace předplatného bez ručního vystavování' },
-              { icon: '🔧', label: 'Interní nástroje', desc: 'Propojení s ERP nebo CRM systémem' },
-              { icon: '🤝', label: 'Agentury', desc: 'Hromadné vystavování pro portfolio klientů' },
+              { icon: <ShoppingCart size={28} color={C.fg} />, label: 'E-shopy', desc: 'Automatická faktura po každé objednávce' },
+              { icon: <Building2 size={28} color={C.fg} />, label: 'SaaS firmy', desc: 'Fakturace předplatného bez ručního vystavování' },
+              { icon: <Wrench size={28} color={C.fg} />, label: 'Interní nástroje', desc: 'Propojení s ERP nebo CRM systémem' },
+              { icon: <Handshake size={28} color={C.fg} />, label: 'Agentury', desc: 'Hromadné vystavování pro portfolio klientů' },
             ].map(item => (
               <div key={item.label} style={{ padding: 28, borderRadius: 14, background: C.bg, border: `1px solid ${C.border}` }}>
-                <div style={{ fontSize: 28, marginBottom: 12 }}>{item.icon}</div>
+                <div style={{ marginBottom: 12 }}>{item.icon}</div>
                 <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>{item.label}</div>
                 <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.5 }}>{item.desc}</div>
               </div>

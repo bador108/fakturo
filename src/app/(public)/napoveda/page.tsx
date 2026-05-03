@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Rocket, FileText, Users, Building2, RefreshCw, BarChart2, CreditCard, Lock } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Nápověda – Fakturo',
@@ -16,15 +17,16 @@ const C = {
 const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
 const disp = { letterSpacing: -2, fontWeight: 600 }
 
+const fg = '#0c0c0e'
 const categories = [
-  { icon: '🚀', title: 'Začínáme', desc: 'Jak nastavit účet a vystavit první fakturu', articles: 8 },
-  { icon: '📄', title: 'Faktury', desc: 'Vystavení, úprava, odeslání a stornování', articles: 12 },
-  { icon: '👥', title: 'Klienti', desc: 'Správa klientů a firemní databáze', articles: 6 },
-  { icon: '🏦', title: 'Platby a banka', desc: 'Napojení na banku a párování plateb', articles: 9 },
-  { icon: '🔄', title: 'Pravidelné fakturace', desc: 'Nastavení opakovaných faktur', articles: 5 },
-  { icon: '📊', title: 'Účetní export', desc: 'Pohoda XML, PDF, CSV a měsíční podklady', articles: 7 },
-  { icon: '💳', title: 'Předplatné a ceník', desc: 'Plány, platby a správa předplatného', articles: 4 },
-  { icon: '🔒', title: 'Bezpečnost a GDPR', desc: 'Ochrana dat a nastavení bezpečnosti', articles: 5 },
+  { icon: <Rocket size={22} color={fg} />, title: 'Začínáme', desc: 'Jak nastavit účet a vystavit první fakturu', articles: 8 },
+  { icon: <FileText size={22} color={fg} />, title: 'Faktury', desc: 'Vystavení, úprava, odeslání a stornování', articles: 12 },
+  { icon: <Users size={22} color={fg} />, title: 'Klienti', desc: 'Správa klientů a firemní databáze', articles: 6 },
+  { icon: <Building2 size={22} color={fg} />, title: 'Platby a banka', desc: 'Napojení na banku a párování plateb', articles: 9 },
+  { icon: <RefreshCw size={22} color={fg} />, title: 'Pravidelné fakturace', desc: 'Nastavení opakovaných faktur', articles: 5 },
+  { icon: <BarChart2 size={22} color={fg} />, title: 'Účetní export', desc: 'Pohoda XML, PDF, CSV a měsíční podklady', articles: 7 },
+  { icon: <CreditCard size={22} color={fg} />, title: 'Předplatné a ceník', desc: 'Plány, platby a správa předplatného', articles: 4 },
+  { icon: <Lock size={22} color={fg} />, title: 'Bezpečnost a GDPR', desc: 'Ochrana dat a nastavení bezpečnosti', articles: 5 },
 ]
 
 const popularArticles = [
@@ -62,9 +64,9 @@ export default function NapovedaPage() {
               />
               <div style={{
                 position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)',
-                color: C.muted, fontSize: 18,
+                color: C.muted, display: 'flex', alignItems: 'center',
               }}>
-                🔍
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
               </div>
             </div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 12 }}>
@@ -92,7 +94,7 @@ export default function NapovedaPage() {
               <div style={{
                 width: 44, height: 44, borderRadius: 10, background: C.bgSoft,
                 border: `1px solid ${C.border}`, display: 'flex', alignItems: 'center',
-                justifyContent: 'center', fontSize: 20, flexShrink: 0,
+                justifyContent: 'center', flexShrink: 0,
               }}>
                 {cat.icon}
               </div>

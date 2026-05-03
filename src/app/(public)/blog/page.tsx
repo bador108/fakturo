@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Clock, PenLine } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Blog – Fakturo',
@@ -111,7 +112,7 @@ export default function BlogPage() {
                   {article.perex}
                 </p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 12, color: C.muted }}>🕐 {article.readTime} čtení</span>
+                  <span style={{ fontSize: 12, color: C.muted, display: 'inline-flex', alignItems: 'center', gap: 4 }}><Clock size={12} color={C.muted} /> {article.readTime} čtení</span>
                   <span style={{ fontSize: 13, color: C.primary, fontWeight: 600 }}>Číst →</span>
                 </div>
               </article>
@@ -154,7 +155,7 @@ export default function BlogPage() {
       {/* Note */}
       <section style={{ ...cont, padding: '40px 32px' }}>
         <div style={{ padding: '16px 20px', borderRadius: 10, background: '#fef3c7', border: '1px solid #fde68a', fontSize: 13, color: '#92400e' }}>
-          📝 Poznámka: Toto jsou ukázkové články. Reálný obsah bude doplněn postupně.
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><PenLine size={14} color="#92400e" /> Poznámka: Toto jsou ukázkové články. Reálný obsah bude doplněn postupně.</span>
         </div>
       </section>
     </div>
