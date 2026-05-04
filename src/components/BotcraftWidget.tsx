@@ -18,9 +18,8 @@ interface Props {
 export function BotcraftWidget({ botId }: Props) {
   const [open, setOpen] = useState(false)
   const [theme, setTheme] = useState<string | null>(null)
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Ahoj! Jsem Fakturo AI. Pomůžu vám s orientací v aplikaci – faktury, klienti, výdaje nebo nastavení. Co potřebujete?' },
-  ])
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([])
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -29,8 +28,16 @@ export function BotcraftWidget({ botId }: Props) {
   useEffect(() => {
     fetch(`${BOTCRAFT_PUBLIC_API}/${botId}`)
       .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data?.theme_color) setTheme(data.theme_color) })
-      .catch(() => {})
+      .then(data => {
+        if (!data) return
+        if (data.theme_color) setTheme(data.theme_color)
+        if (data.suggested_questions?.length) setSuggestedQuestions(data.suggested_questions)
+        const welcome = data.welcome_message || 'Ahoj! Jak ti mohu pomoci?'
+        setMessages([{ role: 'assistant', content: welcome }])
+      })
+      .catch(() => {
+        setMessages([{ role: 'assistant', content: 'Ahoj! Jak ti mohu pomoci?' }])
+      })
   }, [botId])
 
   useEffect(() => {
@@ -150,6 +157,22 @@ export function BotcraftWidget({ botId }: Props) {
                 </div>
               </div>
             ))}
+
+            {/* Suggested questions — jen po welcome zprávě, před prvním user inputem */}
+            {messages.length === 1 && suggestedQuestions.length > 0 && !loading && (
+              <div className="flex flex-wrap gap-2 pl-9">
+                {suggestedQuestions.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => { setInput(q); setTimeout(() => inputRef.current?.focus(), 0) }}
+                    className="px-3 py-1.5 rounded-full text-xs border border-gray-200 bg-white text-gray-700 hover:border-gray-400 hover:text-gray-900 transition-colors text-left"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div ref={bottomRef} />
           </div>
 
