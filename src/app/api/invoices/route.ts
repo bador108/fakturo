@@ -21,18 +21,26 @@ async function ensureUser(userId: string, db: ReturnType<typeof createServiceCli
 }
 
 export async function GET() {
-  const { userId } = await auth()
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  try {
+    const { userId } = await auth()
+    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const db = createServiceClient()
-  const { data, error } = await db
-    .from('invoices')
-    .select('*, invoice_items(*)')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
+    const db = createServiceClient()
+    const { data, error } = await db
+      .from('invoices')
+      .select('*, invoice_items(*)')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+    if (error) {
+      console.error('[GET /api/invoices] Supabase error:', error.message, error.code, error.details)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+    return NextResponse.json(data ?? [])
+  } catch (e) {
+    console.error('[GET /api/invoices] Unexpected error:', e)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }
 
 export async function POST(req: Request) {

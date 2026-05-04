@@ -31,8 +31,8 @@ export default function InvoicesPage() {
     if (f && filters.some(x => x.key === f)) setFilter(f)
 
     fetch('/api/invoices')
-      .then(r => r.json())
-      .then(d => { setInvoices(d ?? []); setLoading(false) })
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(d => { setInvoices(Array.isArray(d) ? d : []); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
