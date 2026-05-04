@@ -19,23 +19,23 @@ const disp = { letterSpacing: -2, fontWeight: 600 }
 
 const fg = '#0c0c0e'
 const categories = [
-  { icon: <Rocket size={22} color={fg} />, title: 'Začínáme', desc: 'Jak nastavit účet a vystavit první fakturu', articles: 8 },
-  { icon: <FileText size={22} color={fg} />, title: 'Faktury', desc: 'Vystavení, úprava, odeslání a stornování', articles: 12 },
-  { icon: <Users size={22} color={fg} />, title: 'Klienti', desc: 'Správa klientů a firemní databáze', articles: 6 },
-  { icon: <Building2 size={22} color={fg} />, title: 'Platby a banka', desc: 'Napojení na banku a párování plateb', articles: 9 },
-  { icon: <RefreshCw size={22} color={fg} />, title: 'Pravidelné fakturace', desc: 'Nastavení opakovaných faktur', articles: 5 },
-  { icon: <BarChart2 size={22} color={fg} />, title: 'Účetní export', desc: 'Pohoda XML, PDF, CSV a měsíční podklady', articles: 7 },
-  { icon: <CreditCard size={22} color={fg} />, title: 'Předplatné a ceník', desc: 'Plány, platby a správa předplatného', articles: 4 },
-  { icon: <Lock size={22} color={fg} />, title: 'Bezpečnost a GDPR', desc: 'Ochrana dat a nastavení bezpečnosti', articles: 5 },
+  { icon: <Rocket size={22} color={fg} />, title: 'Začínáme', desc: 'Jak nastavit účet a vystavit první fakturu', articles: 8, slug: 'zaciname' },
+  { icon: <FileText size={22} color={fg} />, title: 'Faktury', desc: 'Vystavení, úprava, odeslání a stornování', articles: 12, slug: 'faktury' },
+  { icon: <Users size={22} color={fg} />, title: 'Klienti', desc: 'Správa klientů a firemní databáze', articles: 6, slug: 'klienti' },
+  { icon: <Building2 size={22} color={fg} />, title: 'Platby a banka', desc: 'Napojení na banku a párování plateb', articles: 9, slug: 'platby-a-banka' },
+  { icon: <RefreshCw size={22} color={fg} />, title: 'Pravidelné fakturace', desc: 'Nastavení opakovaných faktur', articles: 5, slug: 'pravidelne-fakturace' },
+  { icon: <BarChart2 size={22} color={fg} />, title: 'Účetní export', desc: 'Pohoda XML, PDF, CSV a měsíční podklady', articles: 7, slug: 'ucetni-export' },
+  { icon: <CreditCard size={22} color={fg} />, title: 'Předplatné a ceník', desc: 'Plány, platby a správa předplatného', articles: 4, slug: 'predplatne-a-cenik' },
+  { icon: <Lock size={22} color={fg} />, title: 'Bezpečnost a GDPR', desc: 'Ochrana dat a nastavení bezpečnosti', articles: 5, slug: 'bezpecnost-a-gdpr' },
 ]
 
 const popularArticles = [
-  'Jak vystavit první fakturu',
-  'Napojení na Fio banku',
-  'Co musí faktura obsahovat',
-  'Jak nastavit pravidelnou fakturaci',
-  'Export pro účetní — Pohoda XML',
-  'Jak změnit nebo zrušit předplatné',
+  { title: 'Jak vystavit první fakturu', slug: 'jak-vystavit-prvni-fakturu', category: 'zaciname' },
+  { title: 'Napojení na Fio banku', slug: 'napojeni-na-fio-banku', category: 'platby-a-banka' },
+  { title: 'Co musí faktura obsahovat', slug: 'co-musi-faktura-obsahovat', category: 'faktury' },
+  { title: 'Jak nastavit pravidelnou fakturaci', slug: 'jak-nastavit-pravidelnou-fakturaci', category: 'pravidelne-fakturace' },
+  { title: 'Export pro účetní — Pohoda XML', slug: 'export-pro-ucetni-pohoda-xml', category: 'ucetni-export' },
+  { title: 'Jak změnit nebo zrušit předplatné', slug: 'jak-zmenit-nebo-zrusit-predplatne', category: 'predplatne-a-cenik' },
 ]
 
 export default function NapovedaPage() {
@@ -71,8 +71,8 @@ export default function NapovedaPage() {
             </div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 12 }}>
               Populární: {popularArticles.slice(0, 3).map((a, i) => (
-                <span key={a}>
-                  <span style={{ color: C.primary, cursor: 'pointer' }}>{a}</span>
+                <span key={a.slug}>
+                  <Link href={`/napoveda/${a.category}/${a.slug}`} style={{ color: C.primary, textDecoration: 'none' }}>{a.title}</Link>
                   {i < 2 && <span style={{ margin: '0 6px' }}>·</span>}
                 </span>
               ))}
@@ -86,10 +86,10 @@ export default function NapovedaPage() {
         <h2 style={{ ...disp, fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', margin: '0 0 32px', letterSpacing: -1 }}>Procházet kategorie</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
           {categories.map(cat => (
-            <div key={cat.title} style={{
+            <Link key={cat.title} href={`/napoveda/${cat.slug}`} style={{
               padding: 24, borderRadius: 14, border: `1px solid ${C.border}`,
-              background: C.bg, cursor: 'pointer',
-              display: 'flex', alignItems: 'flex-start', gap: 16,
+              background: C.bg, display: 'flex', alignItems: 'flex-start', gap: 16,
+              textDecoration: 'none', color: 'inherit',
             }}>
               <div style={{
                 width: 44, height: 44, borderRadius: 10, background: C.bgSoft,
@@ -103,7 +103,7 @@ export default function NapovedaPage() {
                 <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, marginBottom: 8 }}>{cat.desc}</div>
                 <div style={{ fontSize: 12, color: C.primary, fontWeight: 500 }}>{cat.articles} článků →</div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -114,14 +114,14 @@ export default function NapovedaPage() {
           <h2 style={{ ...disp, fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', margin: '0 0 28px', letterSpacing: -1 }}>Nejčastěji hledané</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0, maxWidth: 640 }}>
             {popularArticles.map((article, i, arr) => (
-              <div key={article} style={{
+              <Link key={article.slug} href={`/napoveda/${article.category}/${article.slug}`} style={{
                 padding: '16px 0', borderBottom: i < arr.length - 1 ? `1px solid ${C.border}` : 'none',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                cursor: 'pointer',
+                textDecoration: 'none',
               }}>
-                <span style={{ fontSize: 15, color: C.fg2, fontWeight: 500 }}>{article}</span>
+                <span style={{ fontSize: 15, color: C.fg2, fontWeight: 500 }}>{article.title}</span>
                 <span style={{ color: C.muted, fontSize: 16 }}>→</span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
