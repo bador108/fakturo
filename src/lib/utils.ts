@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { InvoiceItemDraft, VatRate } from '@/types';
+import { Invoice, InvoiceItemDraft, VatRate } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -46,7 +46,7 @@ export function formatDate(dateString: string): string {
 /**
  * Agreguje data faktur podle měsíců pro grafy na dashboardu
  */
-export function buildMonthData(invoices: Array<Record<string, unknown>> = []) {
+export function buildMonthData(invoices: Invoice[] = []) {
   const monthsMap = new Map<string, { month: string; name: string; total: number; amount: number; paid: number; count: number }>();
   
   const now = new Date();
@@ -58,12 +58,12 @@ export function buildMonthData(invoices: Array<Record<string, unknown>> = []) {
   }
 
   (invoices || []).forEach((inv) => {
-    const dateStr = (inv.issue_date || inv.created_at) as string | undefined;
+    const dateStr = inv.issue_date || inv.created_at;
     if (!dateStr) return;
     const key = dateStr.slice(0, 7);
     if (monthsMap.has(key)) {
       const curr = monthsMap.get(key)!;
-      const amt = Number(inv.total ?? inv.amount) || 0;
+      const amt = Number(inv.total) || 0;
       curr.total += amt;
       curr.amount += amt;
       curr.count += 1;
