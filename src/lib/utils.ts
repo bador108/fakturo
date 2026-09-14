@@ -44,17 +44,40 @@ export function formatDate(dateString: string): string {
 }
 
 /**
- * Agreguje data faktur podle měsíců pro grafy na dashboardu
+ * Agreguje data faktur podle měsíců pro grafy na dashboardu (CashflowChart a další)
  */
 export function buildMonthData(invoices: Invoice[] = []) {
-  const monthsMap = new Map<string, { month: string; name: string; total: number; amount: number; paid: number; count: number }>();
-  
+  const monthsMap = new Map<
+    string,
+    {
+      month: string;
+      name: string;
+      label: string;
+      total: number;
+      amount: number;
+      invoiced: number;
+      paid: number;
+      revenue: number;
+      count: number;
+    }
+  >();
+
   const now = new Date();
   for (let i = 11; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     const monthName = d.toLocaleDateString('cs-CZ', { month: 'short' });
-    monthsMap.set(key, { month: monthName, name: monthName, total: 0, amount: 0, paid: 0, count: 0 });
+    monthsMap.set(key, {
+      month: monthName,
+      name: monthName,
+      label: monthName,
+      total: 0,
+      amount: 0,
+      invoiced: 0,
+      paid: 0,
+      revenue: 0,
+      count: 0,
+    });
   }
 
   (invoices || []).forEach((inv) => {
@@ -66,9 +89,12 @@ export function buildMonthData(invoices: Invoice[] = []) {
       const amt = Number(inv.total) || 0;
       curr.total += amt;
       curr.amount += amt;
+      curr.invoiced += amt;
       curr.count += 1;
+
       if (inv.status === 'paid') {
         curr.paid += amt;
+        curr.revenue += amt;
       }
     }
   });
