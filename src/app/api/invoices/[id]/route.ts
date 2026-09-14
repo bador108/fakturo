@@ -1,91 +1,74 @@
-import { auth } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase'
-import type { InvoiceFormData } from '@/types'
+import { auth } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+import { createServiceClient } from '@/lib/supabase';
+import type { InvoiceItem } from '@/types';
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
-  const { userId } = await auth()
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+export async function POST(_req: Request, { params }: { params: { id: string } }) {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const db = createServiceClient()
-  const { data, error } = await db
+  const db = createServiceClient();
+
+  const { data: original, error } = await db
     .from('invoices')
     .select('*, invoice_items(*)')
     .eq('id', params.id)
     .eq('user_id', userId)
-    .single()
+    .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 404 })
-  return NextResponse.json(data)
-}
+  if (error || !original) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const { userId } = await auth()
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const db = createServiceClient()
-  const body = await req.json() as InvoiceFormData & {
-    subtotal: number; vat_amount: number; total: number; status: string
-  }
-  const { items, ...invoiceData } = body
-
-  const { data: invoice, error } = await db
+  const { data: latest } = await db
     .from('invoices')
-    .update(invoiceData)
-    .eq('id', params.id)
+    .select('invoice_number')
     .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  let nextNumber = original.invoice_number;
+  if (latest?.invoice_number) {
+    const match = latest.invoice_number.match(/(\d+)$/);
+    if (match) {
+      const num = parseInt(match[1], 10) + 1;
+      nextNumber = latest.invoice_number.replace(/\d+$/, String(num).padStart(match[1].length, '0'));
+    }
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const dueDate = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, invoice_items, created_at, updated_at, status, ...rest } = original;
+
+  const { data: copy, error: copyErr } = await db
+    .from('invoices')
+    .insert({
+      ...rest,
+      invoice_number: nextNumber,
+      variable_symbol: nextNumber.replace(/\D/g, ''),
+      issue_date: today,
+      duzp: today,
+      due_date: dueDate,
+      status: 'draft',
+    })
     .select()
-    .single()
+    .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (copyErr) return NextResponse.json({ error: copyErr.message }, { status: 500 });
 
-  // Replace all items
-  await db.from('invoice_items').delete().eq('invoice_id', params.id)
-  if (items?.length) {
-    const rows = items.map((item, i) => ({
-      invoice_id: params.id,
+  if (invoice_items?.length) {
+    const rows = invoice_items.map((item: InvoiceItem, i: number) => ({
+      invoice_id: copy.id,
       position: i,
       description: item.description,
       quantity: item.quantity,
       unit: item.unit,
       unit_price: item.unit_price,
-    }))
-    await db.from('invoice_items').insert(rows)
+      vat_rate: item.vat_rate ?? 21,
+    }));
+    await db.from('invoice_items').insert(rows);
   }
 
-  return NextResponse.json(invoice)
-}
-
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const { userId } = await auth()
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const db = createServiceClient()
-  const body = await req.json()
-
-  const { data, error } = await db
-    .from('invoices')
-    .update(body)
-    .eq('id', params.id)
-    .eq('user_id', userId)
-    .select()
-    .single()
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
-}
-
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-  const { userId } = await auth()
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const db = createServiceClient()
-  const { error } = await db
-    .from('invoices')
-    .delete()
-    .eq('id', params.id)
-    .eq('user_id', userId)
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json({ ok: true })
+  return NextResponse.json({ id: copy.id }, { status: 201 });
 }
