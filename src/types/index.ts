@@ -2,6 +2,18 @@ export type VatRate = 0 | 12 | 21;
 
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
 
+export type Currency = 'CZK' | 'EUR' | 'USD';
+
+export type ExpenseCategory =
+  | 'kancelar'
+  | 'software'
+  | 'sluzby'
+  | 'hardware'
+  | 'cestovne'
+  | 'marketing'
+  | 'ostatni'
+  | string;
+
 export interface Client {
   id: string;
   user_id: string;
@@ -102,6 +114,21 @@ export interface CompanySettings {
   bank_name?: string;
   vat_payer?: boolean;
   default_due_days?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface Expense {
+  id: string;
+  user_id: string;
+  description: string;
+  amount: number;
+  vat_amount?: number;
+  currency: Currency | string;
+  category: ExpenseCategory;
+  date: string;
+  supplier?: string;
+  notes?: string;
   created_at?: string;
   updated_at?: string;
 }
