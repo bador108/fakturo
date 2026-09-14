@@ -9,13 +9,16 @@ export default async function NewInvoicePage() {
 
   const db = createServiceClient()
 
-  // Get count of all invoices to determine next number
-  const { count } = await db
+  // Get last invoice number to determine the next one
+  const { data: lastInvoice } = await db
     .from('invoices')
-    .select('*', { count: 'exact', head: true })
+    .select('invoice_number')
     .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
 
-  const nextNumber = generateInvoiceNumber((count ?? 0) + 1)
+  const nextNumber = generateInvoiceNumber(lastInvoice?.invoice_number)
 
   // Load default sender profile
   const { data: profile } = await db
