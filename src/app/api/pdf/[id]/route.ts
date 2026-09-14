@@ -1,16 +1,18 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { renderToBuffer } from '@react-pdf/renderer'
 import { createServiceClient } from '@/lib/supabase'
-import { InvoicePDF } from '@/components/invoice/InvoicePDF'
-import React from 'react'
+import { renderInvoiceHtml } from '@/lib/invoiceHtml'
+import { renderPdfFromHtml } from '@/lib/pdfBrowser'
 import QRCode from 'qrcode'
 
-function buildQrPayload(invoice: { sender_iban?: string | null; total: number; currency: string; invoice_number: string }): string | null {
+// Puppeteer/Chromium potřebuje víc času než výchozích 10s, hlavně na cold startu
+export const maxDuration = 30
+
+function buildQrPayload(invoice: { sender_iban?: string | null; total: number; currency: string; invoice_number: string; variable_symbol?: string | null }): string | null {
   if (!invoice.sender_iban) return null
   const iban = invoice.sender_iban.replace(/\s/g, '')
   const amount = Number(invoice.total).toFixed(2)
-  return `SPD*1.0*ACC:${iban}*AM:${amount}*CC:${invoice.currency}*MSG:Faktura ${invoice.invoice_number}`
+  return `SPD*1.0*ACC:${iban}*AM:${amount}*CC:${invoice.currency}*X-VS:${invoice.variable_symbol ?? ''}*MSG:Faktura ${invoice.invoice_number}`
 }
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
@@ -29,21 +31,24 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 
   const items = invoice.invoice_items ?? []
 
-  // Generate QR code if IBAN is available
   let qrCode: string | undefined
   const qrPayload = buildQrPayload(invoice)
   if (qrPayload) {
     qrCode = await QRCode.toDataURL(qrPayload, { width: 150, margin: 1 })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const element = React.createElement(InvoicePDF as any, { invoice, items, qrCode }) as any
-  const pdfBuffer = await renderToBuffer(element)
+  try {
+    const html = renderInvoiceHtml({ invoice, items, qrCode })
+    const pdfBuffer = await renderPdfFromHtml(html)
 
-  return new NextResponse(new Uint8Array(pdfBuffer), {
-    headers: {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="faktura-${invoice.invoice_number}.pdf"`,
-    },
-  })
+    return new NextResponse(new Uint8Array(pdfBuffer), {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="faktura-${invoice.invoice_number}.pdf"`,
+      },
+    })
+  } catch (e) {
+    console.error('[GET /api/pdf/[id]] Error:', e)
+    return NextResponse.json({ error: 'Nepodařilo se vygenerovat PDF' }, { status: 500 })
+  }
 }

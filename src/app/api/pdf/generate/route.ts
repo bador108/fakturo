@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
-import { renderToBuffer } from '@react-pdf/renderer'
-import { InvoicePDF } from '@/components/invoice/InvoicePDF'
 import { calcTotals } from '@/lib/utils'
-import React from 'react'
+
+// Puppeteer/Chromium potřebuje víc času než výchozích 10s, hlavně na cold startu
+export const maxDuration = 30
+import { renderInvoiceHtml } from '@/lib/invoiceHtml'
+import { renderPdfFromHtml } from '@/lib/pdfBrowser'
 import QRCode from 'qrcode'
 import type { InvoiceFormData } from '@/types'
 
@@ -24,7 +26,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { subtotal, vat_amount, total, vatBreakdown } = calcTotals(form.items, form.vat_payer, form.reverse_charge)
+    const { subtotal, vat_amount, total } = calcTotals(form.items, form.vat_payer, form.reverse_charge)
 
     // Fake Invoice shape (nic se neukládá do DB, jen pro render PDF)
     const invoice = {
@@ -65,7 +67,8 @@ export async function POST(req: Request) {
       notes: form.notes || null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-    }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any
 
     const items = form.items.map((item, i) => ({
       id: String(i),
@@ -86,10 +89,8 @@ export async function POST(req: Request) {
       qrCode = await QRCode.toDataURL(qrPayload, { width: 150, margin: 1 })
     }
 
-    void vatBreakdown
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const element = React.createElement(InvoicePDF as any, { invoice, items, qrCode }) as any
-    const pdfBuffer = await renderToBuffer(element)
+    const html = renderInvoiceHtml({ invoice, items, qrCode })
+    const pdfBuffer = await renderPdfFromHtml(html)
 
     return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {

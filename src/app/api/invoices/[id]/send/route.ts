@@ -1,11 +1,13 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { renderToBuffer } from '@react-pdf/renderer'
 import { createServiceClient } from '@/lib/supabase'
-import { InvoicePDF } from '@/components/invoice/InvoicePDF'
+import { renderInvoiceHtml } from '@/lib/invoiceHtml'
+import { renderPdfFromHtml } from '@/lib/pdfBrowser'
 import { Resend } from 'resend'
-import React from 'react'
 import QRCode from 'qrcode'
+
+// Puppeteer/Chromium potřebuje víc času než výchozích 10s, hlavně na cold startu
+export const maxDuration = 30
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const { userId } = await auth()
@@ -29,13 +31,12 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   let qrCode: string | undefined
   if (invoice.sender_iban) {
     const iban = invoice.sender_iban.replace(/\s/g, '')
-    const qrPayload = `SPD*1.0*ACC:${iban}*AM:${Number(invoice.total).toFixed(2)}*CC:${invoice.currency}*MSG:Faktura ${invoice.invoice_number}`
+    const qrPayload = `SPD*1.0*ACC:${iban}*AM:${Number(invoice.total).toFixed(2)}*CC:${invoice.currency}*X-VS:${invoice.variable_symbol ?? ''}*MSG:Faktura ${invoice.invoice_number}`
     qrCode = await QRCode.toDataURL(qrPayload, { width: 150, margin: 1 })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const element = React.createElement(InvoicePDF as any, { invoice, items, qrCode }) as any
-  const pdfBuffer = await renderToBuffer(element)
+  const html = renderInvoiceHtml({ invoice, items, qrCode })
+  const pdfBuffer = await renderPdfFromHtml(html)
 
   // Optionally create Stripe payment link
   let paymentUrl: string | null = null
