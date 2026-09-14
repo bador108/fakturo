@@ -234,7 +234,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                 <input
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                   placeholder="Firma s.r.o."
                 />
               </div>
@@ -246,7 +246,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                     <input
                       value={form.ico}
                       onChange={e => setForm(f => ({ ...f, ico: e.target.value }))}
-                      className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                      className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                       placeholder="12345678"
                     />
                     <button
@@ -263,7 +263,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   <input
                     value={form.dic}
                     onChange={e => setForm(f => ({ ...f, dic: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="CZ12345678"
                   />
                 </div>
@@ -274,7 +274,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                 <input
                   value={form.address}
                   onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                   placeholder="Ulice 123"
                 />
               </div>
@@ -285,7 +285,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   <input
                     value={form.city}
                     onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="Praha"
                   />
                 </div>
@@ -294,7 +294,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   <input
                     value={form.zip}
                     onChange={e => setForm(f => ({ ...f, zip: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="11000"
                   />
                 </div>
@@ -309,7 +309,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                     type="email"
                     value={form.email}
                     onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="info@firma.cz"
                   />
                 </div>
@@ -320,7 +320,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   <input
                     value={form.phone}
                     onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
                     placeholder="+420 777 000 000"
                   />
                 </div>
@@ -332,7 +332,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                   value={form.notes}
                   onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                   rows={2}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-soft resize-none"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft resize-none"
                   placeholder="Interní poznámky ke klientovi…"
                 />
               </div>

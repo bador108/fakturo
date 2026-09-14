@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light dark;
+  /* Projekt nemá dark mode (viz CLAUDE.md). "light dark" tady způsobovalo, že
+     nativní inputy/textarea bez explicitního pozadí (např. v ClientsManager
+     modálu) braly OS dark theme — černé pozadí, špatně čitelný text. */
+  color-scheme: light;
 }
 
 @layer base {
