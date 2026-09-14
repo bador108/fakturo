@@ -1,6 +1,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
+import type { InvoiceItem } from '@/types';
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
   const { userId } = await auth();
@@ -57,7 +58,7 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
   if (copyErr) return NextResponse.json({ error: copyErr.message }, { status: 500 });
 
   if (invoice_items?.length) {
-    const rows = invoice_items.map((item: any, i: number) => ({
+    const rows = (invoice_items as InvoiceItem[]).map((item: InvoiceItem, i: number) => ({
       invoice_id: copy.id,
       position: i,
       description: item.description,
