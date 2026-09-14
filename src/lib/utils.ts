@@ -43,6 +43,39 @@ export function formatDate(dateString: string): string {
   return new Intl.DateTimeFormat('cs-CZ').format(date);
 }
 
+/**
+ * Agreguje data faktur podle měsíců pro grafy na dashboardu
+ */
+export function buildMonthData(invoices: Array<Record<string, unknown>> = []) {
+  const monthsMap = new Map<string, { month: string; name: string; total: number; amount: number; paid: number; count: number }>();
+  
+  const now = new Date();
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const monthName = d.toLocaleDateString('cs-CZ', { month: 'short' });
+    monthsMap.set(key, { month: monthName, name: monthName, total: 0, amount: 0, paid: 0, count: 0 });
+  }
+
+  (invoices || []).forEach((inv) => {
+    const dateStr = (inv.issue_date || inv.created_at) as string | undefined;
+    if (!dateStr) return;
+    const key = dateStr.slice(0, 7);
+    if (monthsMap.has(key)) {
+      const curr = monthsMap.get(key)!;
+      const amt = Number(inv.total ?? inv.amount) || 0;
+      curr.total += amt;
+      curr.amount += amt;
+      curr.count += 1;
+      if (inv.status === 'paid') {
+        curr.paid += amt;
+      }
+    }
+  });
+
+  return Array.from(monthsMap.values());
+}
+
 export interface VatBreakdownItem {
   rate: VatRate;
   base: number;
@@ -51,7 +84,7 @@ export interface VatBreakdownItem {
 }
 
 /**
- * Spočíta součty a rozpad DPH per-položka
+ * Spočítá součty a rozpad DPH per-položka
  */
 export function calcTotals(
   items: InvoiceItemDraft[],
