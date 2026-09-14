@@ -242,21 +242,21 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-medium text-slate-500 mb-1 block">IČO</label>
-                  <div className="flex gap-2">
-                    <input
-                      value={form.ico}
-                      onChange={e => setForm(f => ({ ...f, ico: e.target.value }))}
-                      className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
-                      placeholder="12345678"
-                    />
-                    <button
-                      onClick={lookupAres}
-                      disabled={!form.ico || aresLoading}
-                      className="text-xs text-brand hover:text-brand-dark px-2 border border-brand-soft rounded-lg hover:bg-brand-soft transition disabled:opacity-40 whitespace-nowrap"
-                    >
-                      {aresLoading ? '…' : 'ARES'}
-                    </button>
-                  </div>
+                  <input
+                    value={form.ico}
+                    onChange={e => setForm(f => ({ ...f, ico: e.target.value }))}
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-soft"
+                    placeholder="12345678"
+                  />
+                  <button
+                    type="button"
+                    onClick={lookupAres}
+                    disabled={!form.ico || aresLoading}
+                    className="mt-1 flex items-center gap-1 text-xs text-brand hover:underline disabled:opacity-40 disabled:no-underline"
+                  >
+                    <Search className="h-3 w-3" />
+                    {aresLoading ? 'Hledám…' : 'Doplnit z ARESu'}
+                  </button>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-slate-500 mb-1 block">DIČ</label>

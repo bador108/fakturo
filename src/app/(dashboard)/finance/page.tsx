@@ -51,10 +51,11 @@ export default async function FinancePage() {
   if (!userId) return null
 
   const db = createServiceClient()
-  const [{ data: invData }, { data: expData }, { data: userData }] = await Promise.all([
+  const [{ data: invData }, { data: expData }, { data: userData }, { count: clientCount }] = await Promise.all([
     db.from('invoices').select('*').eq('user_id', userId).order('issue_date', { ascending: false }),
     db.from('expenses').select('*').eq('user_id', userId).order('date', { ascending: false }),
     db.from('users').select('dashboard_layout').eq('id', userId).single(),
+    db.from('clients').select('*', { count: 'exact', head: true }).eq('user_id', userId),
   ])
 
   const invoices = (invData ?? []) as Invoice[]
@@ -112,6 +113,57 @@ export default async function FinancePage() {
       color: CAT_COLORS[key] ?? '#94a3b8',
     }))
 
+  // Extra agregace pro rozšířený katalog widgetů
+  const avgInvoiceValue = invoices.length ? invoices.reduce((s, i) => s + toCZK(Number(i.total), i.currency), 0) / invoices.length : 0
+  const marginPct = totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0
+
+  const STATUS_LABELS: Record<string, string> = { draft: 'Koncept', sent: 'Odesláno', paid: 'Zaplaceno', cancelled: 'Storno' }
+  const STATUS_COLORS: Record<string, string> = { draft: '#94a3b8', sent: '#3b82f6', paid: '#10b981', cancelled: '#ef4444' }
+  const statusCounts = invoices.reduce((acc, i) => { acc[i.status] = (acc[i.status] ?? 0) + 1; return acc }, {} as Record<string, number>)
+  const statusSlices = Object.entries(statusCounts)
+    .filter(([, v]) => v > 0)
+    .map(([key, amount]) => ({ label: STATUS_LABELS[key] ?? key, amount, color: STATUS_COLORS[key] ?? '#94a3b8' }))
+
+  const CURRENCY_COLORS: Record<string, string> = { CZK: '#4F46E5', EUR: '#0ea5e9', USD: '#10b981' }
+  const currencyTotals = invoices.reduce((acc, i) => { acc[i.currency] = (acc[i.currency] ?? 0) + Number(i.total); return acc }, {} as Record<string, number>)
+  const currencySlices = Object.entries(currencyTotals)
+    .filter(([, v]) => v > 0)
+    .map(([key, amount]) => ({ label: key, amount: Math.round(amount), color: CURRENCY_COLORS[key] ?? '#94a3b8' }))
+
+  const weeklyRevenue = Array.from({ length: 8 }, (_, i) => {
+    const weekStart = new Date(now.getTime() - (7 - i) * 7 * 86400000)
+    const weekEnd = new Date(weekStart.getTime() + 7 * 86400000)
+    const revenue = invoices
+      .filter(inv => inv.status === 'paid' && inv.issue_date >= weekStart.toISOString().slice(0, 10) && inv.issue_date < weekEnd.toISOString().slice(0, 10))
+      .reduce((s, inv) => s + toCZK(Number(inv.total), inv.currency), 0)
+    return { label: `${weekStart.getDate()}.${weekStart.getMonth() + 1}.`, revenue }
+  })
+
+  const clientTotals = invoices
+    .filter(i => i.status === 'paid')
+    .reduce((acc, i) => { acc[i.client_name] = (acc[i.client_name] ?? 0) + toCZK(Number(i.total), i.currency); return acc }, {} as Record<string, number>)
+  const topClients = Object.entries(clientTotals)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5)
+    .map(([name, amount]) => ({ name, amount: Math.round(amount) }))
+
+  const overdueList = invoices
+    .filter(i => i.status === 'sent' && i.due_date < today)
+    .sort((a, b) => a.due_date.localeCompare(b.due_date))
+    .slice(0, 5)
+    .map(i => ({ id: i.id, clientName: i.client_name, invoiceNumber: i.invoice_number, total: Number(i.total), currency: i.currency, daysOverdue: Math.round((new Date(today).getTime() - new Date(i.due_date).getTime()) / 86400000) }))
+
+  const recentList = invoices
+    .slice(0, 5)
+    .map(i => ({ id: i.id, clientName: i.client_name, invoiceNumber: i.invoice_number, total: Number(i.total), currency: i.currency, status: i.status }))
+
+  const in7Days = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)
+  const dueSoonList = invoices
+    .filter(i => i.status === 'sent' && i.due_date >= today && i.due_date <= in7Days)
+    .sort((a, b) => a.due_date.localeCompare(b.due_date))
+    .slice(0, 5)
+    .map(i => ({ id: i.id, clientName: i.client_name, invoiceNumber: i.invoice_number, total: Number(i.total), currency: i.currency, dueDate: i.due_date }))
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
@@ -129,9 +181,19 @@ export default async function FinancePage() {
           netProfit,
           totalVat,
           totalPendingAndOverdue: totalPending + totalOverdue,
+          avgInvoiceValue,
+          marginPct,
+          clientCount: clientCount ?? 0,
         }}
         chartMonths={chartMonths}
         catSlices={catSlices}
+        statusSlices={statusSlices}
+        currencySlices={currencySlices}
+        weeklyRevenue={weeklyRevenue}
+        topClients={topClients}
+        overdueList={overdueList}
+        recentList={recentList}
+        dueSoonList={dueSoonList}
         monthRows={monthRows}
         invoiceCount={invoices.length}
         initialLayout={userData?.dashboard_layout ?? null}

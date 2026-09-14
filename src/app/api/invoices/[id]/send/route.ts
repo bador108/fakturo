@@ -35,68 +35,78 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     qrCode = await QRCode.toDataURL(qrPayload, { width: 150, margin: 1 })
   }
 
-  const html = renderInvoiceHtml({ invoice, items, qrCode })
-  const pdfBuffer = await renderPdfFromHtml(html)
+  try {
+    const html = renderInvoiceHtml({ invoice, items, qrCode })
+    const pdfBuffer = await renderPdfFromHtml(html)
 
-  // Optionally create Stripe payment link
-  let paymentUrl: string | null = null
-  if (includePaymentLink && process.env.STRIPE_SECRET_KEY) {
-    try {
-      const linkRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/api/invoices/${params.id}/payment-link`, {
-        method: 'POST',
-        headers: { Cookie: req.headers.get('cookie') ?? '' },
-      })
-      if (linkRes.ok) {
-        const linkData = await linkRes.json()
-        paymentUrl = linkData.url
+    // Optionally create Stripe payment link
+    let paymentUrl: string | null = null
+    if (includePaymentLink && process.env.STRIPE_SECRET_KEY) {
+      try {
+        const linkRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/api/invoices/${params.id}/payment-link`, {
+          method: 'POST',
+          headers: { Cookie: req.headers.get('cookie') ?? '' },
+        })
+        if (linkRes.ok) {
+          const linkData = await linkRes.json()
+          paymentUrl = linkData.url
+        }
+      } catch {
+        // Payment link is optional, continue without it
       }
-    } catch {
-      // Payment link is optional, continue without it
     }
+
+    const resend = new Resend(process.env.RESEND_API_KEY)
+
+    // Vlastní doména (fakturo-seven.vercel.app) není v Resendu ověřená — dokud
+    // nebude, posíláme přes jejich sandbox odesílatel (stejně jako cron a support).
+    const { error: mailErr } = await resend.emails.send({
+      from: 'Fakturo <onboarding@resend.dev>',
+      to: email,
+      subject: `Faktura č. ${invoice.invoice_number} od ${invoice.sender_name}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
+          <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Faktura č. ${invoice.invoice_number}</h2>
+          <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">
+            Dobrý den,<br/>
+            zasíláme vám fakturu od <strong>${invoice.sender_name}</strong>.
+          </p>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
+            <tr><td style="color:#64748b;padding:4px 0">Číslo faktury</td><td style="text-align:right;font-weight:600">${invoice.invoice_number}</td></tr>
+            <tr><td style="color:#64748b;padding:4px 0">Datum splatnosti</td><td style="text-align:right;font-weight:600">${invoice.due_date}</td></tr>
+            <tr><td style="color:#64748b;padding:4px 0">K úhradě</td><td style="text-align:right;font-weight:700;font-size:16px;color:#4f46e5">${new Intl.NumberFormat('cs-CZ',{style:'currency',currency:invoice.currency}).format(invoice.total)}</td></tr>
+          </table>
+          ${paymentUrl ? `
+          <div style="text-align:center;margin:24px 0">
+            <a href="${paymentUrl}" style="display:inline-block;background:#4f46e5;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">
+              Zaplatit online kartou
+            </a>
+            <p style="color:#94a3b8;font-size:11px;margin-top:8px">Bezpečná platba kartou přes Stripe</p>
+          </div>` : ''}
+          <p style="color:#94a3b8;font-size:12px;">Faktura je přiložena jako PDF. Vystaveno přes <a href="https://fakturo-seven.vercel.app" style="color:#4f46e5">Fakturo</a>.</p>
+        </div>
+      `,
+      attachments: [
+        {
+          filename: `faktura-${invoice.invoice_number}.pdf`,
+          content: Buffer.from(pdfBuffer),
+        },
+      ],
+    })
+
+    if (mailErr) {
+      console.error('[POST /api/invoices/[id]/send] Resend error:', mailErr)
+      return NextResponse.json({ error: mailErr.message }, { status: 500 })
+    }
+
+    // Update client_email if not set
+    if (!invoice.client_email && email) {
+      await db.from('invoices').update({ client_email: email }).eq('id', params.id)
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (e) {
+    console.error('[POST /api/invoices/[id]/send] Error:', e)
+    return NextResponse.json({ error: 'Nepodařilo se odeslat fakturu' }, { status: 500 })
   }
-
-  const resend = new Resend(process.env.RESEND_API_KEY)
-
-  const { error: mailErr } = await resend.emails.send({
-    from: 'Fakturo <faktury@fakturo-seven.vercel.app>',
-    to: email,
-    subject: `Faktura č. ${invoice.invoice_number} od ${invoice.sender_name}`,
-    html: `
-      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
-        <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Faktura č. ${invoice.invoice_number}</h2>
-        <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">
-          Dobrý den,<br/>
-          zasíláme vám fakturu od <strong>${invoice.sender_name}</strong>.
-        </p>
-        <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
-          <tr><td style="color:#64748b;padding:4px 0">Číslo faktury</td><td style="text-align:right;font-weight:600">${invoice.invoice_number}</td></tr>
-          <tr><td style="color:#64748b;padding:4px 0">Datum splatnosti</td><td style="text-align:right;font-weight:600">${invoice.due_date}</td></tr>
-          <tr><td style="color:#64748b;padding:4px 0">K úhradě</td><td style="text-align:right;font-weight:700;font-size:16px;color:#4f46e5">${new Intl.NumberFormat('cs-CZ',{style:'currency',currency:invoice.currency}).format(invoice.total)}</td></tr>
-        </table>
-        ${paymentUrl ? `
-        <div style="text-align:center;margin:24px 0">
-          <a href="${paymentUrl}" style="display:inline-block;background:#4f46e5;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">
-            Zaplatit online kartou
-          </a>
-          <p style="color:#94a3b8;font-size:11px;margin-top:8px">Bezpečná platba kartou přes Stripe</p>
-        </div>` : ''}
-        <p style="color:#94a3b8;font-size:12px;">Faktura je přiložena jako PDF. Vystaveno přes <a href="https://fakturo-seven.vercel.app" style="color:#4f46e5">Fakturo</a>.</p>
-      </div>
-    `,
-    attachments: [
-      {
-        filename: `faktura-${invoice.invoice_number}.pdf`,
-        content: Buffer.from(pdfBuffer),
-      },
-    ],
-  })
-
-  if (mailErr) return NextResponse.json({ error: mailErr.message }, { status: 500 })
-
-  // Update client_email if not set
-  if (!invoice.client_email && email) {
-    await db.from('invoices').update({ client_email: email }).eq('id', params.id)
-  }
-
-  return NextResponse.json({ success: true })
 }
