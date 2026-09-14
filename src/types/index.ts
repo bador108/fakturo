@@ -1,6 +1,22 @@
 export type VatRate = 0 | 12 | 21;
 
-export type PaymentMethod = 'bank_transfer' | 'cash' | 'card';
+export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
+
+export interface Client {
+  id: string;
+  user_id: string;
+  name: string;
+  ico?: string;
+  dic?: string;
+  street?: string;
+  city?: string;
+  zip?: string;
+  country?: string;
+  email?: string;
+  phone?: string;
+  created_at?: string;
+  updated_at?: string;
+}
 
 export interface InvoiceItem {
   id?: string;
@@ -14,13 +30,12 @@ export interface InvoiceItem {
 }
 
 export interface InvoiceItemDraft {
+  id?: string;
   description: string;
   quantity: number;
   unit: string;
   unit_price: number;
   vat_rate: VatRate;
-  aiSuggested?: boolean;
-  aiReason?: string;
 }
 
 export interface Invoice {
@@ -28,45 +43,65 @@ export interface Invoice {
   user_id: string;
   invoice_number: string;
   variable_symbol?: string;
+  constant_symbol?: string;
+  status: InvoiceStatus;
   issue_date: string;
-  due_date: string;
   duzp: string;
-  payment_method: PaymentMethod;
-  status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
+  due_date: string;
   
   // Dodavatel
-  sender_name: string;
-  sender_address: string;
-  sender_city: string;
-  sender_zip: string;
-  sender_ico: string;
+  sender_name?: string;
+  sender_ico?: string;
   sender_dic?: string;
-  sender_bank?: string;
+  sender_street?: string;
+  sender_city?: string;
+  sender_zip?: string;
+  sender_country?: string;
   sender_iban?: string;
+  sender_swift?: string;
+  sender_bank_name?: string;
   
   // Odběratel
+  client_id?: string;
   client_name: string;
-  client_address: string;
-  client_city: string;
-  client_zip: string;
   client_ico?: string;
   client_dic?: string;
+  client_street?: string;
+  client_city?: string;
+  client_zip?: string;
+  client_country?: string;
   client_email?: string;
-  
-  // DPH a finance
-  vat_payer: boolean;
-  reverse_charge: boolean;
+
+  // Částky
   currency: string;
   subtotal: number;
   vat_amount: number;
   total: number;
+  vat_payer: boolean;
+  reverse_charge: boolean;
   notes?: string;
-  
+
   created_at?: string;
   updated_at?: string;
+
   invoice_items?: InvoiceItem[];
 }
 
-export interface InvoiceFormData extends Omit<Invoice, 'id' | 'user_id' | 'status' | 'created_at' | 'updated_at' | 'invoice_items'> {
-  items: InvoiceItemDraft[];
+export interface CompanySettings {
+  id?: string;
+  user_id: string;
+  company_name?: string;
+  ico?: string;
+  dic?: string;
+  street?: string;
+  city?: string;
+  zip?: string;
+  country?: string;
+  iban?: string;
+  swift?: string;
+  bank_name?: string;
+  vat_payer?: boolean;
+  default_due_days?: number;
+  created_at?: string;
+  updated_at?: string;
 }
