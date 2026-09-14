@@ -127,7 +127,7 @@ export interface Expense {
   currency: Currency | string;
   category: ExpenseCategory;
   date: string;
-  supplier?: string;
+  vendor?: string; // Změněno ze 'supplier' na 'vendor'
   notes?: string;
   created_at?: string;
   updated_at?: string;
