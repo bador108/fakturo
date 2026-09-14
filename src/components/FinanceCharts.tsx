@@ -13,7 +13,7 @@ interface CategorySlice {
 }
 
 // ── Revenue vs Expenses bar chart ─────────────────────────────────
-export function RevenueExpensesChart({ months }: { months: MonthBar[] }) {
+export function RevenueExpensesChart({ months, color = '#6366f1' }: { months: MonthBar[]; color?: string }) {
   const maxVal = Math.max(...months.flatMap(m => [m.revenue, m.expenses]), 1)
   const H = 140
   const barW = 16
@@ -25,7 +25,7 @@ export function RevenueExpensesChart({ months }: { months: MonthBar[] }) {
     <div>
       <div className="flex gap-4 mb-3 text-xs text-slate-500">
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-brand inline-block" />
+          <span className="h-2.5 w-2.5 rounded-sm inline-block" style={{ background: color }} />
           Příjmy
         </span>
         <span className="flex items-center gap-1.5">
@@ -46,7 +46,7 @@ export function RevenueExpensesChart({ months }: { months: MonthBar[] }) {
             const eH = Math.max(Math.round((m.expenses / maxVal) * H), m.expenses > 0 ? 3 : 0)
             return (
               <g key={m.label}>
-                <rect x={x} y={H - rH} width={barW} height={rH} rx={3} fill="#6366f1" opacity={0.9} />
+                <rect x={x} y={H - rH} width={barW} height={rH} rx={3} fill={color} opacity={0.9} />
                 <rect x={x + barW + gap} y={H - eH} width={barW} height={eH} rx={3} fill="#fb7185" opacity={0.85} />
                 <text x={x + barW + gap / 2} y={H + 18} textAnchor="middle"
                   style={{ fontSize: 10, fill: '#94a3b8', fontFamily: 'inherit' }}>
@@ -110,7 +110,7 @@ export function CategoryDonut({ slices }: { slices: CategorySlice[] }) {
 }
 
 // ── Profit line sparkline ─────────────────────────────────────────
-export function ProfitSparkline({ months }: { months: MonthBar[] }) {
+export function ProfitSparkline({ months, color = '#6366f1' }: { months: MonthBar[]; color?: string }) {
   const profits = months.map(m => m.revenue - m.expenses)
   const min = Math.min(...profits, 0)
   const max = Math.max(...profits, 1)
@@ -132,10 +132,10 @@ export function ProfitSparkline({ months }: { months: MonthBar[] }) {
       <svg width={W} height={H + 4} className="w-full">
         {/* Zero line */}
         <line x1={0} x2={W} y1={zeroY} y2={zeroY} stroke="#e2e8f0" strokeWidth={1} strokeDasharray="4 2" />
-        <polyline points={points} fill="none" stroke="#6366f1" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+        <polyline points={points} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
         {profits.map((p, i) => (
           <circle key={i} cx={i * step} cy={H - ((p - min) / (max - min)) * H} r={3}
-            fill={p >= 0 ? '#6366f1' : '#fb7185'} />
+            fill={p >= 0 ? color : '#fb7185'} />
         ))}
       </svg>
     </div>

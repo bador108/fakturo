@@ -23,6 +23,7 @@
     "qrcode": "^1.5.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-grid-layout": "^2.2.4",
     "resend": "^6.10.0",
     "stripe": "^22.0.1",
     "svix": "^1.90.0",
