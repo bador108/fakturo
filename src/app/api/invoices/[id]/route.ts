@@ -1,74 +1,133 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
-import type { InvoiceItem } from '@/types';
+import type { InvoiceItemDraft } from '@/types';
 
-export async function POST(_req: Request, { params }: { params: { id: string } }) {
+// GET /api/invoices/[id] - Načtení detailu faktury
+export async function GET(
+  _req: Request,
+  { params }: { params: { id: string } }
+) {
   const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   const db = createServiceClient();
 
-  const { data: original, error } = await db
+  const { data, error } = await db
     .from('invoices')
     .select('*, invoice_items(*)')
     .eq('id', params.id)
     .eq('user_id', userId)
     .single();
 
-  if (error || !original) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  if (error || !data) {
+    return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
+  }
 
-  const { data: latest } = await db
-    .from('invoices')
-    .select('invoice_number')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
+  return NextResponse.json(data);
+}
 
-  let nextNumber = original.invoice_number;
-  if (latest?.invoice_number) {
-    const match = latest.invoice_number.match(/(\d+)$/);
-    if (match) {
-      const num = parseInt(match[1], 10) + 1;
-      nextNumber = latest.invoice_number.replace(/\d+$/, String(num).padStart(match[1].length, '0'));
+// PUT /api/invoices/[id] - Úprava faktury
+export async function PUT(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const body = await req.json();
+    const { items, ...invoiceData } = body;
+
+    const db = createServiceClient();
+
+    // Ověření, že faktura patří přihlášenému uživateli
+    const { data: existing } = await db
+      .from('invoices')
+      .select('id')
+      .eq('id', params.id)
+      .eq('user_id', userId)
+      .single();
+
+    if (!existing) {
+      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
     }
+
+    // Aktualizace faktury
+    const { error: updateError } = await db
+      .from('invoices')
+      .update({
+        ...invoiceData,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', params.id)
+      .eq('user_id', userId);
+
+    if (updateError) {
+      return NextResponse.json({ error: updateError.message }, { status: 500 });
+    }
+
+    // Aktualizace položek faktury (smazání starých a vložení nových)
+    if (Array.isArray(items)) {
+      await db.from('invoice_items').delete().eq('invoice_id', params.id);
+
+      if (items.length > 0) {
+        const newItems = items.map((item: InvoiceItemDraft, index: number) => ({
+          invoice_id: params.id,
+          position: index,
+          description: item.description,
+          quantity: Number(item.quantity) || 0,
+          unit: item.unit || 'ks',
+          unit_price: Number(item.unit_price) || 0,
+          vat_rate: item.vat_rate ?? 21,
+        }));
+
+        const { error: itemsError } = await db
+          .from('invoice_items')
+          .insert(newItems);
+
+        if (itemsError) {
+          return NextResponse.json({ error: itemsError.message }, { status: 500 });
+        }
+      }
+    }
+
+    return NextResponse.json({ success: true, id: params.id });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Server error';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+// DELETE /api/invoices/[id] - Smazání faktury
+export async function DELETE(
+  _req: Request,
+  { params }: { params: { id: string } }
+) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const today = new Date().toISOString().slice(0, 10);
-  const dueDate = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+  const db = createServiceClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id, invoice_items, created_at, updated_at, status, ...rest } = original;
+  // Smazání navázaných položek
+  await db.from('invoice_items').delete().eq('invoice_id', params.id);
 
-  const { data: copy, error: copyErr } = await db
+  // Smazání faktury
+  const { error } = await db
     .from('invoices')
-    .insert({
-      ...rest,
-      invoice_number: nextNumber,
-      variable_symbol: nextNumber.replace(/\D/g, ''),
-      issue_date: today,
-      duzp: today,
-      due_date: dueDate,
-      status: 'draft',
-    })
-    .select()
-    .single();
+    .delete()
+    .eq('id', params.id)
+    .eq('user_id', userId);
 
-  if (copyErr) return NextResponse.json({ error: copyErr.message }, { status: 500 });
-
-  if (invoice_items?.length) {
-    const rows = invoice_items.map((item: InvoiceItem, i: number) => ({
-      invoice_id: copy.id,
-      position: i,
-      description: item.description,
-      quantity: item.quantity,
-      unit: item.unit,
-      unit_price: item.unit_price,
-      vat_rate: item.vat_rate ?? 21,
-    }));
-    await db.from('invoice_items').insert(rows);
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ id: copy.id }, { status: 201 });
+  return NextResponse.json({ success: true });
 }
