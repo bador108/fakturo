@@ -9,6 +9,14 @@
 @layer base {
   * { box-sizing: border-box; }
   body { min-height: 100dvh; }
+
+  /* Skrýt natívní šipky u number inputů — vypadají jako výchozí browser UI, ne jako produkt */
+  input[type='number'] { -moz-appearance: textfield; }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
 
 @layer utilities {

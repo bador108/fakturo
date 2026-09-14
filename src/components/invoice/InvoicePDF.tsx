@@ -10,7 +10,12 @@ import {
 import type { Invoice, InvoiceItem } from '@/types'
 import { formatDate, formatCurrency, calcTotals } from '@/lib/utils'
 
-// Register a clean sans-serif font stack via system fonts
+// POZNÁMKA: Helvetica (výchozí PDF font) neumí české háčky/čárky (č,ř,š,ž,ě,ď,ť,ň,ů).
+// Zkoušeli jsme nahradit vlastním fontem (Noto Sans, DejaVu Sans) s plným pokrytím
+// Latin Extended-A, ale @react-pdf/renderer 4.4.1 + fontkit 2.0.4 některé znaky
+// (ř,ž,ě,ů,í) i tak vykreslí poškozené (mojibake) — je to bug v knihovně/subsettingu,
+// ne ve fontu. Dokud se nenajde skutečná oprava, zůstáváme radši u Helvetiky
+// (chybějící znak je lepší než viditelně rozbitý).
 Font.registerHyphenationCallback(w => [w])
 
 const c = {

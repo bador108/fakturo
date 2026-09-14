@@ -389,7 +389,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             </div>
             <Input label="DIČ" value={form.sender_dic} onChange={e => set('sender_dic', e.target.value)} />
           </div>
-          <Input label="Číslo účtu / IBAN" value={form.sender_bank} onChange={e => set('sender_bank', e.target.value)} />
+          <Input
+            label="Číslo účtu / IBAN"
+            placeholder="CZ65 0800 0000 1920 0014 5399"
+            value={form.sender_iban}
+            onChange={e => setForm(f => ({ ...f, sender_iban: e.target.value, sender_bank: e.target.value }))}
+          />
           <div className="grid grid-cols-2 gap-3">
             <Input label="E-mail" type="email" value={form.sender_email} onChange={e => set('sender_email', e.target.value)} />
             <Input label="Telefon" value={form.sender_phone} onChange={e => set('sender_phone', e.target.value)} />
