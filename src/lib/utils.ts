@@ -7,6 +7,22 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Generuje výchozí číslo faktury (např. 20260001) nebo inkrementuje poslední číslo
+ */
+export function generateInvoiceNumber(lastNumber?: string): string {
+  const currentYear = new Date().getFullYear();
+  if (!lastNumber) {
+    return `${currentYear}0001`;
+  }
+  const match = lastNumber.match(/(\d+)$/);
+  if (match) {
+    const nextNum = parseInt(match[1], 10) + 1;
+    return lastNumber.replace(/\d+$/, String(nextNum).padStart(match[1].length, '0'));
+  }
+  return `${currentYear}0001`;
+}
+
+/**
  * Formátuje číslo na měnu (výchozí CZK v českém formátu "1 000,00 Kč")
  */
 export function formatCurrency(amount: number, currency: string = 'CZK'): string {
@@ -69,7 +85,7 @@ export function calcTotals(
   });
 
   const vatBreakdown: VatBreakdownItem[] = Object.entries(breakdownMap)
-    .filter(([_, data]) => data.base > 0)
+    .filter((entry) => entry[1].base > 0)
     .map(([rate, data]) => ({
       rate: Number(rate) as VatRate,
       base: data.base,
