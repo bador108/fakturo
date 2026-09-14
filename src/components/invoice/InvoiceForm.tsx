@@ -218,6 +218,25 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   const addItem = () => setForm(f => ({ ...f, items: [...f.items, { ...DEFAULT_ITEM, vat_rate: currentVatRate }] }))
   const removeItem = (i: number) => setForm(f => ({ ...f, items: f.items.filter((_, idx) => idx !== i) }))
 
+  const [vatHint, setVatHint] = useState<Record<number, string>>({})
+
+  async function suggestVatRate(index: number, description: string) {
+    if (!description.trim() || !form.vat_payer) return
+    try {
+      const res = await fetch('/api/vat-suggest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description }),
+      })
+      if (!res.ok) return
+      const data = await res.json() as { vat_rate: VatRate; reason?: string }
+      setItem(index, 'vat_rate', data.vat_rate)
+      setVatHint(h => ({ ...h, [index]: data.reason ?? '' }))
+    } catch {
+      // Tichy fail — DPH zustane na aktualni hodnote, uzivatel ji muze zmenit rucne
+    }
+  }
+
   const { subtotal, vat_amount, total, vatBreakdown } = calcTotals(form.items, form.vat_payer, form.reverse_charge)
 
   useEffect(() => {
@@ -483,7 +502,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
 
         {form.items.map((item, i) => (
           <div key={i} className="space-y-2 md:space-y-0 md:grid md:grid-cols-[1fr_80px_90px_110px_80px_40px] md:gap-3 md:items-end border border-slate-100 rounded-lg p-3 md:border-0 md:rounded-none md:p-0">
-            <Input placeholder="Popis položky" value={item.description} onChange={e => setItem(i, 'description', e.target.value)} />
+            <Input
+              placeholder="Popis položky"
+              value={item.description}
+              onChange={e => setItem(i, 'description', e.target.value)}
+              onBlur={e => suggestVatRate(i, e.target.value)}
+            />
             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 md:contents">
               <div>
                 <p className="text-xs text-slate-400 mb-1 md:hidden">Množství</p>
@@ -504,7 +528,11 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             {form.vat_payer && (
               <div className="md:contents">
                 <p className="text-xs text-slate-400 mb-1 md:hidden">DPH</p>
-                <Select label="" value={item.vat_rate} onChange={e => setItem(i, 'vat_rate', e.target.value)}>
+                <Select
+                  label=""
+                  value={item.vat_rate}
+                  onChange={e => { setItem(i, 'vat_rate', e.target.value); setVatHint(h => ({ ...h, [i]: '' })) }}
+                >
                   <option value={0}>0 %</option>
                   <option value={12}>12 %</option>
                   <option value={21}>21 %</option>
@@ -514,6 +542,9 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} className="hidden md:flex p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
               <Trash2 className="h-4 w-4" />
             </button>
+            {vatHint[i] && (
+              <p className="md:col-start-1 md:col-span-4 text-xs text-brand -mt-1">DPH navrženo automaticky: {vatHint[i]}</p>
+            )}
           </div>
         ))}
 
