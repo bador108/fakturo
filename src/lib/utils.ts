@@ -6,6 +6,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Formátuje číslo na měnu (výchozí CZK v českém formátu "1 000,00 Kč")
+ */
+export function formatCurrency(amount: number, currency: string = 'CZK'): string {
+  return new Intl.NumberFormat('cs-CZ', {
+    style: 'currency',
+    currency: currency || 'CZK',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount ?? 0);
+}
+
+/**
+ * Formátuje datum do českého tvaru (např. "14. 9. 2026")
+ */
+export function formatDate(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('cs-CZ').format(date);
+}
+
 export interface VatBreakdownItem {
   rate: VatRate;
   base: number;
@@ -13,6 +34,9 @@ export interface VatBreakdownItem {
   total: number;
 }
 
+/**
+ * Spočíta součty a rozpad DPH per-položka
+ */
 export function calcTotals(
   items: InvoiceItemDraft[],
   vatPayer: boolean,
