@@ -8,7 +8,7 @@ import { Select } from '@/components/ui/select'
 import { calcTotals, formatCurrency } from '@/lib/utils'
 import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate } from '@/types'
 
-const DEFAULT_ITEM: InvoiceItemDraft = { description: '', quantity: 1, unit: 'ks', unit_price: 0 }
+const DEFAULT_ITEM: InvoiceItemDraft = { description: '', quantity: 1, unit: 'ks', unit_price: 0, vat_rate: 21 }
 
 const today = new Date().toISOString().slice(0, 10)
 const due = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10)
@@ -19,13 +19,15 @@ const defaultForm: InvoiceFormData = {
   sender_name: '', sender_address: '', sender_city: '', sender_zip: '', sender_country: 'CZ',
   sender_ico: '', sender_dic: '', sender_bank: '', sender_iban: '', sender_email: '', sender_phone: '',
   client_name: '', client_address: '', client_city: '', client_zip: '', client_country: 'CZ', client_ico: '',
-  client_email: '',
-  invoice_number: `${year}0001`, issue_date: today, due_date: due,
-  currency: 'CZK', vat_rate: 21, vat_payer: true, reverse_charge: false, notes: '', items: [{ ...DEFAULT_ITEM }],
+  client_dic: '', client_email: '',
+  invoice_number: `${year}0001`, issue_date: today, duzp: today, due_date: due,
+  variable_symbol: '', payment_method: 'bank_transfer',
+  currency: 'CZK', vat_payer: true, reverse_charge: false, notes: '', items: [{ ...DEFAULT_ITEM }],
 }
 
 export default function GeneratorPage() {
   const [form, setForm] = useState<InvoiceFormData>(defaultForm)
+  const [currentVatRate, setCurrentVatRate] = useState<VatRate>(21)
   const [loading, setLoading] = useState(false)
   const [aresLoading, setAresLoading] = useState<'sender' | 'client' | null>(null)
   const [aresError, setAresError] = useState<'sender' | 'client' | null>(null)
@@ -43,10 +45,15 @@ export default function GeneratorPage() {
     })
   }, [])
 
-  const addItem = () => setForm(f => ({ ...f, items: [...f.items, { ...DEFAULT_ITEM }] }))
+  function applyVatRateToAllItems(rate: VatRate) {
+    setCurrentVatRate(rate)
+    setForm(f => ({ ...f, items: f.items.map(item => ({ ...item, vat_rate: rate })) }))
+  }
+
+  const addItem = () => setForm(f => ({ ...f, items: [...f.items, { ...DEFAULT_ITEM, vat_rate: currentVatRate }] }))
   const removeItem = (i: number) => setForm(f => ({ ...f, items: f.items.filter((_, idx) => idx !== i) }))
 
-  const { subtotal, vat_amount, total } = calcTotals(form.items, form.vat_rate)
+  const { subtotal, total, vatBreakdown } = calcTotals(form.items, form.vat_payer, form.reverse_charge)
 
   async function lookupAres(type: 'sender' | 'client') {
     const ico = type === 'sender' ? form.sender_ico : form.client_ico
@@ -177,9 +184,9 @@ export default function GeneratorPage() {
         <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-slate-800">Položky</h2>
-            <Select label="" className="w-40" value={form.vat_rate} onChange={e => set('vat_rate', Number(e.target.value) as VatRate)}>
+            <Select label="" className="w-40" value={currentVatRate} onChange={e => applyVatRateToAllItems(Number(e.target.value) as VatRate)}>
               <option value={0}>DPH 0 %</option>
-              <option value={15}>DPH 15 %</option>
+              <option value={12}>DPH 12 %</option>
               <option value={21}>DPH 21 %</option>
             </Select>
           </div>
@@ -205,10 +212,12 @@ export default function GeneratorPage() {
               <span>Základ DPH</span>
               <span className="w-32 text-right font-mono">{formatCurrency(subtotal, form.currency)}</span>
             </div>
-            <div className="flex gap-8 text-slate-400">
-              <span>DPH ({form.vat_rate} %)</span>
-              <span className="w-32 text-right font-mono">{formatCurrency(vat_amount, form.currency)}</span>
-            </div>
+            {vatBreakdown.map(b => (
+              <div key={b.rate} className="flex gap-8 text-slate-400">
+                <span>DPH ({b.rate} %)</span>
+                <span className="w-32 text-right font-mono">{formatCurrency(b.vat, form.currency)}</span>
+              </div>
+            ))}
             <div className="flex gap-8 font-bold text-slate-900 text-base border-t border-slate-100 pt-2 mt-1">
               <span>Celkem</span>
               <span className="w-32 text-right font-mono">{formatCurrency(total, form.currency)}</span>

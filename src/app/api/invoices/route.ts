@@ -90,6 +90,7 @@ export async function POST(req: Request) {
       quantity: item.quantity,
       unit: item.unit,
       unit_price: item.unit_price,
+      vat_rate: item.vat_rate ?? 21,
     }))
     const { error: itemsErr } = await db.from('invoice_items').insert(rows)
     if (itemsErr) return NextResponse.json({ error: itemsErr.message }, { status: 500 })
