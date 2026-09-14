@@ -110,7 +110,9 @@ export interface VatBreakdownItem {
 }
 
 /**
- * Spočítá součty a rozpad DPH per-položka
+ * Spočítá součty a rozpad DPH per-položka (každá položka může mít jinou sazbu).
+ * Když uživatel není plátce DPH nebo je uplatněn reverse charge, DPH se nepočítá
+ * (sazba se pro účely součtu bere jako 0), ale rozpad se pořád vrací dle skutečných sazeb položek.
  */
 export function calcTotals(
   items: InvoiceItemDraft[],
@@ -129,18 +131,19 @@ export function calcTotals(
     const itemSubtotal = (Number(item.quantity) || 0) * (Number(item.unit_price) || 0);
     subtotal += itemSubtotal;
 
-    const itemVatRate = vatPayer && !reverseCharge ? item.vat_rate : 0;
+    const rateForBreakdown = item.vat_rate ?? 21;
+    const itemVatRate = vatPayer && !reverseCharge ? rateForBreakdown : 0;
     const itemVat = (itemSubtotal * itemVatRate) / 100;
     const itemTotal = itemSubtotal + itemVat;
 
     totalVat += itemVat;
 
-    if (!breakdownMap[itemVatRate]) {
-      breakdownMap[itemVatRate] = { base: 0, vat: 0, total: 0 };
+    if (!breakdownMap[rateForBreakdown]) {
+      breakdownMap[rateForBreakdown] = { base: 0, vat: 0, total: 0 };
     }
-    breakdownMap[itemVatRate].base += itemSubtotal;
-    breakdownMap[itemVatRate].vat += itemVat;
-    breakdownMap[itemVatRate].total += itemTotal;
+    breakdownMap[rateForBreakdown].base += itemSubtotal;
+    breakdownMap[rateForBreakdown].vat += itemVat;
+    breakdownMap[rateForBreakdown].total += itemTotal;
   });
 
   const vatBreakdown: VatBreakdownItem[] = Object.entries(breakdownMap)
@@ -154,7 +157,7 @@ export function calcTotals(
 
   return {
     subtotal,
-    vatAmount: totalVat,
+    vat_amount: totalVat,
     total: subtotal + totalVat,
     vatBreakdown,
   };

@@ -48,7 +48,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
   function openEdit(c: Client) {
     setForm({
       name: c.name, address: c.address ?? '', city: c.city ?? '',
-      zip: c.zip ?? '', country: c.country, ico: c.ico ?? '',
+      zip: c.zip ?? '', country: c.country ?? 'CZ', ico: c.ico ?? '',
       dic: c.dic ?? '', email: c.email ?? '', phone: c.phone ?? '',
       notes: c.notes ?? '',
     })

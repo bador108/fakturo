@@ -2,6 +2,12 @@ export type VatRate = 0 | 12 | 21;
 
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
 
+export type InvoiceType = 'faktura' | 'zalohova' | 'opravny' | 'nabidka';
+
+export type InvoiceFilter = 'all' | 'sent' | 'paid' | 'overdue' | 'draft';
+
+export type PaymentMethod = 'bank_transfer' | 'cash' | 'card';
+
 export type Currency = 'CZK' | 'EUR' | 'USD';
 
 export type ExpenseCategory =
@@ -18,14 +24,15 @@ export interface Client {
   id: string;
   user_id: string;
   name: string;
-  ico?: string;
-  dic?: string;
-  street?: string;
+  address?: string;
   city?: string;
   zip?: string;
   country?: string;
+  ico?: string;
+  dic?: string;
   email?: string;
   phone?: string;
+  notes?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -39,6 +46,7 @@ export interface InvoiceItem {
   unit: string;
   unit_price: number;
   vat_rate: VatRate;
+  total?: number;
 }
 
 export interface InvoiceItemDraft {
@@ -54,49 +62,160 @@ export interface Invoice {
   id: string;
   user_id: string;
   invoice_number: string;
+  invoice_type: InvoiceType;
   variable_symbol?: string;
   constant_symbol?: string;
   status: InvoiceStatus;
   issue_date: string;
-  duzp: string;
+  duzp?: string;
   due_date: string;
-  
+
   // Dodavatel
-  sender_name?: string;
+  sender_name: string;
   sender_ico?: string;
   sender_dic?: string;
-  sender_street?: string;
+  sender_address?: string;
   sender_city?: string;
   sender_zip?: string;
-  sender_country?: string;
+  sender_country: string;
   sender_iban?: string;
-  sender_swift?: string;
-  sender_bank_name?: string;
-  
+  sender_bank?: string;
+  sender_email?: string;
+  sender_phone?: string;
+
   // Odběratel
-  client_id?: string;
   client_name: string;
   client_ico?: string;
   client_dic?: string;
-  client_street?: string;
+  client_address?: string;
   client_city?: string;
   client_zip?: string;
-  client_country?: string;
+  client_country: string;
   client_email?: string;
 
-  // Částky
+  // Částky (vat_rate zůstává jen jako legacy/hlavičkový údaj — skutečný rozpad DPH
+  // se počítá per položka z invoice_items.vat_rate, viz lib/utils.ts#calcTotals)
   currency: string;
+  vat_rate?: VatRate | null;
   subtotal: number;
   vat_amount: number;
   total: number;
   vat_payer: boolean;
   reverse_charge: boolean;
+  payment_method?: PaymentMethod;
   notes?: string;
 
   created_at?: string;
   updated_at?: string;
 
   invoice_items?: InvoiceItem[];
+}
+
+// Tvar formuláře pro vytvoření/editaci faktury (InvoiceForm, generator/page.tsx)
+export interface InvoiceFormData {
+  invoice_type: InvoiceType;
+  sender_name: string;
+  sender_address: string;
+  sender_city: string;
+  sender_zip: string;
+  sender_country: string;
+  sender_ico: string;
+  sender_dic: string;
+  sender_bank: string;
+  sender_iban: string;
+  sender_email: string;
+  sender_phone: string;
+  client_name: string;
+  client_address: string;
+  client_city: string;
+  client_zip: string;
+  client_country: string;
+  client_ico: string;
+  client_dic: string;
+  client_email: string;
+  invoice_number: string;
+  issue_date: string;
+  duzp: string;
+  due_date: string;
+  variable_symbol: string;
+  payment_method: PaymentMethod;
+  currency: Currency;
+  vat_payer: boolean;
+  reverse_charge: boolean;
+  notes: string;
+  items: InvoiceItemDraft[];
+}
+
+export interface SenderProfile {
+  id: string;
+  user_id: string;
+  name: string;
+  address?: string;
+  city?: string;
+  zip?: string;
+  country: string;
+  ico?: string;
+  dic?: string;
+  bank_account?: string;
+  iban?: string;
+  email?: string;
+  phone?: string;
+  is_default: boolean;
+  created_at?: string;
+}
+
+export interface RecurringInvoice {
+  id: string;
+  user_id: string;
+  name: string;
+  recurrence: 'weekly' | 'monthly' | 'quarterly' | 'yearly';
+  next_date: string;
+  is_active: boolean;
+  sender_name: string;
+  sender_address?: string;
+  sender_city?: string;
+  sender_zip?: string;
+  sender_country: string;
+  sender_ico?: string;
+  sender_dic?: string;
+  sender_bank?: string;
+  sender_iban?: string;
+  sender_email?: string;
+  sender_phone?: string;
+  client_name: string;
+  client_address?: string;
+  client_city?: string;
+  client_zip?: string;
+  client_country: string;
+  client_ico?: string;
+  currency: string;
+  vat_rate: VatRate;
+  notes?: string;
+  due_days: number;
+  items: InvoiceItemDraft[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ItemTemplate {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string;
+  unit: string;
+  unit_price: number;
+  created_at?: string;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: 'overdue' | 'reminder' | 'paid' | 'system';
+  title: string;
+  message: string;
+  invoice_id?: string;
+  read: boolean;
+  created_at?: string;
 }
 
 export interface CompanySettings {
@@ -124,10 +243,11 @@ export interface Expense {
   description: string;
   amount: number;
   vat_amount?: number;
+  vat_claimable?: boolean;
   currency: Currency | string;
   category: ExpenseCategory;
   date: string;
-  vendor?: string; // Změněno ze 'supplier' na 'vendor'
+  vendor?: string;
   notes?: string;
   created_at?: string;
   updated_at?: string;

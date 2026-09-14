@@ -95,7 +95,7 @@ export function ItemTemplatesPicker({ onAdd, currentItems }: Props) {
                       </div>
                       <button
                         onClick={() => {
-                          onAdd({ description: t.description, quantity: 1, unit: t.unit, unit_price: t.unit_price })
+                          onAdd({ description: t.description, quantity: 1, unit: t.unit, unit_price: t.unit_price, vat_rate: 21 })
                           setOpen(false)
                         }}
                         className="h-7 w-7 rounded-lg bg-brand hover:bg-brand-dark flex items-center justify-center text-white shrink-0"

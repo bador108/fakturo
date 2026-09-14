@@ -23,6 +23,7 @@ const DEFAULT_ITEM: InvoiceItemDraft = {
   quantity: 1,
   unit: 'ks',
   unit_price: 0,
+  vat_rate: 21,
 }
 
 export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: InvoiceFormProps) {
@@ -178,18 +179,28 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     client_zip: '',
     client_country: 'CZ',
     client_ico: '',
+    client_dic: '',
     client_email: '',
     invoice_number: nextInvoiceNumber,
     issue_date: new Date().toISOString().slice(0, 10),
+    duzp: new Date().toISOString().slice(0, 10),
     due_date: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+    variable_symbol: '',
+    payment_method: 'bank_transfer',
     currency: 'CZK',
-    vat_rate: 21,
     vat_payer: true,
     reverse_charge: false,
     notes: '',
     items: [{ ...DEFAULT_ITEM }],
     ...defaultValues,
   })
+
+  const [currentVatRate, setCurrentVatRate] = useState<VatRate>(21)
+
+  function applyVatRateToAllItems(rate: VatRate) {
+    setCurrentVatRate(rate)
+    setForm(f => ({ ...f, items: f.items.map(item => ({ ...item, vat_rate: rate })) }))
+  }
 
   const set = useCallback(<K extends keyof InvoiceFormData>(key: K, value: InvoiceFormData[K]) => {
     setForm(f => ({ ...f, [key]: value }))
@@ -204,10 +215,10 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     })
   }, [])
 
-  const addItem = () => setForm(f => ({ ...f, items: [...f.items, { ...DEFAULT_ITEM }] }))
+  const addItem = () => setForm(f => ({ ...f, items: [...f.items, { ...DEFAULT_ITEM, vat_rate: currentVatRate }] }))
   const removeItem = (i: number) => setForm(f => ({ ...f, items: f.items.filter((_, idx) => idx !== i) }))
 
-  const { subtotal, vat_amount, total } = calcTotals(form.items, form.vat_rate)
+  const { subtotal, vat_amount, total, vatBreakdown } = calcTotals(form.items, form.vat_payer, form.reverse_charge)
 
   useEffect(() => {
     if (!form.sender_iban || !total) { setQrDataUrl(null); return }
@@ -221,10 +232,8 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   async function save(status: 'draft' | 'sent') {
     setSaving(true)
     try {
-      // When non-payer or reverse charge: no VAT added
-      const effectiveVat = (form.vat_payer && !form.reverse_charge) ? vat_amount : 0
-      const effectiveTotal = subtotal + effectiveVat
-      const payload = { ...form, subtotal, vat_amount: effectiveVat, total: effectiveTotal, status }
+      // calcTotals už respektuje vat_payer/reverse_charge (DPH = 0, když neplátce nebo přenesená daňová povinnost)
+      const payload = { ...form, subtotal, vat_amount, total, status }
       const url = invoiceId ? `/api/invoices/${invoiceId}` : '/api/invoices'
       const method = invoiceId ? 'PUT' : 'POST'
       const res = await fetch(url, {
@@ -325,6 +334,13 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         </Select>
         <Input label="Datum vystavení" type="date" value={form.issue_date} onChange={e => set('issue_date', e.target.value)} />
         <Input label="Datum splatnosti" type="date" value={form.due_date} onChange={e => set('due_date', e.target.value)} />
+        <Input label="DUZP" type="date" value={form.duzp} onChange={e => set('duzp', e.target.value)} />
+        <Input label="Variabilní symbol" placeholder={form.invoice_number.replace(/\D/g, '')} value={form.variable_symbol} onChange={e => set('variable_symbol', e.target.value)} />
+        <Select label="Způsob úhrady" value={form.payment_method} onChange={e => set('payment_method', e.target.value as InvoiceFormData['payment_method'])}>
+          <option value="bank_transfer">Bankovní převod</option>
+          <option value="cash">Hotovost</option>
+          <option value="card">Platební karta</option>
+        </Select>
       </div>
 
       {/* Sender + Client */}
@@ -389,8 +405,9 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
               client_address: c.address ?? '',
               client_city: c.city ?? '',
               client_zip: c.zip ?? '',
-              client_country: c.country,
+              client_country: c.country ?? 'CZ',
               client_ico: c.ico ?? '',
+              client_dic: c.dic ?? '',
               client_email: c.email ?? '',
             }))} />
           </div>
@@ -400,9 +417,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             <Input label="Město" value={form.client_city} onChange={e => set('client_city', e.target.value)} />
             <Input label="PSČ" value={form.client_zip} onChange={e => set('client_zip', e.target.value)} />
           </div>
-          <div className="space-y-1">
+          <div className="grid grid-cols-2 gap-3">
             <Input label="IČO" value={form.client_ico} onChange={e => set('client_ico', e.target.value)} />
-          <Input label="E-mail klienta" type="email" value={form.client_email} onChange={e => set('client_email', e.target.value)} />
+            <Input label="DIČ" value={form.client_dic} onChange={e => set('client_dic', e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Input label="E-mail klienta" type="email" value={form.client_email} onChange={e => set('client_email', e.target.value)} />
             <button
               type="button"
               onClick={() => lookupAres('client')}
@@ -438,26 +458,26 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
               Plátce DPH
             </label>
             {form.vat_payer && (
-              <Select label="" className="w-36" value={form.vat_rate} onChange={e => set('vat_rate', Number(e.target.value) as VatRate)}>
+              <Select label="" className="w-36" value={currentVatRate} onChange={e => applyVatRateToAllItems(Number(e.target.value) as VatRate)}>
                 <option value={0}>DPH 0 %</option>
-                <option value={10}>DPH 10 %</option>
-                <option value={15}>DPH 15 %</option>
+                <option value={12}>DPH 12 %</option>
                 <option value={21}>DPH 21 %</option>
               </Select>
             )}
           </div>
         </div>
 
-        <div className="hidden md:grid grid-cols-[1fr_80px_90px_110px_40px] gap-3 text-xs font-medium text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-100">
+        <div className="hidden md:grid grid-cols-[1fr_80px_90px_110px_80px_40px] gap-3 text-xs font-medium text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-100">
           <span>Popis</span>
           <span>Množství</span>
           <span>Jedn.</span>
           <span className="text-right">Cena / jedn.</span>
+          <span>DPH</span>
           <span />
         </div>
 
         {form.items.map((item, i) => (
-          <div key={i} className="space-y-2 md:space-y-0 md:grid md:grid-cols-[1fr_80px_90px_110px_40px] md:gap-3 md:items-end border border-slate-100 rounded-lg p-3 md:border-0 md:rounded-none md:p-0">
+          <div key={i} className="space-y-2 md:space-y-0 md:grid md:grid-cols-[1fr_80px_90px_110px_80px_40px] md:gap-3 md:items-end border border-slate-100 rounded-lg p-3 md:border-0 md:rounded-none md:p-0">
             <Input placeholder="Popis položky" value={item.description} onChange={e => setItem(i, 'description', e.target.value)} />
             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 md:contents">
               <div>
@@ -476,6 +496,16 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
               <p className="text-xs text-slate-400 mb-1 md:hidden">Cena / jednotku</p>
               <Input type="number" min={0} step="0.01" className="text-right" value={item.unit_price} onChange={e => setItem(i, 'unit_price', e.target.value)} />
             </div>
+            {form.vat_payer && (
+              <div className="md:contents">
+                <p className="text-xs text-slate-400 mb-1 md:hidden">DPH</p>
+                <Select label="" value={item.vat_rate} onChange={e => setItem(i, 'vat_rate', e.target.value)}>
+                  <option value={0}>0 %</option>
+                  <option value={12}>12 %</option>
+                  <option value={21}>21 %</option>
+                </Select>
+              </div>
+            )}
             <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} className="hidden md:flex p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
               <Trash2 className="h-4 w-4" />
             </button>
@@ -501,10 +531,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
                   <span className="min-w-[7rem] text-right">§ 92a ZDPH</span>
                 </div>
               ) : (
-                <div className="flex gap-4 text-slate-400">
-                  <span>DPH ({form.vat_rate} %)</span>
-                  <span className="min-w-[7rem] text-right font-mono">{formatCurrency(vat_amount, form.currency)}</span>
-                </div>
+                vatBreakdown.map(b => (
+                  <div key={b.rate} className="flex gap-4 text-slate-400">
+                    <span>DPH ({b.rate} %)</span>
+                    <span className="min-w-[7rem] text-right font-mono">{formatCurrency(b.vat, form.currency)}</span>
+                  </div>
+                ))
               )}
             </>
           )}
