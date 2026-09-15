@@ -8,7 +8,6 @@ import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PhoneMockup } from '@/components/PhoneMockup'
 import { FeatureShowcase } from '@/components/FeatureShowcase'
 import { Reveal } from '@/components/Reveal'
-import { LayoutDashboard, FileText, Users, CreditCard } from 'lucide-react'
 
 const C = {
   bg: '#ffffff', bgSoft: '#fafafa', bgDark: '#0c0c0e',
@@ -68,61 +67,8 @@ function Nav({ userId }: { userId: string | null }) {
 
 function DashMock() {
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', borderRadius: 16, overflow: 'hidden', background: C.bg, border: `1px solid ${C.border}`, boxShadow: '0 30px 80px rgba(15,15,30,0.12), 0 8px 24px rgba(15,15,30,0.05)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px', background: C.bgSoft, borderBottom: `1px solid ${C.border}` }}>
-        {(['#ff5f57','#febc2e','#28c840'] as string[]).map(bg => <div key={bg} style={{ width: 11, height: 11, borderRadius: 999, background: bg }} />)}
-        <div style={{ flex: 1, textAlign: 'center', fontSize: 12, color: C.muted2, fontWeight: 500 }}>fakturo-seven.vercel.app/dashboard</div>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr' }}>
-        <div style={{ borderRight: `1px solid ${C.border}`, padding: 16, background: C.bgSoft, minHeight: 480 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', marginBottom: 16 }}>
-            <Image src="/icon.png" alt="Fakturo" width={28} height={28} style={{ borderRadius: 7 }} />
-            <div><div style={{ fontSize: 13, fontWeight: 600 }}>Jana Nováková</div><div style={{ fontSize: 11, color: C.muted }}>Pro plán</div></div>
-          </div>
-          {([
-            ['Přehled', <LayoutDashboard key="home" size={14} />, false, null],
-            ['Faktury', <FileText key="invoices" size={14} />, true, '24'],
-            ['Klienti', <Users key="clients" size={14} />, false, '12'],
-            ['Platby', <CreditCard key="payments" size={14} />, false, null],
-          ] as [string, React.ReactNode, boolean, string | null][]).map(([n, ic, active, badge]) => (
-            <div key={n as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, marginBottom: 2, background: active ? C.bg : 'transparent', border: active ? `1px solid ${C.border}` : '1px solid transparent', fontSize: 13, color: active ? C.fg : C.muted, fontWeight: active ? 600 : 500 }}>
-              <span style={{ display: 'flex', alignItems: 'center' }}>{ic}</span>
-              <span style={{ flex: 1 }}>{n}</span>
-              {badge && <span style={{ background: active ? C.primarySoft : 'transparent', color: active ? C.primary : C.muted2, padding: '1px 6px', borderRadius: 999, fontSize: 10, fontWeight: 600 }}>{badge}</span>}
-            </div>
-          ))}
-        </div>
-        <div style={{ padding: 28 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-            <div><div style={{ fontSize: 12, color: C.muted, marginBottom: 2 }}>Faktury · Duben 2026</div><div style={{ fontSize: 22, fontWeight: 700, letterSpacing: -0.5 }}>Přehled</div></div>
-            <div style={{ background: C.fg, color: C.bg, padding: '8px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600 }}>+ Nová faktura</div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 24 }}>
-            {([{ label:'Vystaveno', value:'148 200 Kč', delta:'+24%', color:C.fg },{ label:'Zaplaceno', value:'124 350 Kč', delta:'+18%', color:C.green },{ label:'Čeká', value:'23 850 Kč', delta:'2 faktury', color:C.muted }] as {label:string,value:string,delta:string,color:string}[]).map(s => (
-              <div key={s.label} style={{ padding: 14, borderRadius: 10, background: C.bgSoft, border: `1px solid ${C.border}` }}>
-                <div style={{ fontSize: 11, color: C.muted, marginBottom: 6, fontWeight: 500 }}>{s.label}</div>
-                <div style={{ fontSize: 18, fontWeight: 700, letterSpacing: -0.5, color: s.color }}>{s.value}</div>
-                <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>{s.delta}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ border: `1px solid ${C.border}`, borderRadius: 10, overflow: 'hidden' }}>
-            {([['2026/042','Studio Pixel s.r.o.','24 850 Kč','12. 5.','paid'],['2026/041','Atelier Holub','18 200 Kč','8. 5.','paid'],['2026/040','Káva & Kód','12 000 Kč','15. 5.','pending'],['2026/039','Notář Dvořák','5 600 Kč','3. 5.','overdue']] as string[][]).map(([num,klient,amount,due,stat],i,arr) => (
-              <div key={num} style={{ padding: '12px 16px', fontSize: 13, display: 'grid', gridTemplateColumns: '120px 1fr 110px 100px 80px', gap: 12, alignItems: 'center', borderBottom: i < arr.length-1 ? `1px solid ${C.border}` : 'none' }}>
-                <span style={{ fontWeight: 600 }}>{num}</span>
-                <span style={{ color: C.fg2 }}>{klient}</span>
-                <span style={{ textAlign: 'right', fontWeight: 600 }}>{amount}</span>
-                <span style={{ color: C.muted }}>{due}</span>
-                <span style={{ textAlign: 'right' }}>
-                  {stat==='paid'&&<span style={{ display:'inline-block',padding:'2px 8px',borderRadius:999,background:C.greenSoft,color:C.green,fontSize:11,fontWeight:600 }}>Zaplaceno</span>}
-                  {stat==='pending'&&<span style={{ display:'inline-block',padding:'2px 8px',borderRadius:999,background:'#fef3c7',color:'#a16207',fontSize:11,fontWeight:600 }}>Čeká</span>}
-                  {stat==='overdue'&&<span style={{ display:'inline-block',padding:'2px 8px',borderRadius:999,background:'#fee2e2',color:'#b91c1c',fontSize:11,fontWeight:600 }}>Po splat.</span>}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+    <div style={{ maxWidth: 1100, margin: '0 auto', borderRadius: 16, overflow: 'hidden', background: C.bg, border: `1px solid ${C.border}`, boxShadow: '0 30px 80px rgba(15,15,30,0.12), 0 8px 24px rgba(15,15,30,0.05)', position: 'relative', aspectRatio: '1200/836' }}>
+      <Image src="/screenshots/dashboard.png" alt="Dashboard Fakturo" fill style={{ objectFit: 'cover', objectPosition: 'top' }} sizes="1100px" priority />
     </div>
   )
 }
@@ -158,34 +104,6 @@ function Hero({ userId }: { userId: string | null }) {
         </div>
       </div>
       <div style={{ ...cont, paddingTop: 64 }}><DashMock /></div>
-    </section>
-  )
-}
-
-function TrustBar() {
-  return (
-    <section style={{ ...cont, padding: '56px 32px' }}>
-      <div style={{ textAlign: 'center', fontSize: 13, color: C.muted, marginBottom: 32, fontWeight: 500 }}>
-        Důvěřuje nám přes <strong style={{ color: C.fg }}>4 200 freelancerů</strong> a malých firem
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.55, fontSize: 17, fontWeight: 600, color: C.fg2, flexWrap: 'wrap', gap: 16 }}>
-        {(['Atelier Holub','Studio Pixel','Káva & Kód','pixelpilot','Dřevořez','Notář Dvořák'] as string[]).map(l => <div key={l}>{l}</div>)}
-      </div>
-    </section>
-  )
-}
-
-function Metrics() {
-  return (
-    <section style={{ ...cont, padding: '32px 32px 80px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 16, padding: '32px 0' }}>
-        {([['4 200+','aktivních uživatelů'],['1.2M','vystavených faktur'],['32 s','průměrný čas vystavení'],['4.9','hodnocení v App Store']] as string[][]).map(([num,label],i,arr) => (
-          <div key={label} style={{ padding: '0 24px', textAlign: 'center', borderRight: i < arr.length-1 ? `1px solid ${C.border}` : 'none' }}>
-            <div style={{ ...disp, fontSize: 36, lineHeight: 1, marginBottom: 6, fontWeight: 700 }}>{num}</div>
-            <div style={{ fontSize: 13, color: C.muted, fontWeight: 500 }}>{label}</div>
-          </div>
-        ))}
-      </div>
     </section>
   )
 }
@@ -294,17 +212,14 @@ function FeatureGrid() {
     <section style={{ ...cont, padding: '64px 32px 80px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
         {([
-          { title:'Slušné upomínky', text:'Mile, ale jasně. Tři varianty zdvořilosti, ty si vybereš.', img:'/features/reminders.jpg' },
-          { title:'Víceměnové faktury', text:'CZK · EUR · USD s live kurzy ČNB. DPH 0, 12, 21 %.', img:'/features/multicurrency.jpg' },
-          { title:'EU faktury', text:'VIES, OSS, reverse charge, cizí měny. S DPH i bez.', img:'/features/eu-invoices.jpg' },
-          { title:'Pro účetní', text:'Měsíční podklady jedním kliknutím. Pohoda XML, PDF.', img:'/features/accounting.jpg' },
-          { title:'API + webhooky', text:'Napoj si Fakturo na cokoliv. REST API, webhooks.', img:'/features/api.jpg' },
-          { title:'Bezpečnost', text:'Šifrování v klidu i přenosu, GDPR, 2FA, audit log.', img:'/features/security.jpg' },
-        ] as {title:string,text:string,img:string}[]).map(f => (
+          { title:'Slušné upomínky', text:'Mile, ale jasně. Tři varianty zdvořilosti, ty si vybereš.' },
+          { title:'Víceměnové faktury', text:'CZK · EUR · USD s live kurzy ČNB. DPH 0, 12, 21 %.' },
+          { title:'EU faktury', text:'VIES, OSS, reverse charge, cizí měny. S DPH i bez.' },
+          { title:'Pro účetní', text:'Měsíční podklady jedním kliknutím. Pohoda XML, PDF.' },
+          { title:'API + webhooky', text:'Napoj si Fakturo na cokoliv. REST API, webhooks.' },
+          { title:'Bezpečnost', text:'Šifrování v klidu i přenosu, GDPR, 2FA, audit log.' },
+        ] as {title:string,text:string}[]).map(f => (
           <div key={f.title} style={{ padding: 28, borderRadius: 14, border: `1px solid ${C.border}`, background: C.bg }}>
-            <div style={{ width: 64, height: 64, borderRadius: 12, background: C.bgSoft, border: `1px solid ${C.border}`, overflow: 'hidden', marginBottom: 16, position: 'relative' }}>
-              <Image src={f.img} alt="" fill style={{ objectFit: 'cover' }} sizes="64px" />
-            </div>
             <h3 style={{ fontSize: 17, fontWeight: 600, margin: 0, marginBottom: 8, letterSpacing: -0.3 }}>{f.title}</h3>
             <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.55 }}>{f.text}</p>
           </div>
@@ -411,8 +326,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
     <div style={pageStyle}>
       <Nav userId={userId} />
       <Hero userId={userId} />
-      <Reveal><TrustBar /></Reveal>
-      <Reveal><Metrics /></Reveal>
       <Reveal>
         <section style={{ ...cont, padding: '80px 32px', textAlign: 'center' }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Demo</div>
