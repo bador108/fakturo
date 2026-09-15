@@ -22,7 +22,9 @@ const env = Object.fromEntries(
 
 const TEST_USERNAME = 'test'
 const TEST_PASSWORD = process.env.TEST_USER_PASSWORD
-const TEST_EMAIL = 'test@fakturo.app' // fallback identita, Clerk vyžaduje aspoň jednu email adresu
+// Reálná, aktivně kontrolovaná schránka — appka má 2FA přes email kód zapnuté
+// instančně, takže fallback email MUSÍ být doručitelný, jinak se na "test" nikdo nepřihlásí.
+const TEST_EMAIL = 'fakturosupport@gmail.com'
 
 if (!TEST_PASSWORD) {
   console.error('Chybí TEST_USER_PASSWORD env proměnná. Spusť: TEST_USER_PASSWORD=\'...\' node scripts/create-test-user.mjs')
