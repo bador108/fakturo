@@ -9,18 +9,23 @@ import type { SenderProfile } from '@/types'
 interface Props {
   userId: string
   profiles: SenderProfile[]
+  canBrand: boolean
 }
+
+const DEFAULT_ACCENT = '#4F46E5'
 
 function ProfileForm({
   profile,
   onSave,
   onDelete,
   defaultOpen = false,
+  canBrand,
 }: {
   profile?: SenderProfile
   onSave: (p: SenderProfile) => void
   onDelete?: () => void
   defaultOpen?: boolean
+  canBrand: boolean
 }) {
   const [open, setOpen] = useState(defaultOpen)
   const [saving, setSaving] = useState(false)
@@ -37,6 +42,7 @@ function ProfileForm({
     iban: profile?.iban ?? '',
     email: profile?.email ?? '',
     phone: profile?.phone ?? '',
+    accent_color: profile?.accent_color ?? DEFAULT_ACCENT,
   })
 
   function set(key: keyof typeof form, val: string) {
@@ -49,10 +55,12 @@ function ProfileForm({
     try {
       const url = profile ? `/api/sender-profiles/${profile.id}` : '/api/sender-profiles'
       const method = profile ? 'PUT' : 'POST'
+      const payload: Partial<typeof form> & { is_default: boolean } = { ...form, is_default: profile?.is_default ?? false }
+      if (!canBrand) delete payload.accent_color
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, is_default: profile?.is_default ?? false }),
+        body: JSON.stringify(payload),
       })
       if (res.ok) {
         const data = await res.json()
@@ -109,6 +117,28 @@ function ProfileForm({
             </div>
             <Input label="E-mail" type="email" value={form.email} onChange={e => set('email', e.target.value)} />
             <Input label="Telefon" value={form.phone} onChange={e => set('phone', e.target.value)} />
+            <div className="col-span-2">
+              <label className="text-sm font-medium text-slate-600 mb-1 block">Barva faktury</label>
+              {canBrand ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={form.accent_color}
+                    onChange={e => set('accent_color', e.target.value)}
+                    className="h-9 w-9 rounded-lg border border-slate-200 cursor-pointer bg-white p-0.5"
+                  />
+                  <input
+                    type="text"
+                    value={form.accent_color}
+                    onChange={e => set('accent_color', e.target.value)}
+                    placeholder="#4F46E5"
+                    className="w-28 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
+                  />
+                </div>
+              ) : (
+                <p className="text-xs text-slate-400">Vlastní barva faktury je součástí Start a Pro plánu. <a href="/cenik" className="text-brand hover:underline">Upgradovat</a></p>
+              )}
+            </div>
           </div>
           <div className="flex items-center justify-between pt-1">
             <div className="flex items-center gap-3">
@@ -129,7 +159,7 @@ function ProfileForm({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function SenderProfilesManager({ userId, profiles: initial }: Props) {
+export function SenderProfilesManager({ userId, profiles: initial, canBrand }: Props) {
   const [profiles, setProfiles] = useState<SenderProfile[]>(initial)
   const [showNew, setShowNew] = useState(false)
 
@@ -139,6 +169,7 @@ export function SenderProfilesManager({ userId, profiles: initial }: Props) {
         <ProfileForm
           key={p.id}
           profile={p}
+          canBrand={canBrand}
           onSave={updated => setProfiles(ps => ps.map(x => x.id === updated.id ? updated : x))}
           onDelete={() => setProfiles(ps => ps.filter(x => x.id !== p.id))}
         />
@@ -147,6 +178,7 @@ export function SenderProfilesManager({ userId, profiles: initial }: Props) {
       {showNew ? (
         <ProfileForm
           defaultOpen
+          canBrand={canBrand}
           onSave={newProfile => {
             setProfiles(ps => [...ps, newProfile])
             setShowNew(false)

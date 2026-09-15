@@ -104,6 +104,7 @@ export interface Invoice {
   reverse_charge: boolean;
   payment_method?: PaymentMethod;
   notes?: string;
+  accent_color?: string;
 
   created_at?: string;
   updated_at?: string;
@@ -144,6 +145,7 @@ export interface InvoiceFormData {
   reverse_charge: boolean;
   notes: string;
   items: InvoiceItemDraft[];
+  accent_color?: string;
 }
 
 export interface SenderProfile {
@@ -160,6 +162,7 @@ export interface SenderProfile {
   iban?: string;
   email?: string;
   phone?: string;
+  accent_color?: string;
   is_default: boolean;
   created_at?: string;
 }

@@ -73,6 +73,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       sender_iban: profile.iban ?? '',
       sender_email: profile.email ?? '',
       sender_phone: profile.phone ?? '',
+      accent_color: profile.accent_color ?? '#4F46E5',
     }))
   }
 
@@ -192,6 +193,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     reverse_charge: false,
     notes: '',
     items: [{ ...DEFAULT_ITEM }],
+    accent_color: '#4F46E5',
     ...defaultValues,
   })
 

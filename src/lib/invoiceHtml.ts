@@ -19,6 +19,13 @@ function getFontDataUris() {
   return fontCache
 }
 
+const DEFAULT_ACCENT = '#4F46E5'
+
+function sanitizeColor(color: string | null | undefined): string {
+  if (color && /^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(color)) return color
+  return DEFAULT_ACCENT
+}
+
 function esc(v: unknown): string {
   if (v === null || v === undefined) return ''
   return String(v)
@@ -49,6 +56,7 @@ interface RenderOptions {
 export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): string {
   const { regular, bold } = getFontDataUris()
   const currency = invoice.currency
+  const accent = sanitizeColor(invoice.accent_color)
   const { vatBreakdown } = calcTotals(
     items.map(i => ({ description: i.description, quantity: i.quantity, unit: i.unit, unit_price: i.unit_price, vat_rate: i.vat_rate })),
     invoice.vat_payer,
@@ -105,14 +113,14 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   }
   .header { display: flex; justify-content: space-between; margin-bottom: 32px; }
   .sender-name { font-size: 19pt; font-weight: 700; color: #18181B; letter-spacing: -0.2px; margin: 0; }
-  .invoice-label { font-size: 10.5pt; font-weight: 700; color: #4F46E5; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .invoice-label { font-size: 10.5pt; font-weight: 700; color: ${accent}; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
   .invoice-number { font-size: 12pt; color: #71717A; margin-top: 1px; }
   .meta-block { text-align: right; }
   .meta-row { display: flex; gap: 14px; margin-top: 6px; justify-content: flex-end; flex-wrap: wrap; }
   .meta-item { display: flex; flex-direction: column; gap: 2px; }
   .meta-label { font-size: 7.5pt; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; }
   .meta-value { font-size: 9.5pt; font-weight: 700; }
-  .meta-value.accent { color: #4F46E5; }
+  .meta-value.accent { color: ${accent}; }
 
   .parties { display: flex; gap: 24px; margin-bottom: 28px; }
   .party-box { flex: 1; background: #FAFAFA; border-radius: 6px; padding: 14px; }
@@ -121,7 +129,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   .party-line { font-size: 9.5pt; color: #71717A; line-height: 1.5; }
 
   table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-  thead tr { background: #4F46E5; }
+  thead tr { background: ${accent}; }
   thead th { color: #fff; font-size: 8.5pt; font-weight: 700; padding: 7px 10px; text-align: left; }
   tbody td { font-size: 9.5pt; padding: 7px 10px; border-bottom: 1px solid #E4E4E7; }
   tbody tr.alt { background: #F4F4F5; }
@@ -131,7 +139,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   .totals { display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 10px; }
   .total-row { display: flex; gap: 16px; margin-bottom: 3px; min-width: 220px; justify-content: space-between; }
   .total-label { color: #71717A; }
-  .grand-total { display: flex; justify-content: space-between; gap: 16px; min-width: 220px; background: #4F46E5; color: #fff; font-weight: 700; font-size: 11pt; padding: 8px 14px; border-radius: 4px; margin-top: 4px; }
+  .grand-total { display: flex; justify-content: space-between; gap: 16px; min-width: 220px; background: ${accent}; color: #fff; font-weight: 700; font-size: 11pt; padding: 8px 14px; border-radius: 4px; margin-top: 4px; }
 
   .legal-notice { font-size: 8.5pt; color: #B45309; margin-bottom: 20px; }
 

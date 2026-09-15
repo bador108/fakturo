@@ -6,7 +6,7 @@ import { ReminderSettings } from '@/components/ReminderSettings'
 import { UpgradeButton } from '@/components/UpgradeButton'
 import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
-import { FREE_TIER_LIMIT } from '@/lib/stripe'
+import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
 
 export default async function SettingsPage() {
   const { userId } = await auth()
@@ -15,10 +15,11 @@ export default async function SettingsPage() {
   const db = createServiceClient()
   const [{ data: profiles }, { data: user }] = await Promise.all([
     db.from('sender_profiles').select('*').eq('user_id', userId).order('is_default', { ascending: false }),
-    db.from('users').select('plan, invoice_count_this_month, reminder_days').eq('id', userId).single(),
+    db.from('users').select('plan, email, invoice_count_this_month, reminder_days').eq('id', userId).single(),
   ])
 
-  const plan = user?.plan ?? 'free'
+  const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
+  const canBrand = plan === 'start' || plan === 'pro'
   const used = user?.invoice_count_this_month ?? 0
   const reminderDays: number[] = user?.reminder_days ?? [3, 7, 14]
 
@@ -53,7 +54,7 @@ export default async function SettingsPage() {
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-1">Profily dodavatele</h2>
         <p className="text-xs text-slate-400 mb-4">Uložte údaje pro různé firmy nebo živnosti. Vybraný profil se automaticky načte do nové faktury.</p>
-        <SenderProfilesManager userId={userId} profiles={profiles ?? []} />
+        <SenderProfilesManager userId={userId} profiles={profiles ?? []} canBrand={canBrand} />
       </div>
 
       {/* Item templates */}

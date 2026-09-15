@@ -65,6 +65,7 @@ export async function POST(req: Request) {
       vat_amount,
       total,
       notes: form.notes || null,
+      accent_color: form.accent_color || null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
