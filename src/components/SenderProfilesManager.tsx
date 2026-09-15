@@ -12,7 +12,7 @@ interface Props {
   canBrand: boolean
 }
 
-const DEFAULT_ACCENT = '#4F46E5'
+const DEFAULT_ACCENT = '#0c0c0e'
 
 function ProfileForm({
   profile,
@@ -131,7 +131,7 @@ function ProfileForm({
                     type="text"
                     value={form.accent_color}
                     onChange={e => set('accent_color', e.target.value)}
-                    placeholder="#4F46E5"
+                    placeholder="#0c0c0e"
                     className="w-28 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
                   />
                 </div>

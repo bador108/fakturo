@@ -74,7 +74,39 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       sender_iban: profile.iban ?? '',
       sender_email: profile.email ?? '',
       sender_phone: profile.phone ?? '',
-      accent_color: profile.accent_color ?? '#4F46E5',
+      accent_color: profile.accent_color ?? '#0c0c0e',
+    }))
+  }
+
+  // Vlastní profil se dá vypsat i jako odběratel (např. dobropis, nebo když je
+  // uživatel na faktuře příjemce, ne vystavovatel).
+  function loadSenderProfileAsClient(profile: SenderProfile) {
+    setForm(f => ({
+      ...f,
+      client_name: profile.name,
+      client_address: profile.address ?? '',
+      client_city: profile.city ?? '',
+      client_zip: profile.zip ?? '',
+      client_country: profile.country,
+      client_ico: profile.ico ?? '',
+      client_dic: profile.dic ?? '',
+      client_email: profile.email ?? '',
+    }))
+  }
+
+  // Symetrie k "Vybrat klienta" u odběratele — uložený klient jde vypsat i jako dodavatel.
+  function loadClientAsSender(c: Client) {
+    setForm(f => ({
+      ...f,
+      sender_name: c.name,
+      sender_address: c.address ?? '',
+      sender_city: c.city ?? '',
+      sender_zip: c.zip ?? '',
+      sender_country: c.country ?? 'CZ',
+      sender_ico: c.ico ?? '',
+      sender_dic: c.dic ?? '',
+      sender_email: c.email ?? '',
+      sender_phone: c.phone ?? '',
     }))
   }
 
@@ -201,7 +233,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     reverse_charge: false,
     notes: '',
     items: [{ ...DEFAULT_ITEM }],
-    accent_color: '#4F46E5',
+    accent_color: '#0c0c0e',
     ...defaultValues,
   })
 
@@ -375,26 +407,29 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       {/* Sender + Client */}
       <div className="grid md:grid-cols-2 gap-5">
         <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <h2 className="font-semibold text-slate-800">Dodavatel</h2>
-            {senderProfiles.length > 1 && (
-              <div className="flex items-center gap-1.5">
-                <User className="h-3.5 w-3.5 text-slate-400" />
-                <select
-                  className="text-xs text-brand bg-transparent border-0 focus:outline-none cursor-pointer"
-                  defaultValue=""
-                  onChange={e => {
-                    const p = senderProfiles.find(x => x.id === e.target.value)
-                    if (p) loadSenderProfile(p)
-                  }}
-                >
-                  <option value="" disabled>Načíst profil…</option>
-                  {senderProfiles.map(p => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                  ))}
-                </select>
-              </div>
-            )}
+            <div className="flex items-center gap-3">
+              {senderProfiles.length > 1 && (
+                <div className="flex items-center gap-1.5">
+                  <User className="h-3.5 w-3.5 text-slate-400" />
+                  <select
+                    className="text-xs text-brand bg-transparent border-0 focus:outline-none cursor-pointer"
+                    defaultValue=""
+                    onChange={e => {
+                      const p = senderProfiles.find(x => x.id === e.target.value)
+                      if (p) loadSenderProfile(p)
+                    }}
+                  >
+                    <option value="" disabled>Načíst profil…</option>
+                    {senderProfiles.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <ClientPicker onSelect={loadClientAsSender} />
+            </div>
           </div>
           <Input label="Jméno / firma" value={form.sender_name} onChange={e => set('sender_name', e.target.value)} />
           <Input label="Adresa" value={form.sender_address} onChange={e => set('sender_address', e.target.value)} />
@@ -431,19 +466,39 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         </section>
 
         <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <h2 className="font-semibold text-slate-800">Odběratel</h2>
-            <ClientPicker onSelect={(c: Client) => setForm(f => ({
-              ...f,
-              client_name: c.name,
-              client_address: c.address ?? '',
-              client_city: c.city ?? '',
-              client_zip: c.zip ?? '',
-              client_country: c.country ?? 'CZ',
-              client_ico: c.ico ?? '',
-              client_dic: c.dic ?? '',
-              client_email: c.email ?? '',
-            }))} />
+            <div className="flex items-center gap-3">
+              {senderProfiles.length > 0 && (
+                <div className="flex items-center gap-1.5">
+                  <User className="h-3.5 w-3.5 text-slate-400" />
+                  <select
+                    className="text-xs text-brand bg-transparent border-0 focus:outline-none cursor-pointer"
+                    defaultValue=""
+                    onChange={e => {
+                      const p = senderProfiles.find(x => x.id === e.target.value)
+                      if (p) loadSenderProfileAsClient(p)
+                    }}
+                  >
+                    <option value="" disabled>Moje údaje…</option>
+                    {senderProfiles.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <ClientPicker onSelect={(c: Client) => setForm(f => ({
+                ...f,
+                client_name: c.name,
+                client_address: c.address ?? '',
+                client_city: c.city ?? '',
+                client_zip: c.zip ?? '',
+                client_country: c.country ?? 'CZ',
+                client_ico: c.ico ?? '',
+                client_dic: c.dic ?? '',
+                client_email: c.email ?? '',
+              }))} />
+            </div>
           </div>
           <Input label="Jméno / firma" value={form.client_name} onChange={e => set('client_name', e.target.value)} />
           <Input label="Adresa" value={form.client_address} onChange={e => set('client_address', e.target.value)} />

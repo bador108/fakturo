@@ -207,7 +207,7 @@ function FeatureGrid() {
           { title:'Víceměnové faktury', text:'CZK · EUR · USD s live kurzy ČNB. DPH 0, 12, 21 %.' },
           { title:'EU faktury', text:'VIES, OSS, reverse charge, cizí měny. S DPH i bez.' },
           { title:'Pro účetní', text:'Měsíční podklady jedním kliknutím. Pohoda XML, PDF.' },
-          { title:'API + webhooky', text:'Napoj si Fakturo na cokoliv. REST API, webhooks.' },
+          { title:'QR platby', text:'Ke každé faktuře automaticky QR kód. Klient naskenuje a zaplatí.' },
           { title:'Bezpečnost', text:'Šifrování v klidu i přenosu, GDPR, 2FA, audit log.' },
         ] as {title:string,text:string}[]).map(f => (
           <div key={f.title} style={{ padding: 28, borderRadius: 14, border: `1px solid ${C.border}`, background: C.bg }}>
@@ -280,7 +280,7 @@ function CTA({ userId }: { userId: string | null }) {
 
 function Footer() {
   const cols = [
-    { title: 'Produkt', items: [['Funkce','/funkce'],['Ceník','/cenik'],['Pravidelné fakturace','/pravidelne-fakturace'],['API','/api-developers']] as [string,string][] },
+    { title: 'Produkt', items: [['Funkce','/funkce'],['Ceník','/cenik'],['Pravidelné fakturace','/pravidelne-fakturace']] as [string,string][] },
     { title: 'Společnost', items: [['O nás','/o-nas'],['Kontakt','/kontakt']] as [string,string][] },
     { title: 'Pomoc', items: [['Nápověda','/napoveda'],['Bezpečnost','/bezpecnost'],['GDPR','/gdpr']] as [string,string][] },
   ]

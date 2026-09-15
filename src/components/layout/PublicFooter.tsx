@@ -15,7 +15,6 @@ const cols = [
       { label: 'Funkce', href: '/funkce' },
       { label: 'Ceník', href: '/cenik' },
       { label: 'Pravidelné fakturace', href: '/pravidelne-fakturace' },
-      { label: 'API', href: '/api-developers' },
     ],
   },
   {

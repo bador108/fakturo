@@ -96,16 +96,6 @@ const features = [
       'Funkční na iOS i Androidu',
     ],
   },
-  {
-    title: 'API a integrace',
-    desc: 'Napoj Fakturo na vlastní systémy.',
-    items: [
-      'REST API pro vývojáře',
-      'Webhooky při vytvoření / zaplacení faktury',
-      'Napojení na e-shopy a CRM systémy',
-      'Dokumentace a sandbox prostředí',
-    ],
-  },
 ]
 
 export default function FunkcePage() {
