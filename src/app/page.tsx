@@ -65,14 +65,6 @@ function Nav({ userId }: { userId: string | null }) {
   )
 }
 
-function DashMock() {
-  return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', borderRadius: 16, overflow: 'hidden', background: C.bg, border: `1px solid ${C.border}`, boxShadow: '0 30px 80px rgba(15,15,30,0.12), 0 8px 24px rgba(15,15,30,0.05)', position: 'relative', aspectRatio: '1200/836' }}>
-      <Image src="/screenshots/dashboard.png" alt="Dashboard Fakturo" fill style={{ objectFit: 'cover', objectPosition: 'top' }} sizes="1100px" priority />
-    </div>
-  )
-}
-
 function Hero({ userId }: { userId: string | null }) {
   return (
     <section style={{ padding: '88px 0 64px' }}>
@@ -103,7 +95,6 @@ function Hero({ userId }: { userId: string | null }) {
           ))}
         </div>
       </div>
-      <div style={{ ...cont, paddingTop: 64 }}><DashMock /></div>
     </section>
   )
 }

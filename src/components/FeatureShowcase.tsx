@@ -91,21 +91,12 @@ function Lightbox({ src, title, onClose }: { src: string; title: string; onClose
         className="relative z-10 w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10"
         onClick={e => e.stopPropagation()}
       >
-        {/* Browser chrome */}
-        <div className="bg-slate-800 flex items-center gap-2 px-4 py-2.5">
-          <button
-            onClick={onClose}
-            className="h-3 w-3 rounded-full bg-slate-500 hover:bg-slate-400 transition flex items-center justify-center"
-          />
-          <span className="h-3 w-3 rounded-full bg-slate-500" />
-          <span className="h-3 w-3 rounded-full bg-slate-500" />
-          <div className="ml-3 flex-1 bg-slate-700 rounded-md h-5 flex items-center px-3">
-            <span className="text-[10px] text-slate-400 font-mono">fakturo.vercel.app</span>
-          </div>
-          <button onClick={onClose} className="ml-2 text-slate-400 hover:text-white transition">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 z-10 h-9 w-9 rounded-full bg-slate-900/70 hover:bg-slate-900/90 backdrop-blur-sm text-white flex items-center justify-center transition"
+        >
+          <X className="h-4 w-4" />
+        </button>
         <div className="relative w-full" style={{ aspectRatio: '1200/836' }}>
           <Image
             src={src}
@@ -164,21 +155,8 @@ export function FeatureShowcase() {
         <button
           type="button"
           onClick={() => setLightbox(current.img)}
-          className="relative rounded-2xl overflow-hidden border shadow-2xl ring-2 ring-slate-300 transition-all group w-full text-left cursor-zoom-in"
+          className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-2xl transition-all group w-full text-left cursor-zoom-in"
         >
-          {/* Browser chrome */}
-          <div className="bg-slate-800 flex items-center gap-2 px-4 py-2.5">
-            <span className="h-3 w-3 rounded-full bg-slate-500" />
-            <span className="h-3 w-3 rounded-full bg-slate-500" />
-            <span className="h-3 w-3 rounded-full bg-slate-500" />
-            <div className="ml-3 flex-1 bg-slate-700 rounded-md h-5 flex items-center px-3">
-              <span className="text-[10px] text-slate-400 font-mono">fakturo.vercel.app</span>
-            </div>
-            <div className="ml-2 flex items-center gap-1 text-slate-400 text-[10px] opacity-0 group-hover:opacity-100 transition">
-              <ZoomIn className="h-3 w-3" />
-              <span>Zvětšit</span>
-            </div>
-          </div>
           <div className="relative w-full" style={{ aspectRatio: '1200/836' }}>
             <Image
               key={current.img}
