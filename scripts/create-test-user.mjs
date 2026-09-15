@@ -9,7 +9,9 @@ import { readFileSync } from 'fs'
 // pouhým "test" — Clerk API uživatele s username vytvoří i tak, ale přihlašovací formulář
 // respektuje jen identifikátory zapnuté v Dashboardu.
 //
-// Spuštění: node scripts/create-test-user.mjs  (potřebuje .env.local s reálnými klíči)
+// Heslo se NIKDY nepíše natvrdo do repa — dej ho jako env proměnnou při spuštění:
+//   TEST_USER_PASSWORD='...' node scripts/create-test-user.mjs
+// (potřebuje taky .env.local s reálnými Clerk/Supabase klíči)
 
 const env = Object.fromEntries(
   readFileSync('.env.local', 'utf8').split('\n')
@@ -19,8 +21,13 @@ const env = Object.fromEntries(
 )
 
 const TEST_USERNAME = 'test'
-const TEST_PASSWORD = 'test0987'
+const TEST_PASSWORD = process.env.TEST_USER_PASSWORD
 const TEST_EMAIL = 'test@fakturo.app' // fallback identita, Clerk vyžaduje aspoň jednu email adresu
+
+if (!TEST_PASSWORD) {
+  console.error('Chybí TEST_USER_PASSWORD env proměnná. Spusť: TEST_USER_PASSWORD=\'...\' node scripts/create-test-user.mjs')
+  process.exit(1)
+}
 
 const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
 const db = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, type FormEvent } from 'react'
-import { useSignIn, useAuth } from '@clerk/nextjs'
+import { useSignIn, useAuth, useClerk } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -28,6 +28,7 @@ type Mode = 'sign-in' | 'forgot-request' | 'forgot-verify'
 export default function SignInPage() {
   const { signIn } = useSignIn()
   const { isSignedIn } = useAuth()
+  const clerk = useClerk()
   const router = useRouter()
 
   useEffect(() => {
@@ -48,17 +49,17 @@ export default function SignInPage() {
     setError(null)
     setGoogleLoading(true)
     try {
-      const { error: err } = await signIn.sso({
+      // Klasická (stabilní, dobře zdokumentovaná) Clerk metoda místo novějšího
+      // signIn.sso() z Future API, kde redirectUrl/redirectCallbackUrl chování
+      // bylo nespolehlivé (viz commit historie).
+      await clerk.client.signIn.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: '/dashboard',
-        redirectCallbackUrl: '/sign-in/sso-callback',
+        redirectUrl: '/sign-in/sso-callback',
+        redirectUrlComplete: '/dashboard',
       })
-      if (err) {
-        setError(errMsg(err))
-        setGoogleLoading(false)
-      }
-      // Na úspěch se stránka přesměruje na Google — loading stav zůstává, dokud se to nestane.
+      // Úspěch = stránka se přesměruje na Google, loading zůstává dokud se to nestane.
     } catch (err) {
+      console.error('Google sign-in failed:', err)
       setError(errMsg(err as { message?: string }))
       setGoogleLoading(false)
     }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, type FormEvent } from 'react'
-import { useSignUp, useAuth } from '@clerk/nextjs'
+import { useSignUp, useAuth, useClerk } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -26,6 +26,7 @@ function GoogleIcon({ className }: { className?: string }) {
 export default function SignUpPage() {
   const { signUp } = useSignUp()
   const { isSignedIn } = useAuth()
+  const clerk = useClerk()
   const router = useRouter()
 
   useEffect(() => {
@@ -45,16 +46,13 @@ export default function SignUpPage() {
     setError(null)
     setGoogleLoading(true)
     try {
-      const { error: err } = await signUp.sso({
+      await clerk.client.signUp.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: '/dashboard',
-        redirectCallbackUrl: '/sign-in/sso-callback',
+        redirectUrl: '/sign-in/sso-callback',
+        redirectUrlComplete: '/dashboard',
       })
-      if (err) {
-        setError(errMsg(err))
-        setGoogleLoading(false)
-      }
     } catch (err) {
+      console.error('Google sign-up failed:', err)
       setError(errMsg(err as { message?: string }))
       setGoogleLoading(false)
     }
