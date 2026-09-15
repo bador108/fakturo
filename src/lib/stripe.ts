@@ -10,7 +10,7 @@ export function getEffectivePlan(plan: string, email?: string | null): string {
   return plan
 }
 
-export const FREE_TIER_LIMIT = 15
+export const FREE_TIER_LIMIT = 5
 export const START_TIER_LIMIT = 999999 // unlimited in practice
 
 export function getPriceId(plan: 'start' | 'pro', billing: 'monthly' | 'annual'): string {

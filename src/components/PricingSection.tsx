@@ -34,7 +34,7 @@ const plans: Plan[] = [
     btnClass: 'border-2 border-slate-200 text-slate-700 hover:border-brand-soft hover:text-brand',
     checkColor: 'text-slate-400',
     features: [
-      { text: '15 faktur za měsíc', included: true },
+      { text: '5 faktur za měsíc', included: true },
       { text: 'PDF export', included: true },
       { text: 'Odeslání emailem', included: true },
       { text: 'Správa klientů (3 klienti)', included: true },

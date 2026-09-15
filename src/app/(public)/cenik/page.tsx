@@ -4,7 +4,7 @@ import { PricingSection } from '@/components/PricingSection'
 
 export const metadata: Metadata = {
   title: 'Ceník – Fakturo',
-  description: 'Jednoduché ceny bez překvapení. Free plán zdarma (15 faktur/měsíc), Start 99 Kč/měsíc, Pro 249 Kč/měsíc.',
+  description: 'Jednoduché ceny bez překvapení. Free plán zdarma (5 faktur/měsíc), Start 99 Kč/měsíc, Pro 249 Kč/měsíc.',
 }
 
 const C = {
