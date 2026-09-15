@@ -11,7 +11,6 @@ const isPublic = createRouteMatcher([
   '/pravidelne-fakturace(.*)',
   '/o-nas(.*)',
   '/kontakt(.*)',
-  '/napoveda(.*)',
   '/bezpecnost(.*)',
   '/gdpr(.*)',
   '/api/clerk(.*)',

@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import { InvoiceForm } from '@/components/invoice/InvoiceForm'
 import { getEffectivePlan } from '@/lib/stripe'
-import { isPro } from '@/lib/plan'
 import type { Currency, Invoice, InvoiceItem } from '@/types'
 
 export default async function InvoicePage({ params }: { params: { id: string } }) {
@@ -17,7 +16,7 @@ export default async function InvoicePage({ params }: { params: { id: string } }
   ])
 
   if (error || !data) notFound()
-  const isProPlan = isPro(getEffectivePlan(user?.plan ?? 'free', user?.email))
+  const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
 
   const invoice = data as Invoice & { invoice_items: InvoiceItem[] }
 
@@ -71,7 +70,7 @@ export default async function InvoicePage({ params }: { params: { id: string } }
       invoiceId={invoice.id}
       nextInvoiceNumber={invoice.invoice_number}
       defaultValues={defaultValues}
-      isProPlan={isProPlan}
+      plan={plan}
     />
   )
 }

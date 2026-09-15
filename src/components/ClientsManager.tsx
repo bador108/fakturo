@@ -32,6 +32,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
   const [saving, setSaving] = useState(false)
   const [aresLoading, setAresLoading] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [error, setError] = useState('')
 
   const filtered = clients.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -42,6 +43,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
   function openAdd() {
     setForm(EMPTY)
     setEditing(null)
+    setError('')
     setModal('add')
   }
 
@@ -79,6 +81,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
   async function save() {
     if (!form.name.trim()) return
     setSaving(true)
+    setError('')
     try {
       if (modal === 'edit' && editing) {
         const res = await fetch(`/api/clients/${editing.id}`, {
@@ -86,20 +89,18 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),
         })
-        if (res.ok) {
-          const updated = await res.json()
-          setClients(cs => cs.map(c => c.id === editing.id ? updated : c))
-        }
+        if (!res.ok) { const d = await res.json().catch(() => null); setError(d?.error ?? 'Uložení se nezdařilo.'); return }
+        const updated = await res.json()
+        setClients(cs => cs.map(c => c.id === editing.id ? updated : c))
       } else {
         const res = await fetch('/api/clients', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),
         })
-        if (res.ok) {
-          const created = await res.json()
-          setClients(cs => [...cs, created].sort((a, b) => a.name.localeCompare(b.name)))
-        }
+        if (!res.ok) { const d = await res.json().catch(() => null); setError(d?.error ?? 'Uložení se nezdařilo.'); return }
+        const created = await res.json()
+        setClients(cs => [...cs, created].sort((a, b) => a.name.localeCompare(b.name)))
       }
       setModal(null)
     } finally {
@@ -337,6 +338,8 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
                 />
               </div>
             </div>
+
+            {error && <p className="text-xs text-red-500 mt-3">{error}</p>}
 
             <div className="flex gap-3 mt-6">
               <button

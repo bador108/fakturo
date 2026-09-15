@@ -3,7 +3,6 @@ import { createServiceClient } from '@/lib/supabase'
 import { generateInvoiceNumber } from '@/lib/utils'
 import { InvoiceForm } from '@/components/invoice/InvoiceForm'
 import { getEffectivePlan } from '@/lib/stripe'
-import { isPro } from '@/lib/plan'
 
 export default async function NewInvoicePage() {
   const { userId } = await auth()
@@ -19,7 +18,7 @@ export default async function NewInvoicePage() {
   ])
 
   const nextNumber = generateInvoiceNumber(lastInvoice?.invoice_number)
-  const isProPlan = isPro(getEffectivePlan(user?.plan ?? 'free', user?.email))
+  const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
 
   const defaultValues = profile
     ? {
@@ -45,7 +44,7 @@ export default async function NewInvoicePage() {
     <InvoiceForm
       nextInvoiceNumber={nextNumber}
       defaultValues={defaultValues}
-      isProPlan={isProPlan}
+      plan={plan}
     />
   )
 }

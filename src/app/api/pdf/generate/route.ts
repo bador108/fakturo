@@ -1,16 +1,27 @@
 import { NextResponse } from 'next/server'
 import { calcTotals } from '@/lib/utils'
 
-// Puppeteer/Chromium potřebuje víc času než výchozích 10s, hlavně na cold startu
+// Puppeteer/Chromium potřebuje víc než výchozích 10s, hlavně na cold startu
 export const maxDuration = 30
 import { renderInvoiceHtml } from '@/lib/invoiceHtml'
 import { renderPdfFromHtml } from '@/lib/pdfBrowser'
+import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
 import QRCode from 'qrcode'
 import type { InvoiceFormData } from '@/types'
 
-// Veřejný endpoint (generátor faktur zdarma bez registrace) — bez auth,
-// ale se základní validací vstupu, ať vadný request nespadne jako holý 500.
+const RATE_LIMIT_MAX = 10
+const RATE_LIMIT_WINDOW_MIN = 60
+
+// Veřejný endpoint (generátor faktur zdarma bez registrace) — bez auth, ale s rate
+// limitem (PDF render přes Puppeteer je drahá operace — bez limitu snadný DoS vektor)
+// a základní validací vstupu, ať vadný request nespadne jako holý 500.
 export async function POST(req: Request) {
+  const ip = getClientIp(req)
+  const allowed = await checkRateLimit('pdf_generate_requests', ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MIN)
+  if (!allowed) {
+    return NextResponse.json({ error: 'Příliš mnoho požadavků, zkuste to prosím za chvíli.' }, { status: 429 })
+  }
+
   let form: InvoiceFormData
   try {
     form = await req.json() as InvoiceFormData

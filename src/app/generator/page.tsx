@@ -82,7 +82,11 @@ export default function GeneratorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
-      if (!res.ok) { alert('Chyba při generování PDF'); return }
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        alert(data?.error ?? 'Chyba při generování PDF')
+        return
+      }
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')

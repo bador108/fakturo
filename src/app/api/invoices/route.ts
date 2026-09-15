@@ -2,7 +2,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
-import { isPro } from '@/lib/plan'
+import { isPro, isPaid } from '@/lib/plan'
 import type { InvoiceFormData } from '@/types'
 
 async function ensureUser(userId: string, db: ReturnType<typeof createServiceClient>) {
@@ -73,8 +73,14 @@ export async function POST(req: Request) {
     subtotal: number; vat_amount: number; total: number; status: string
   }
 
-  if (body.invoice_type === 'nabidka' && !isPro(getEffectivePlan(user.plan, user.email))) {
+  const effectivePlan = getEffectivePlan(user.plan, user.email)
+
+  if (body.invoice_type === 'nabidka' && !isPro(effectivePlan)) {
     return NextResponse.json({ error: 'Cenové nabídky jsou součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 })
+  }
+
+  if (body.currency && body.currency !== 'CZK' && !isPaid(effectivePlan)) {
+    return NextResponse.json({ error: 'Fakturace v cizí měně je součástí Start a Pro plánu.', code: 'START_REQUIRED' }, { status: 403 })
   }
 
   const { items, ...invoiceData } = body

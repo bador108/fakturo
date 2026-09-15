@@ -282,7 +282,7 @@ function Footer() {
   const cols = [
     { title: 'Produkt', items: [['Funkce','/funkce'],['Ceník','/cenik'],['Pravidelné fakturace','/pravidelne-fakturace']] as [string,string][] },
     { title: 'Společnost', items: [['O nás','/o-nas'],['Kontakt','/kontakt']] as [string,string][] },
-    { title: 'Pomoc', items: [['Nápověda','/napoveda'],['Bezpečnost','/bezpecnost'],['GDPR','/gdpr']] as [string,string][] },
+    { title: 'Pomoc', items: [['Bezpečnost','/bezpecnost'],['GDPR','/gdpr']] as [string,string][] },
   ]
   return (
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: '64px 32px 32px', maxWidth: 1280, margin: '0 auto' }}>

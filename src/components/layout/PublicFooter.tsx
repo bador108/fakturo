@@ -27,7 +27,6 @@ const cols = [
   {
     title: 'Pomoc',
     items: [
-      { label: 'Nápověda', href: '/napoveda' },
       { label: 'Bezpečnost', href: '/bezpecnost' },
       { label: 'GDPR', href: '/gdpr' },
     ],

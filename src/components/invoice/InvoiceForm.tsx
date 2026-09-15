@@ -16,7 +16,7 @@ interface InvoiceFormProps {
   defaultValues?: Partial<InvoiceFormData>
   invoiceId?: string
   nextInvoiceNumber: string
-  isProPlan?: boolean
+  plan?: string
 }
 
 const DEFAULT_ITEM: InvoiceItemDraft = {
@@ -27,7 +27,9 @@ const DEFAULT_ITEM: InvoiceItemDraft = {
   vat_rate: 21,
 }
 
-export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber, isProPlan = false }: InvoiceFormProps) {
+export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber, plan = 'free' }: InvoiceFormProps) {
+  const isProPlan = plan === 'pro'
+  const isPaidPlan = plan === 'start' || plan === 'pro'
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [copying, setCopying] = useState(false)
@@ -402,8 +404,8 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber, isPro
         <Input label="Číslo faktury" value={form.invoice_number} onChange={e => set('invoice_number', e.target.value)} />
         <Select label="Měna" value={form.currency} onChange={e => set('currency', e.target.value as Currency)}>
           <option value="CZK">CZK – Česká koruna</option>
-          <option value="EUR">EUR – Euro</option>
-          <option value="USD">USD – US Dollar</option>
+          <option value="EUR" disabled={!isPaidPlan}>EUR – Euro{!isPaidPlan ? ' (Start)' : ''}</option>
+          <option value="USD" disabled={!isPaidPlan}>USD – US Dollar{!isPaidPlan ? ' (Start)' : ''}</option>
         </Select>
         <Input label="Datum vystavení" type="date" value={form.issue_date} onChange={e => set('issue_date', e.target.value)} />
         <Input label="Datum splatnosti" type="date" value={form.due_date} onChange={e => set('due_date', e.target.value)} />
