@@ -80,7 +80,8 @@ export default function SignInPage() {
         await signIn.finalize()
         router.push('/dashboard')
       } else {
-        setError('Přihlášení vyžaduje další krok, který zatím nepodporujeme. Kontaktujte podporu.')
+        console.error('Sign-in needs an unhandled next step. Full status:', signIn.status, signIn)
+        setError(`Přihlášení vyžaduje další krok (${signIn.status}), který zatím nepodporujeme. Kontaktujte podporu.`)
       }
     } catch (err) {
       setError(errMsg(err as { message?: string }))

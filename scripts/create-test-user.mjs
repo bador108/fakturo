@@ -38,7 +38,6 @@ try {
     username: TEST_USERNAME,
     password: TEST_PASSWORD,
     emailAddress: [TEST_EMAIL],
-    skipPasswordChecks: true,
     firstName: 'Test',
     lastName: 'Účet',
   })
@@ -53,9 +52,10 @@ try {
       process.exit(1)
     }
     // Existující účet mohl mít heslo z dřívějšího pokusu — vynutit aktuální, ať přihlášení sedí.
+    // (bez skipPasswordChecks — s tím Clerk označí heslo jako "untrusted" a sign-in
+    // pak vyžaduje netriviální dodatečný krok, viz needs_client_trust)
     clerkUser = await clerk.users.updateUser(clerkUser.id, {
       password: TEST_PASSWORD,
-      skipPasswordChecks: true,
     })
   } else {
     console.error('Chyba při vytváření Clerk uživatele:', JSON.stringify(err?.errors ?? err, null, 2))
