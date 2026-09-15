@@ -41,19 +41,26 @@ export default function SignInPage() {
   const [code, setCode] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleGoogle() {
     setError(null)
+    setGoogleLoading(true)
     try {
       const { error: err } = await signIn.sso({
         strategy: 'oauth_google',
-        redirectUrl: '/sign-in/sso-callback',
+        redirectUrl: '/dashboard',
         redirectCallbackUrl: '/sign-in/sso-callback',
       })
-      if (err) setError(errMsg(err))
+      if (err) {
+        setError(errMsg(err))
+        setGoogleLoading(false)
+      }
+      // Na úspěch se stránka přesměruje na Google — loading stav zůstává, dokud se to nestane.
     } catch (err) {
       setError(errMsg(err as { message?: string }))
+      setGoogleLoading(false)
     }
   }
 
@@ -149,9 +156,10 @@ export default function SignInPage() {
               <button
                 type="button"
                 onClick={handleGoogle}
-                className="w-full flex items-center justify-center gap-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium py-2.5 rounded-lg transition mb-5"
+                disabled={googleLoading}
+                className="w-full flex items-center justify-center gap-2.5 border border-slate-200 hover:bg-slate-50 disabled:opacity-50 text-slate-700 text-sm font-medium py-2.5 rounded-lg transition mb-5"
               >
-                <GoogleIcon className="h-4 w-4" />
+                {googleLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon className="h-4 w-4" />}
                 Pokračovat přes Google
               </button>
               <div className="flex items-center gap-3 mb-5">
