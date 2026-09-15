@@ -145,6 +145,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
 <html lang="cs">
 <head>
 <meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no, email=no, address=no" />
 <style>
   @font-face { font-family: 'Noto Sans'; src: url(${regular}) format('truetype'); font-weight: 400; }
   @font-face { font-family: 'Noto Sans'; src: url(${bold}) format('truetype'); font-weight: 700; }
@@ -218,6 +219,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   .footer { border-top: 1px solid #E4E4E7; padding-top: 14px; margin-top: 8px; }
   .footer-thanks { font-size: 9.5pt; font-weight: 700; color: #18181B; margin: 0 0 4px; }
   .footer-meta { display: flex; justify-content: space-between; font-size: 8.5pt; color: #71717A; }
+  .footer-registry { font-size: 7.5pt; color: #A1A1AA; margin: 8px 0 0; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -244,7 +246,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
     <div class="party-box">
       <div class="party-title">Dodavatel</div>
       <div class="party-name">${esc(invoice.sender_name)}</div>
-      ${partyLines([invoice.sender_address, senderCityLine || null, invoice.sender_ico ? `IČO: ${invoice.sender_ico}` : null, invoice.sender_dic ? `DIČ: ${invoice.sender_dic}` : null, invoice.sender_business_registry, invoice.sender_email, invoice.sender_web, invoice.sender_phone])}
+      ${partyLines([invoice.sender_address, senderCityLine || null, invoice.sender_ico ? `IČO: ${invoice.sender_ico}` : null, invoice.sender_dic ? `DIČ: ${invoice.sender_dic}` : null, invoice.sender_email, invoice.sender_web, invoice.sender_phone])}
     </div>
     <div class="party-box">
       <div class="party-title">Odběratel</div>
@@ -289,6 +291,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
       <span>Faktura č. ${esc(invoice.invoice_number)}</span>
       <span>Vystaveno přes Fakturo · ${esc(formatDate(invoice.issue_date))}</span>
     </div>
+    ${invoice.sender_business_registry ? `<p class="footer-registry">${esc(invoice.sender_name)}, ${esc(invoice.sender_business_registry)}</p>` : ''}
   </div>
 
 </body>
