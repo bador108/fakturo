@@ -6,6 +6,7 @@ import { ReminderSettings } from '@/components/ReminderSettings'
 import { UpgradeButton } from '@/components/UpgradeButton'
 import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
+import { SetPasswordCard } from '@/components/SetPasswordCard'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
 
 export default async function SettingsPage() {
@@ -26,6 +27,8 @@ export default async function SettingsPage() {
   return (
     <div className="max-w-2xl space-y-8">
       <h1 className="text-2xl font-bold text-zinc-900">Nastavení</h1>
+
+      <SetPasswordCard />
 
       {/* Plan status */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
