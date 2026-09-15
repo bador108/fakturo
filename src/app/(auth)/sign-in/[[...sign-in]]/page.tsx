@@ -71,6 +71,9 @@ export default function SignInPage() {
     setLoading(true)
     setError(null)
     try {
+      // Vyčistit případný zaseklý předchozí pokus (stará needs_second_factor/needs_client_trust
+      // apod. hodnota přetrvávající v Clerk klientovi) před startem nového.
+      await signIn.reset()
       const { error: err } = await signIn.password({ password, identifier: email })
       if (err) {
         setError(errMsg(err))
