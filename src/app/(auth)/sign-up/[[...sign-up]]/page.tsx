@@ -50,6 +50,7 @@ export default function SignUpPage() {
         strategy: 'oauth_google',
         redirectUrl: '/sign-in/sso-callback',
         redirectUrlComplete: '/dashboard',
+        oidcPrompt: 'select_account',
       })
     } catch (err) {
       console.error('Google sign-up failed:', err)

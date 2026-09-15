@@ -56,6 +56,7 @@ export default function SignInPage() {
         strategy: 'oauth_google',
         redirectUrl: '/sign-in/sso-callback',
         redirectUrlComplete: '/dashboard',
+        oidcPrompt: 'select_account',
       })
       // Úspěch = stránka se přesměruje na Google, loading zůstává dokud se to nestane.
     } catch (err) {
