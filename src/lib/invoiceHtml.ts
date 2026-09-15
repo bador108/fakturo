@@ -83,9 +83,9 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   const vatRows = (!invoice.vat_payer || invoice.reverse_charge)
     ? ''
     : vatBreakdown.map(b => `
-      <div class="total-row">
-        <span class="total-label">DPH (${b.rate} %)</span>
-        <span class="total-value">${esc(formatCurrency(b.vat, currency))}</span>
+      <div class="summary-total-row">
+        <span>DPH (${b.rate} %)</span>
+        <span>${esc(formatCurrency(b.vat, currency))}</span>
       </div>
     `).join('')
 
@@ -107,22 +107,23 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
     </tbody>
   </table>` : ''
 
+  // Souhrn jede pod tabulkou položek jako jeden světlý box rozdělený na sloupce —
+  // platební údaje / mezisoučty / QR pohromadě, ať je jasné na první pohled kam a kolik poslat.
   const bankAccount = invoice.sender_iban || invoice.sender_bank || null
-  const paymentBlock = `
-  <div class="payment-block">
-    <div>
-      <div class="payment-row">
-        ${bankAccount ? `<div class="payment-item"><span class="payment-label">Bankovní účet</span><span class="payment-value">${esc(bankAccount)}</span></div>` : ''}
-        ${invoice.variable_symbol ? `<div class="payment-item"><span class="payment-label">Variabilní symbol</span><span class="payment-value">${esc(invoice.variable_symbol)}</span></div>` : ''}
-        <div class="payment-item"><span class="payment-label">Způsob platby</span><span class="payment-value">${esc(paymentMethodLabel[invoice.payment_method ?? 'bank_transfer'])}</span></div>
-      </div>
-      <div class="payment-amount">
-        <span class="payment-amount-label">K úhradě</span>
-        <span class="payment-amount-value">${esc(formatCurrency(invoice.total, currency))}</span>
-      </div>
+  const summaryCard = `
+  <div class="summary-card">
+    <div class="summary-col summary-payment">
+      ${bankAccount ? `<div class="summary-item"><span class="summary-label">Bankovní účet</span><span class="summary-value">${esc(bankAccount)}</span></div>` : ''}
+      ${invoice.variable_symbol ? `<div class="summary-item"><span class="summary-label">Variabilní symbol</span><span class="summary-value">${esc(invoice.variable_symbol)}</span></div>` : ''}
+      <div class="summary-item"><span class="summary-label">Způsob platby</span><span class="summary-value">${esc(paymentMethodLabel[invoice.payment_method ?? 'bank_transfer'])}</span></div>
+    </div>
+    <div class="summary-col summary-totals">
+      <div class="summary-total-row"><span>Základ DPH</span><span>${esc(formatCurrency(invoice.subtotal, currency))}</span></div>
+      ${vatRows}
+      <div class="summary-grand"><span class="summary-grand-label">K úhradě</span><span class="summary-grand-value">${esc(formatCurrency(invoice.total, currency))}</span></div>
     </div>
     ${qrCode ? `
-    <div class="payment-qr">
+    <div class="summary-col summary-qr">
       <img src="${qrCode}" alt="QR platba" />
     </div>` : ''}
   </div>`
@@ -167,16 +168,20 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   .party-name { font-size: 11.5pt; font-weight: 700; color: ${accent}; margin-bottom: 4px; }
   .party-line { font-size: 9.5pt; color: #71717A; line-height: 1.5; }
 
-  .payment-block { display: flex; justify-content: space-between; align-items: center; gap: 20px; background: ${accent}; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; }
-  .payment-row { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 12px; }
-  .payment-item { display: flex; flex-direction: column; gap: 2px; }
-  .payment-label { font-size: 7.5pt; color: rgba(255,255,255,0.75); text-transform: uppercase; letter-spacing: 0.5px; }
-  .payment-value { font-size: 10pt; font-weight: 700; color: #fff; }
-  .payment-amount { display: flex; align-items: baseline; gap: 8px; }
-  .payment-amount-label { font-size: 8.5pt; color: rgba(255,255,255,0.75); text-transform: uppercase; letter-spacing: 0.5px; }
-  .payment-amount-value { font-size: 16pt; font-weight: 700; color: #fff; }
-  .payment-qr { background: #fff; border-radius: 6px; padding: 8px; flex-shrink: 0; }
-  .payment-qr img { width: 74px; height: 74px; display: block; }
+  .summary-card { display: flex; align-items: stretch; background: #FAFAFA; border: 1px solid #ECECEF; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+  .summary-col { padding: 16px 20px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+  .summary-col + .summary-col { border-left: 1px solid #E4E4E7; }
+  .summary-payment { flex: 1.1; }
+  .summary-totals { flex: 1; gap: 4px; }
+  .summary-item { display: flex; flex-direction: column; gap: 2px; }
+  .summary-label { font-size: 7.5pt; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; }
+  .summary-value { font-size: 10pt; font-weight: 700; color: #18181B; }
+  .summary-total-row { display: flex; justify-content: space-between; gap: 16px; font-size: 8.5pt; color: #71717A; }
+  .summary-grand { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-top: 6px; padding-top: 8px; border-top: 1px solid #E4E4E7; }
+  .summary-grand-label { font-size: 9pt; font-weight: 700; color: #18181B; text-transform: uppercase; letter-spacing: 0.5px; }
+  .summary-grand-value { font-size: 15pt; font-weight: 700; color: ${accent}; }
+  .summary-qr { flex: 0 0 auto; align-items: center; }
+  .summary-qr img { width: 84px; height: 84px; display: block; }
 
   .recap-table { width: 100%; border-collapse: collapse; margin: 4px 0 20px; }
   .recap-table th { font-size: 7.5pt; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; padding: 4px 0 6px; border-bottom: 1px solid #E4E4E7; }
@@ -191,11 +196,6 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   tbody tr.alt { background: #F4F4F5; }
   .col-qty, .col-price, .col-vat, .col-total { text-align: right; white-space: nowrap; }
   .col-unit { text-align: center; }
-
-  .totals { display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 10px; }
-  .total-row { display: flex; gap: 16px; margin-bottom: 3px; min-width: 220px; justify-content: space-between; }
-  .total-label { color: #71717A; }
-  .grand-total { display: flex; justify-content: space-between; gap: 16px; min-width: 220px; background: ${accent}; color: #fff; font-weight: 700; font-size: 11pt; padding: 8px 14px; border-radius: 4px; margin-top: 4px; }
 
   .legal-notice { font-size: 8.5pt; color: #B45309; margin-bottom: 20px; }
 
@@ -236,8 +236,6 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
     </div>
   </div>
 
-  ${paymentBlock}
-
   <table>
     <thead>
       <tr>
@@ -254,11 +252,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
     </tbody>
   </table>
 
-  <div class="totals">
-    <div class="total-row"><span class="total-label">Základ DPH</span><span>${esc(formatCurrency(invoice.subtotal, currency))}</span></div>
-    ${vatRows}
-    <div class="grand-total"><span>K ÚHRADĚ</span><span>${esc(formatCurrency(invoice.total, currency))}</span></div>
-  </div>
+  ${summaryCard}
 
   ${recapTable}
 

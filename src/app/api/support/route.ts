@@ -27,12 +27,12 @@ export async function POST(req: Request) {
   try {
     const { error } = await resend.emails.send({
       // Resend's sandbox (no verified sending domain) can only deliver "to" the address that
-      // owns the Resend account — everything else 403s. That owner is vaclav.urbanec3@gmail.com,
-      // not fakturosupport@gmail.com, so "to" must stay pinned here or every support message
-      // silently fails. Reply-to still points at the actual sender so replies go to them directly.
+      // owns the Resend account — everything else 403s. The account is registered under
+      // fakturosupport@gmail.com, so that's the only deliverable "to" until a domain is verified.
+      // Reply-to still points at the actual sender so replies go to them directly.
       from: 'Fakturo <onboarding@resend.dev>',
-      to: 'vaclav.urbanec3@gmail.com',
-      replyTo: userEmail ?? 'vaclav.urbanec3@gmail.com',
+      to: 'fakturosupport@gmail.com',
+      replyTo: userEmail ?? 'fakturosupport@gmail.com',
       subject: `[${typeLabel}] ${subject}`,
       html: `
         <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
