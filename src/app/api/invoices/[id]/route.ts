@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
 import { getEffectivePlan } from '@/lib/stripe';
 import { isPro, isPaid } from '@/lib/plan';
+import { generateInvoiceNumber } from '@/lib/utils';
 import type { InvoiceItemDraft } from '@/types';
 
 // GET /api/invoices/[id] - Načtení detailu faktury
@@ -70,18 +71,42 @@ export async function PUT(
       }
     }
 
-    // Aktualizace faktury
-    const { error: updateError } = await db
-      .from('invoices')
-      .update({
-        ...invoiceData,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', params.id)
-      .eq('user_id', userId);
+    // Aktualizace faktury — invoice_number může kolidovat (dvě otevřené záložky,
+    // souběh s cron generováním opakovaných faktur), radši to vyřešit automaticky
+    // přeplánováním čísla než poslat uživateli syrovou DB chybu.
+    let updateError;
+    let attemptNumber = invoiceData.invoice_number;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const result = await db
+        .from('invoices')
+        .update({
+          ...invoiceData,
+          invoice_number: attemptNumber,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', params.id)
+        .eq('user_id', userId);
+      updateError = result.error;
+      if (!updateError) break;
+      if (updateError.code !== '23505') break;
+
+      const { data: lastInvoice } = await db
+        .from('invoices')
+        .select('invoice_number')
+        .eq('user_id', userId)
+        .neq('id', params.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      attemptNumber = generateInvoiceNumber(lastInvoice?.invoice_number);
+    }
 
     if (updateError) {
-      return NextResponse.json({ error: updateError.message }, { status: 500 });
+      const isDuplicate = updateError.code === '23505';
+      return NextResponse.json(
+        { error: isDuplicate ? 'Toto číslo faktury už používáte.' : updateError.message, code: isDuplicate ? 'DUPLICATE_NUMBER' : undefined },
+        { status: isDuplicate ? 409 : 500 }
+      );
     }
 
     // Aktualizace položek faktury (smazání starých a vložení nových)
