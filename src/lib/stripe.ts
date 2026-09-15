@@ -4,9 +4,19 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export const OWNER_EMAIL = 'vaclav.urbanec2@gmail.com'
 
-/** Vlastník má vždy pro plán bez ohledu na Stripe */
+// Emaily s natvrdo přiděleným Pro plánem bez ohledu na Stripe (vlastník appky +
+// ručně přidělené účty). Funguje i pro email, co se ještě nikdy nezaregistroval —
+// jakmile se přihlásí, ensureUser() mu založí řádek v `users`, ale getEffectivePlan()
+// stejně vrátí 'pro', protože kontrola jede přes email, ne přes uloženou hodnotu plan.
+const PRO_OVERRIDE_EMAILS = [OWNER_EMAIL, 'jirizahradka95@gmail.com']
+
+export function isProOverride(email?: string | null): boolean {
+  return !!email && PRO_OVERRIDE_EMAILS.includes(email)
+}
+
+/** Vlastník a ručně přidělené účty mají vždy pro plán bez ohledu na Stripe */
 export function getEffectivePlan(plan: string, email?: string | null): string {
-  if (email === OWNER_EMAIL) return 'pro'
+  if (isProOverride(email)) return 'pro'
   return plan
 }
 

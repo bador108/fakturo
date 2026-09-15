@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { stripe, OWNER_EMAIL } from '@/lib/stripe'
+import { stripe, isProOverride } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase'
 
 export async function POST(req: Request) {
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       if (meta?.userId && subscriptionId) {
         const plan = meta.plan === 'start' ? 'start' : 'pro'
         const { data: ownerCheck } = await db.from('users').select('email').eq('id', meta.userId).single()
-        const effectivePlan = ownerCheck?.email === OWNER_EMAIL ? 'pro' : plan
+        const effectivePlan = isProOverride(ownerCheck?.email) ? 'pro' : plan
         await db.from('users').update({ plan: effectivePlan, stripe_subscription_id: subscriptionId }).eq('id', meta.userId)
       }
       break
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     case 'customer.subscription.deleted': {
       const { data: delUser } = await db.from('users').select('email').eq('stripe_subscription_id', obj.id as string).single()
       await db.from('users').update({
-        plan: delUser?.email === OWNER_EMAIL ? 'pro' : 'free',
+        plan: isProOverride(delUser?.email) ? 'pro' : 'free',
         stripe_subscription_id: null,
       }).eq('stripe_subscription_id', obj.id as string)
       break
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     case 'customer.subscription.updated': {
       const active = (obj.status as string) === 'active' || (obj.status as string) === 'trialing'
       const { data: updUser } = await db.from('users').select('email').eq('stripe_subscription_id', obj.id as string).single()
-      await db.from('users').update({ plan: updUser?.email === OWNER_EMAIL ? 'pro' : active ? 'pro' : 'free' })
+      await db.from('users').update({ plan: isProOverride(updUser?.email) ? 'pro' : active ? 'pro' : 'free' })
         .eq('stripe_subscription_id', obj.id as string)
       break
     }
