@@ -2,22 +2,24 @@
 
 import { useState } from 'react'
 import { CreditCard, Loader2 } from 'lucide-react'
+import { useToast } from '@/components/Toast'
 
 export function ManageSubscriptionButton() {
   const [loading, setLoading] = useState(false)
+  const { showError } = useToast()
 
   async function open() {
     setLoading(true)
     try {
       const res = await fetch('/api/stripe/portal', { method: 'POST' })
       if (!res.ok) {
-        alert('Nepodařilo se otevřít portál. Zkontroluj konfiguraci Stripe.')
+        showError('Nepodařilo se otevřít portál. Zkontroluj konfiguraci Stripe.')
         return
       }
       const { url } = await res.json()
       if (url) window.location.href = url
     } catch {
-      alert('Chyba při připojení ke Stripe.')
+      showError('Chyba při připojení ke Stripe.')
     } finally {
       setLoading(false)
     }

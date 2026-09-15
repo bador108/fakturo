@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Plus, Trash2, FileDown, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
+import { useToast } from '@/components/Toast'
 import { calcTotals, formatCurrency } from '@/lib/utils'
 import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate } from '@/types'
 
@@ -32,6 +33,7 @@ export default function GeneratorPage() {
   const [loading, setLoading] = useState(false)
   const [aresLoading, setAresLoading] = useState<'sender' | 'client' | null>(null)
   const [aresError, setAresError] = useState<'sender' | 'client' | null>(null)
+  const { showError } = useToast()
 
   const set = useCallback(<K extends keyof InvoiceFormData>(key: K, value: InvoiceFormData[K]) => {
     setForm(f => ({ ...f, [key]: value }))
@@ -84,7 +86,7 @@ export default function GeneratorPage() {
       })
       if (!res.ok) {
         const data = await res.json().catch(() => null)
-        alert(data?.error ?? 'Chyba při generování PDF')
+        showError(data?.error ?? 'Chyba při generování PDF')
         return
       }
       const blob = await res.blob()

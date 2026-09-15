@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
 import { isPro, isPaid } from '@/lib/plan'
+import { generateInvoiceNumber } from '@/lib/utils'
 import type { InvoiceFormData } from '@/types'
 
 async function ensureUser(userId: string, db: ReturnType<typeof createServiceClient>) {
@@ -85,13 +86,44 @@ export async function POST(req: Request) {
 
   const { items, ...invoiceData } = body
 
-  const { data: invoice, error: invErr } = await db
-    .from('invoices')
-    .insert({ ...invoiceData, user_id: userId })
-    .select()
-    .single()
+  // invoice_number přišel z čísla spočítaného při načtení stránky — pokud mezitím
+  // vznikla jiná faktura se stejným číslem (dvojklik, dvě otevřené záložky, souběh
+  // s cron generováním opakovaných faktur), insert spadne na unique constraintu.
+  // Radši to vyřešit automaticky přeplánováním čísla, než uživatele poslat zpátky
+  // k ručnímu opakování celého uložení.
+  let invoice: Record<string, unknown> | null = null
+  let invErr
+  let attemptNumber = invoiceData.invoice_number
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const result = await db
+      .from('invoices')
+      .insert({ ...invoiceData, invoice_number: attemptNumber, user_id: userId })
+      .select()
+      .single()
+    invoice = result.data
+    invErr = result.error
+    if (!invErr) break
+    if (invErr.code !== '23505') break
 
-  if (invErr) return NextResponse.json({ error: invErr.message }, { status: 500 })
+    const { data: lastInvoice } = await db
+      .from('invoices')
+      .select('invoice_number')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    attemptNumber = generateInvoiceNumber(lastInvoice?.invoice_number)
+  }
+
+  if (invErr) {
+    const isDuplicate = invErr.code === '23505'
+    return NextResponse.json(
+      { error: isDuplicate ? 'Toto číslo faktury už používáte.' : invErr.message, code: isDuplicate ? 'DUPLICATE_NUMBER' : undefined },
+      { status: isDuplicate ? 409 : 500 }
+    )
+  }
+
+  if (!invoice) return NextResponse.json({ error: 'Fakturu se nepodařilo uložit.' }, { status: 500 })
 
   if (items?.length) {
     const rows = items.map((item, i) => ({

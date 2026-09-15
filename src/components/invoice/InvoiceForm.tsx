@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { ItemTemplatesPicker } from '@/components/ItemTemplatesPicker'
 import { ClientPicker } from '@/components/ClientPicker'
+import { useToast } from '@/components/Toast'
 import { calcTotals, formatCurrency } from '@/lib/utils'
 import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate, InvoiceType, SenderProfile, Client } from '@/types'
 
@@ -31,6 +32,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber, plan 
   const isProPlan = plan === 'pro'
   const isPaidPlan = plan === 'start' || plan === 'pro'
   const router = useRouter()
+  const { showError } = useToast()
   const [saving, setSaving] = useState(false)
   const [copying, setCopying] = useState(false)
   const [converting, setConverting] = useState(false)
@@ -317,8 +319,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber, plan 
         body: JSON.stringify(payload),
       })
       if (!res.ok) {
-        const err = await res.json()
-        alert(err.error ?? 'Chyba při ukládání faktury')
+        const err = await res.json().catch(() => null)
+        showError(
+          err?.code === 'DUPLICATE_NUMBER'
+            ? 'Toto číslo faktury už používáte. Zkuste to prosím znovu.'
+            : err?.error ?? 'Fakturu se nepodařilo uložit. Zkuste to prosím znovu.'
+        )
         return
       }
       const data = await res.json()
