@@ -35,7 +35,7 @@ export function PublicNav() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <Image src="/logo.png" alt="Fakturka" width={110} height={29} />
+            <Image src="/logo.png" alt="Fakturo" width={110} height={29} />
           </Link>
           <div style={{ display: 'flex', gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
             {navLinks.map(([href, label]) => (

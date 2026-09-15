@@ -15,7 +15,7 @@ const TYPE_META: Record<ContactType, { label: string; icon: React.ReactNode; def
   idea: {
     label: 'Navrhnout zlepšení',
     icon: <Lightbulb className="h-4 w-4 text-amber-500" />,
-    defaultSubject: 'Nápad na zlepšení Fakturka',
+    defaultSubject: 'Nápad na zlepšení Fakturo',
     placeholder: 'Popište váš nápad...',
   },
   feedback: {

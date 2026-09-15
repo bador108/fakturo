@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import { Lock, ShieldCheck, Server, CreditCard, Key, Bug } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Bezpečnost – Fakturka',
-  description: 'Jak Fakturka chrání tvoje data. Šifrování, autentizace, infrastruktura a GDPR compliance.',
+  title: 'Bezpečnost – Fakturo',
+  description: 'Jak Fakturo chrání tvoje data. Šifrování, autentizace, infrastruktura a GDPR compliance.',
 }
 
 const C = {
@@ -61,7 +61,7 @@ const sections = [
     title: 'Platby',
     items: [
       'Platby zpracovává Stripe — PCI DSS Level 1',
-      'Fakturka nikdy nevidí čísla platebních karet',
+      'Fakturo nikdy nevidí čísla platebních karet',
       'Šifrované tokenizace platebních metod',
       'SCA (Strong Customer Authentication) dle PSD2',
     ],

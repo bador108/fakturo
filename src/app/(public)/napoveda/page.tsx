@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import { Rocket, FileText, Users, Building2, RefreshCw, BarChart2, CreditCard, Lock } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Nápověda – Fakturka',
-  description: 'Centrum nápovědy Fakturka. Průvodce, návody a odpovědi na nejčastější otázky.',
+  title: 'Nápověda – Fakturo',
+  description: 'Centrum nápovědy Fakturo. Průvodce, návody a odpovědi na nejčastější otázky.',
 }
 
 const C = {

@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import { Zap, Scissors, Globe2, Lock } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'O nás – Fakturka',
-  description: 'Fakturka je moderní fakturační nástroj pro českou realitu. Stavíme fakturaci pro lidi, kteří dělají skutečnou práci.',
+  title: 'O nás – Fakturo',
+  description: 'Fakturo je moderní fakturační nástroj pro českou realitu. Stavíme fakturaci pro lidi, kteří dělají skutečnou práci.',
 }
 
 const C = {
@@ -52,7 +52,7 @@ export default function ONasPage() {
             Fakturace, jak má vypadat v roce 2026.
           </h1>
           <p style={{ fontSize: 19, lineHeight: 1.65, color: C.muted, margin: '0 0 20px', maxWidth: 620 }}>
-            Fakturka vzniklo ze frustrace. Existující fakturační nástroje jsou buď příliš složité, příliš drahé, nebo příliš ošklivé. My věříme, že to jde lépe.
+            Fakturo vzniklo ze frustrace. Existující fakturační nástroje jsou buď příliš složité, příliš drahé, nebo příliš ošklivé. My věříme, že to jde lépe.
           </p>
           <p style={{ fontSize: 17, lineHeight: 1.65, color: C.muted, margin: 0, maxWidth: 620 }}>
             Stavíme produkt pro českou realitu — OSVČ, freelancery a malé firmy, kteří chtějí strávit co nejméně času papírováním a co nejvíce času prací, která je baví.
@@ -121,7 +121,7 @@ export default function ONasPage() {
                 <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 4 }}>Václav Urbanec</div>
                 <div style={{ fontSize: 14, color: C.primary, fontWeight: 500, marginBottom: 12 }}>Zakladatel & vývojář</div>
                 <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.65 }}>
-                  Student informatiky a full-stack vývojář. Fakturka stavím proto, že jsem sám potřeboval jednoduché řešení pro fakturaci jako freelancer. Věřím, že software má být rychlý, přehledný a dělat přesně to, co má.
+                  Student informatiky a full-stack vývojář. Fakturo stavím proto, že jsem sám potřeboval jednoduché řešení pro fakturaci jako freelancer. Věřím, že software má být rychlý, přehledný a dělat přesně to, co má.
                 </p>
               </div>
             </div>

@@ -233,7 +233,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
 
   <div class="footer">
     <span>Faktura č. ${esc(invoice.invoice_number)}</span>
-    <span>Vystaveno přes Fakturka · ${esc(formatDate(invoice.issue_date))}</span>
+    <span>Vystaveno přes Fakturo · ${esc(formatDate(invoice.issue_date))}</span>
   </div>
 
 </body>

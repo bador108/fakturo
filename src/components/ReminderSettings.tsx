@@ -57,7 +57,7 @@ export function ReminderSettings({ userId, initialDays }: Props) {
   return (
     <div className="space-y-4">
       <p className="text-sm text-slate-500">
-        Fakturka automaticky odesílá upomínky na e-mail klienta. Vyberte, kdy chcete upomínky zasílat.
+        Fakturo automaticky odesílá upomínky na e-mail klienta. Vyberte, kdy chcete upomínky zasílat.
       </p>
       <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
         <Bell className="h-3.5 w-3.5 shrink-0" />

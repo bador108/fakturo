@@ -84,7 +84,7 @@ export function Sidebar() {
       <aside className="w-64 hidden md:flex flex-col bg-white border-r border-slate-100 px-4 py-6 gap-2 shadow-sm shrink-0">
         <div className="px-3 mb-6 flex items-center justify-between">
           <Link href="/?home=1" className="hover:opacity-80 transition-opacity">
-            <Image src="/logo.png" alt="Fakturka" width={100} height={27} />
+            <Image src="/logo.png" alt="Fakturo" width={100} height={27} />
           </Link>
           <NotificationBell />
         </div>
@@ -95,7 +95,7 @@ export function Sidebar() {
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-slate-100 shadow-sm h-14 flex items-center justify-between px-4">
         <Link href="/?home=1" className="hover:opacity-80 transition-opacity">
-          <Image src="/logo.png" alt="Fakturka" width={90} height={24} />
+          <Image src="/logo.png" alt="Fakturo" width={90} height={24} />
         </Link>
         <div className="flex items-center gap-3">
           <NotificationBell />
@@ -121,7 +121,7 @@ export function Sidebar() {
             <div className="px-3 mb-6 flex items-center justify-between">
               <div>
                 <Link href="/" className="hover:opacity-80 transition-opacity">
-                  <Image src="/logo.png" alt="Fakturka" width={100} height={27} />
+                  <Image src="/logo.png" alt="Fakturo" width={100} height={27} />
                 </Link>
               </div>
               <button onClick={() => setMobileOpen(false)} className="text-slate-400 hover:text-slate-700">

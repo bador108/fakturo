@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import { Plug, ShoppingCart, Building2, Wrench, Handshake } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'API pro vývojáře – Fakturka',
-  description: 'Fakturka REST API. Integruj fakturaci do svého produktu, e-shopu nebo interního systému.',
+  title: 'API pro vývojáře – Fakturo',
+  description: 'Fakturo REST API. Integruj fakturaci do svého produktu, e-shopu nebo interního systému.',
 }
 
 const C = {
@@ -54,7 +54,7 @@ export default function ApiDevelopersPage() {
           <Plug size={14} color={C.primary} /> REST API · v1
         </div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 820 }}>
-          Fakturka API. Pro vývojáře, kteří potřebují víc.
+          Fakturo API. Pro vývojáře, kteří potřebují víc.
         </h1>
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 40px', maxWidth: 560 }}>
           Integruj fakturaci přímo do svého produktu, e-shopu nebo interního systému. Jednoduché REST API s dokumentací.

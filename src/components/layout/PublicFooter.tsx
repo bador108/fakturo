@@ -44,7 +44,7 @@ export function PublicFooter() {
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
         <div>
           <div style={{ marginBottom: 16 }}>
-            <Image src="/logo.png" alt="Fakturka" width={110} height={29} />
+            <Image src="/logo.png" alt="Fakturo" width={110} height={29} />
           </div>
           <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.6, maxWidth: 280 }}>
             Fakturace pro OSVČ a freelancery.
@@ -72,7 +72,7 @@ export function PublicFooter() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         fontSize: 13, color: C.muted, flexWrap: 'wrap', gap: 12,
       }}>
-        <span>© 2026 Fakturka. Všechna práva vyhrazena.</span>
+        <span>© 2026 Fakturo. Všechna práva vyhrazena.</span>
         <div style={{ display: 'flex', gap: 24 }}>
           <Link href="/gdpr" style={{ color: 'inherit', textDecoration: 'none' }}>GDPR</Link>
           <Link href="/bezpecnost" style={{ color: 'inherit', textDecoration: 'none' }}>Bezpečnost</Link>

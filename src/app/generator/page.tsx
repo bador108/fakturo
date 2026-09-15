@@ -99,7 +99,7 @@ export default function GeneratorPage() {
       {/* Nav */}
       <header className="bg-white border-b border-slate-100 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-brand tracking-tight">Fakturka</Link>
+          <Link href="/" className="text-lg font-bold text-brand tracking-tight">Fakturo</Link>
           <div className="flex items-center gap-3">
             <span className="text-sm text-slate-500">Generátor zdarma · bez registrace</span>
             <Link href="/sign-up" className="text-sm bg-brand text-white px-3 py-1.5 rounded-lg hover:bg-brand-dark transition font-medium">

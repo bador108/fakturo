@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { CheckCircle2 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Stav služby – Fakturka',
-  description: 'Aktuální stav všech služeb Fakturka. Sleduj dostupnost a případné incidenty.',
+  title: 'Stav služby – Fakturo',
+  description: 'Aktuální stav všech služeb Fakturo. Sleduj dostupnost a případné incidenty.',
 }
 
 const C = {
@@ -58,7 +58,7 @@ export default function StavSluzbyPage() {
           <span style={{ fontSize: 16, fontWeight: 700, color: C.green }}>Vše funguje normálně</span>
         </div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 20px', maxWidth: 760 }}>
-          Stav služby Fakturka
+          Stav služby Fakturo
         </h1>
         <p style={{ fontSize: 16, color: C.muted, margin: 0 }}>
           Aktualizováno: 3. 5. 2026, 09:41
@@ -109,7 +109,7 @@ export default function StavSluzbyPage() {
           Posledních 90 dní bez incidentů.
         </h2>
         <p style={{ fontSize: 15, color: C.muted, margin: '0 0 24px', lineHeight: 1.65 }}>
-          Fakturka běží stabilně. Případné incidenty budeme komunikovat zde a na emailu.
+          Fakturo běží stabilně. Případné incidenty budeme komunikovat zde a na emailu.
         </p>
         <a
           href="mailto:fakturosupport@gmail.com"

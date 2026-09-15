@@ -140,7 +140,7 @@ export function UpgradeButton() {
             {/* Summary + CTA */}
             <div className="bg-slate-50 rounded-xl p-4 mb-4 text-sm">
               <div className="flex justify-between text-slate-600">
-                <span>Fakturka {selected === 'start' ? 'Start' : 'Pro'} · {billing === 'annual' ? 'ročně' : 'měsíčně'}</span>
+                <span>Fakturo {selected === 'start' ? 'Start' : 'Pro'} · {billing === 'annual' ? 'ročně' : 'měsíčně'}</span>
                 <span className="font-semibold text-slate-900">
                   {billing === 'annual'
                     ? `${selected === 'start' ? 79 : 199} Kč/měs.`
