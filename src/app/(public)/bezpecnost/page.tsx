@@ -31,30 +31,23 @@ const sections = [
   {
     title: 'Šifrování',
     items: [
-      'Veškerá data přenášena přes TLS 1.3',
-      'Data v databázi šifrována v klidu (AES-256)',
-      'PDF faktury uloženy v šifrovaném úložišti',
-      'API klíče uloženy jako jednosměrný hash (bcrypt)',
+      'Veškerá data přenášena přes TLS',
+      'Data v databázi šifrována v klidu (Supabase Postgres)',
     ],
   },
   {
     title: 'Autentizace',
     items: [
-      'Dvoufaktorová autentizace (2FA) pro všechny účty',
+      'Volitelná dvoufaktorová autentizace (2FA)',
       'Přihlášení přes Clerk — SOC 2 Type II certifikovaný',
-      'Automatická invalidace sessions po 30 dnech nečinnosti',
       'Rate limiting přihlašovacích pokusů',
-      'Audit log každé přihlášení a kritické akce',
     ],
   },
   {
     title: 'Infrastruktura',
     items: [
       'Hosting na Vercel (Edge Network) a Supabase',
-      'Databázové servery výhradně v EU (Frankfurt)',
-      'Denní zálohy databáze s retencí 30 dní',
-      'Monitoring dostupnosti 24/7 s alertingem',
-      'Penetrační testy prováděny každé čtvrtletí',
+      'Databázové servery v EU (Londýn)',
     ],
   },
   {
@@ -62,26 +55,22 @@ const sections = [
     items: [
       'Platby zpracovává Stripe — PCI DSS Level 1',
       'Fakturo nikdy nevidí čísla platebních karet',
-      'Šifrované tokenizace platebních metod',
       'SCA (Strong Customer Authentication) dle PSD2',
     ],
   },
   {
     title: 'Řízení přístupu',
     items: [
-      'Princip nejnižších oprávnění pro interní přístupy',
       'Row-level security (RLS) v databázi — vidíš jen svá data',
-      'Interní přístupy zaměstnanců jsou auditovány',
-      'Žádný zaměstnanec nemá přístup k heslům uživatelů',
+      'Service-role přístup k databázi jen z backend API rout',
     ],
   },
   {
-    title: 'Bug bounty',
+    title: 'Nahlásit problém',
     items: [
       'Zodpovědné hlášení bezpečnostních zranitelností vítáme',
       'Email: fakturosupport@gmail.com',
-      'Odpovídáme do 48 hodin od nahlášení',
-      'Závažné nálezy jsou odměňovány kreditem nebo peněžní odměnou',
+      'Odpovídáme co nejdřív',
     ],
   },
 ]
@@ -100,7 +89,7 @@ export default function BezpecnostPage() {
             Bezpečnost je pro nás základní požadavek, ne doplněk. Fakturuješ s důvěrnými obchodními daty — bereme to vážně.
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            {['TLS 1.3', 'AES-256', 'SOC 2 Type II (Clerk)', 'GDPR', 'PCI DSS (Stripe)'].map(badge => (
+            {['TLS šifrování', 'SOC 2 Type II (Clerk)', 'GDPR', 'PCI DSS (Stripe)'].map(badge => (
               <span key={badge} style={{
                 padding: '6px 12px', borderRadius: 999, background: C.greenSoft,
                 color: C.green, fontSize: 12, fontWeight: 600, border: `1px solid ${C.green}33`,
@@ -152,7 +141,6 @@ export default function BezpecnostPage() {
             <a href="mailto:fakturosupport@gmail.com" style={{ color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
               fakturosupport@gmail.com
             </a>.
-            Odměňujeme závažné nálezy.
           </p>
           <Link href="/kontakt" style={{
             background: C.fg, color: C.bg, padding: '12px 24px', borderRadius: 10,

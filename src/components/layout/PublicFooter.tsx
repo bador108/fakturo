@@ -23,15 +23,12 @@ const cols = [
     items: [
       { label: 'O nás', href: '/o-nas' },
       { label: 'Kontakt', href: '/kontakt' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Reference', href: '/reference' },
     ],
   },
   {
     title: 'Pomoc',
     items: [
       { label: 'Nápověda', href: '/napoveda' },
-      { label: 'Stav služby', href: '/stav-sluzby' },
       { label: 'Bezpečnost', href: '/bezpecnost' },
       { label: 'GDPR', href: '/gdpr' },
     ],

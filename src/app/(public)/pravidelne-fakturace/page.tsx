@@ -51,8 +51,8 @@ export default function PravidelneFacturacePage() {
     <div style={{ background: C.bg, color: C.fg }}>
       {/* Hero */}
       <section style={{ ...cont, padding: '96px 32px 80px', textAlign: 'center' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 12px', borderRadius: 999, background: '#fef3c7', border: '1px solid #fde68a', fontSize: 12, fontWeight: 600, color: '#92400e', marginBottom: 24 }}>
-          ⏳ Coming soon — přidej se na waitlist
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 12px', borderRadius: 999, background: C.greenSoft, border: `1px solid ${C.green}33`, fontSize: 12, fontWeight: 600, color: C.green, marginBottom: 24 }}>
+          ✓ Součást Start a Pro plánu
         </div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 860 }}>
           Vystav fakturu jednou. Posílej ji každý měsíc automaticky.
@@ -65,7 +65,7 @@ export default function PravidelneFacturacePage() {
           fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block',
           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.08)',
         }}>
-          Připojit se na waitlist
+          Vyzkoušet zdarma →
         </Link>
       </section>
 
@@ -161,16 +161,16 @@ export default function PravidelneFacturacePage() {
       <section style={{ padding: '96px 32px' }}>
         <div style={{ ...cont, background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 20, padding: '64px 48px', textAlign: 'center' }}>
           <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px' }}>
-            Chceš být první, kdo to vyzkouší?
+            Nastav si to ještě dnes
           </h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
-            Funkce je ve vývoji. Přidej se na waitlist a dáme ti vědět jako prvním.
+            14 dní zdarma, bez kreditní karty. Opakující se fakturace najdeš v nastavení faktury.
           </p>
           <Link href="/sign-up" style={{
             background: C.fg, color: C.bg, padding: '13px 26px', borderRadius: 10,
             fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block',
           }}>
-            Připojit se na waitlist →
+            Vyzkoušet zdarma →
           </Link>
         </div>
       </section>

@@ -60,29 +60,6 @@ export default function ONasPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section style={{ background: C.bgSoft, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, padding: '56px 0' }}>
-        <div style={{ ...cont }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0 }}>
-            {[
-              { num: '2024', label: 'Rok vzniku' },
-              { num: '4 200+', label: 'Aktivních uživatelů' },
-              { num: '1.2M', label: 'Vystavených faktur' },
-              { num: '32 s', label: 'Průměrný čas vystavení' },
-            ].map((stat, i, arr) => (
-              <div key={stat.label} style={{
-                padding: '0 32px',
-                borderRight: i < arr.length - 1 ? `1px solid ${C.border}` : 'none',
-                textAlign: 'center',
-              }}>
-                <div style={{ fontSize: 36, fontWeight: 700, letterSpacing: -2, marginBottom: 6 }}>{stat.num}</div>
-                <div style={{ fontSize: 14, color: C.muted, fontWeight: 500 }}>{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Principles */}
       <section style={{ ...cont, padding: '96px 32px' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
