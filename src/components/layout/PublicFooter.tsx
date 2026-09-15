@@ -44,7 +44,7 @@ export function PublicFooter() {
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
         <div>
           <div style={{ marginBottom: 16 }}>
-            <Image src="/logo.png" alt="Fakturo" width={110} height={29} />
+            <Image src="/logo.png" alt="Fakturo" width={144} height={29} />
           </div>
           <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.6, maxWidth: 280 }}>
             Fakturace pro OSVČ a freelancery.

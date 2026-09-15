@@ -42,7 +42,7 @@ function Nav({ userId }: { userId: string | null }) {
       <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 32px', maxWidth: 1280, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <Image src="/logo.png" alt="Fakturo" width={110} height={29} />
+            <Image src="/logo.png" alt="Fakturo" width={144} height={29} />
           </Link>
           <div style={{ display: 'flex', gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
             {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ']] as [string,string][]).map(([href, label]) => (
@@ -294,7 +294,7 @@ function Footer() {
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: '64px 32px 32px', maxWidth: 1280, margin: '0 auto' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
         <div>
-          <div style={{ marginBottom: 16 }}><Image src="/logo.png" alt="Fakturo" width={110} height={29} /></div>
+          <div style={{ marginBottom: 16 }}><Image src="/logo.png" alt="Fakturo" width={144} height={29} /></div>
           <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.6, maxWidth: 280 }}>Fakturace pro OSVČ a freelancery.</div>
         </div>
         {cols.map(col => (
