@@ -47,7 +47,7 @@ const features = [
       'Automatické vyplnění z ARES podle IČO',
       'Autocomplete klientů a položek z databáze',
       'Šablony pro opakované typy faktur',
-      'Výpočet DPH (0 %, 15 %, 21 %) automaticky',
+      'Výpočet DPH (0 %, 12 %, 21 %) automaticky',
       'Víceměnové faktury — CZK, EUR, USD s kurzy ČNB',
       'PDF ke stažení nebo odeslání přímo z aplikace',
       'QR platba přímo na faktuře',
