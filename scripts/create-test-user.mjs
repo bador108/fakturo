@@ -38,13 +38,18 @@ try {
   console.log('Clerk uživatel vytvořen:', clerkUser.id)
 } catch (err) {
   if (err?.errors?.[0]?.code === 'form_identifier_exists') {
-    console.log('Clerk uživatel "test" už existuje, hledám ho...')
+    console.log('Clerk uživatel "test" už existuje, hledám ho a vynucuji heslo...')
     const { data } = await clerk.users.getUserList({ username: [TEST_USERNAME] })
     clerkUser = data[0]
     if (!clerkUser) {
       console.error('Nenašel jsem existujícího uživatele "test" ani ho nejde vytvořit.')
       process.exit(1)
     }
+    // Existující účet mohl mít heslo z dřívějšího pokusu — vynutit aktuální, ať přihlášení sedí.
+    clerkUser = await clerk.users.updateUser(clerkUser.id, {
+      password: TEST_PASSWORD,
+      skipPasswordChecks: true,
+    })
   } else {
     console.error('Chyba při vytváření Clerk uživatele:', JSON.stringify(err?.errors ?? err, null, 2))
     process.exit(1)
