@@ -19,13 +19,32 @@ const CATEGORY_KEYWORDS: { category: string; keywords: RegExp }[] = [
   { category: 'marketing', keywords: /\b(reklama|marketing|ads|facebook|instagram|google ads|inzerce|billboard)\b/i },
 ];
 
-function parseAmount(text: string): number | null {
-  const match = text.match(/(\d{1,3}(?:[ .]\d{3})*(?:[,.]\d{1,2})?)\s*(kč|czk|eur|€|\$|usd)?/i);
-  if (!match) return null;
-  const raw = match[1].replace(/\s/g, '').replace(/\.(?=\d{3}(?:\D|$))/g, '');
-  const normalized = raw.replace(',', '.');
+// Číslo buď oddělené mezerami/tečkami po tisících (1 234 567), nebo souvislý řetězec číslic
+// (25000) — ta druhá varianta musí jít až jako fallback, jinak si "25000" ukousne jen "250".
+const NUM_SOURCE = String.raw`\d{1,3}(?:[ .]\d{3})+(?:[,.]\d{1,2})?|\d+(?:[,.]\d{1,2})?`;
+
+function toNumber(raw: string): number | null {
+  const cleaned = raw.replace(/\s/g, '').replace(/\.(?=\d{3}(?:\D|$))/g, '');
+  const normalized = cleaned.replace(',', '.');
   const num = parseFloat(normalized);
   return Number.isFinite(num) ? num : null;
+}
+
+// Vrací i přesně matchnutý úsek (raw, včetně měny), ať ho guessVendor umí z textu vyříznout.
+function parseAmount(text: string): { value: number; raw: string } | null {
+  // Nejdřív zkusit číslo hned u měny — jinak si to plete třeba "iPhone 15" s cenou "15 000 Kč".
+  const currencyAnchored = text.match(new RegExp(`(${NUM_SOURCE})\\s*(kč|czk|eur|€|\\$|usd)`, 'i'));
+  if (currencyAnchored) {
+    const value = toNumber(currencyAnchored[1]);
+    if (value !== null) return { value, raw: currencyAnchored[0] };
+  }
+  // Fallback: bez měny vzít největší číslo v textu (nejpravděpodobnější kandidát na cenu).
+  let best: { value: number; raw: string } | null = null;
+  for (const m of Array.from(text.matchAll(new RegExp(NUM_SOURCE, 'g')))) {
+    const value = toNumber(m[0]);
+    if (value !== null && (!best || value > best.value)) best = { value, raw: m[0] };
+  }
+  return best;
 }
 
 function parseCurrency(text: string): Currency {
@@ -72,10 +91,10 @@ function guessCategory(text: string): string {
   return 'ostatni';
 }
 
-function guessVendor(text: string, amount: number | null): string {
+function guessVendor(text: string, amountRaw: string | null): string {
   let cleaned = text;
-  if (amount !== null) {
-    cleaned = cleaned.replace(/(\d{1,3}(?:[ .]\d{3})*(?:[,.]\d{1,2})?)\s*(kč|czk|eur|€|\$|usd)?/i, ' ');
+  if (amountRaw) {
+    cleaned = cleaned.replace(amountRaw, ' ');
   }
   cleaned = cleaned
     .replace(/\b(dnes|včera|vcera)\b/gi, ' ')
@@ -99,13 +118,13 @@ export async function POST(req: Request) {
     }
 
     const trimmed = text.trim();
-    const amount = parseAmount(trimmed);
+    const amountMatch = parseAmount(trimmed);
     const currency = parseCurrency(trimmed);
     const date = parseDate(trimmed) ?? new Date().toISOString().slice(0, 10);
     const category = guessCategory(trimmed);
-    const vendor = guessVendor(trimmed, amount);
+    const vendor = guessVendor(trimmed, amountMatch?.raw ?? null);
 
-    return NextResponse.json({ amount, currency, date, category, vendor, description: trimmed });
+    return NextResponse.json({ amount: amountMatch?.value ?? null, currency, date, category, vendor, description: trimmed });
   } catch {
     return NextResponse.json({ error: 'Nepodařilo se zpracovat text' }, { status: 400 });
   }
