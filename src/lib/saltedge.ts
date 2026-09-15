@@ -27,11 +27,11 @@ async function seFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
 export async function getOrCreateCustomer(internalUserId: string, existingCustomerId?: string | null): Promise<string> {
   if (existingCustomerId) return existingCustomerId
-  const res = await seFetch<{ data: { id: string } }>('/customers', {
+  const res = await seFetch<{ data: { customer_id: string } }>('/customers', {
     method: 'POST',
     body: JSON.stringify({ data: { identifier: internalUserId } }),
   })
-  return res.data.id
+  return res.data.customer_id
 }
 
 export async function createConnectSession(customerId: string, returnTo: string): Promise<string> {
@@ -40,7 +40,10 @@ export async function createConnectSession(customerId: string, returnTo: string)
     body: JSON.stringify({
       data: {
         customer_id: customerId,
-        consent: { scopes: ['account_details', 'transactions_details'] },
+        // Platné hodnoty jsou jen accounts / holder_info / transactions (ověřeno živě proti
+        // API — dokumentace/starší příklady občas uvádí account_details/transactions_details,
+        // což API odmítne s WrongRequestFormat).
+        consent: { scopes: ['accounts', 'transactions'] },
         attempt: {
           return_to: returnTo,
           return_connection_id: true,
