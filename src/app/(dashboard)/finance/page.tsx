@@ -83,10 +83,10 @@ export default async function FinancePage() {
 
   const monthRows = buildMonthRows(invoices)
 
-  // Build last 6 months chart data
+  // Build last 12 months chart data
   const now = new Date()
-  const chartMonths = Array.from({ length: 6 }, (_, i) => {
-    const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1)
+  const chartMonths = Array.from({ length: 12 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - (11 - i), 1)
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
     const label = d.toLocaleString('cs-CZ', { month: 'short' })
     const revenue = invoices

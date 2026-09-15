@@ -92,7 +92,7 @@ export default async function DashboardPage() {
       {/* Cashflow chart */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="font-semibold text-slate-800">Cashflow (posledních 6 měsíců)</h2>
+          <h2 className="font-semibold text-slate-800">Cashflow (posledních 12 měsíců)</h2>
         </div>
         <CashflowChart months={monthData} />
       </div>
