@@ -6,8 +6,7 @@ import { ReminderSettings } from '@/components/ReminderSettings'
 import { UpgradeButton } from '@/components/UpgradeButton'
 import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
-import { PerplexityAsk } from '@/components/admin/PerplexityAsk'
-import { FREE_TIER_LIMIT, OWNER_EMAIL } from '@/lib/stripe'
+import { FREE_TIER_LIMIT } from '@/lib/stripe'
 
 export default async function SettingsPage() {
   const { userId } = await auth()
@@ -16,7 +15,7 @@ export default async function SettingsPage() {
   const db = createServiceClient()
   const [{ data: profiles }, { data: user }] = await Promise.all([
     db.from('sender_profiles').select('*').eq('user_id', userId).order('is_default', { ascending: false }),
-    db.from('users').select('plan, invoice_count_this_month, reminder_days, email').eq('id', userId).single(),
+    db.from('users').select('plan, invoice_count_this_month, reminder_days').eq('id', userId).single(),
   ])
 
   const plan = user?.plan ?? 'free'
@@ -76,15 +75,6 @@ export default async function SettingsPage() {
         <p className="text-xs text-slate-400 mb-4">Nahrajte výpis z banky a faktury se automaticky označí jako zaplacené · Funguje se všemi bankami</p>
         <BankStatementUpload />
       </div>
-
-      {/* Perplexity admin widget — only visible to the owner */}
-      {user?.email === OWNER_EMAIL && (
-        <div className="p-5 bg-white rounded-xl border border-zinc-200">
-          <h2 className="font-semibold mb-1">Zeptat se webu (interní)</h2>
-          <p className="text-xs text-slate-400 mb-4">Web-grounded Q&A přes Perplexity Agent API · viditelné jen pro vlastníka</p>
-          <PerplexityAsk />
-        </div>
-      )}
     </div>
   )
 }
