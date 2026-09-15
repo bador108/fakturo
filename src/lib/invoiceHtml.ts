@@ -76,7 +76,6 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
       <td class="col-unit">${esc(item.unit)}</td>
       <td class="col-price">${esc(formatCurrency(item.unit_price, currency))}</td>
       ${invoice.vat_payer ? `<td class="col-vat">${esc(item.vat_rate)} %</td>` : ''}
-      <td class="col-total">${esc(formatCurrency(item.total ?? item.quantity * item.unit_price, currency))}</td>
     </tr>
   `).join('')
 
@@ -207,7 +206,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   thead th { color: #fff; font-size: 8.5pt; font-weight: 700; padding: 7px 10px; text-align: left; }
   tbody td { font-size: 9.5pt; padding: 7px 10px; border-bottom: 1px solid #E4E4E7; }
   tbody tr.alt { background: #F4F4F5; }
-  .col-qty, .col-price, .col-vat, .col-total { text-align: right; white-space: nowrap; }
+  .col-qty, .col-price, .col-vat { text-align: right; white-space: nowrap; }
   .col-unit { text-align: center; }
 
   .legal-notice { font-size: 8.5pt; color: #B45309; margin-bottom: 20px; }
@@ -263,7 +262,6 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
         <th class="col-unit">Jedn.</th>
         <th class="col-price">Cena/jedn.</th>
         ${invoice.vat_payer ? '<th class="col-vat">DPH</th>' : ''}
-        <th class="col-total">Celkem</th>
       </tr>
     </thead>
     <tbody>
