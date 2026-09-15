@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
-import { getAccountBalance, getAccountTransactions } from '@/lib/gocardless'
+import { listAccounts, listTransactions } from '@/lib/saltedge'
 import { matchTransactionsToInvoices } from '@/lib/bankMatch'
 
 export async function POST() {
@@ -10,13 +10,13 @@ export async function POST() {
 
   const db = createServiceClient()
 
-  const { data: accounts } = await db
-    .from('bank_accounts')
-    .select('id, gocardless_account_id, iban, currency, display_name, connection_id, bank_connections!inner(status)')
+  const { data: connections } = await db
+    .from('bank_connections')
+    .select('id, provider_connection_id')
     .eq('user_id', userId)
-    .eq('bank_connections.status', 'active')
+    .eq('status', 'active')
 
-  if (!accounts?.length) {
+  if (!connections?.length) {
     return NextResponse.json({ error: 'Žádný propojený bankovní účet' }, { status: 400 })
   }
 
@@ -29,47 +29,50 @@ export async function POST() {
   const accountResults: { iban: string | null; currency: string; balance: number | null; displayName: string | null }[] = []
   const allMatches: ReturnType<typeof matchTransactionsToInvoices> = []
 
-  for (const account of accounts) {
+  for (const connection of connections) {
     try {
-      const [balance, transactions] = await Promise.all([
-        getAccountBalance(account.gocardless_account_id).catch(() => null),
-        getAccountTransactions(account.gocardless_account_id),
-      ])
+      const accounts = await listAccounts(connection.provider_connection_id)
 
-      if (balance) {
-        await db.from('bank_accounts').update({
-          balance: balance.amount,
+      for (const acc of accounts) {
+        const { data: accountRow } = await db.from('bank_accounts').upsert({
+          connection_id: connection.id,
+          user_id: userId,
+          provider_account_id: acc.id,
+          iban: acc.extra?.iban ?? null,
+          currency: acc.currency_code,
+          display_name: acc.name,
+          balance: acc.balance,
           balance_synced_at: new Date().toISOString(),
-        }).eq('id', account.id)
-      }
-      accountResults.push({ iban: account.iban, currency: account.currency, balance: balance?.amount ?? null, displayName: account.display_name })
+        }, { onConflict: 'provider_account_id' }).select('id').single()
 
-      if (transactions.length) {
-        await db.from('bank_transactions').upsert(
-          transactions.map(tx => ({
-            account_id: account.id,
-            user_id: userId,
-            gocardless_transaction_id: tx.externalId,
-            amount: tx.amount,
-            currency: tx.currency,
-            booking_date: tx.date || null,
-            description: tx.description,
-          })),
-          { onConflict: 'account_id,gocardless_transaction_id', ignoreDuplicates: true }
-        )
+        accountResults.push({ iban: acc.extra?.iban ?? null, currency: acc.currency_code, balance: acc.balance, displayName: acc.name })
+
+        const transactions = await listTransactions(connection.provider_connection_id, acc.id)
+
+        if (accountRow && transactions.length) {
+          await db.from('bank_transactions').upsert(
+            transactions.map(tx => ({
+              account_id: accountRow.id,
+              user_id: userId,
+              provider_transaction_id: tx.externalId,
+              amount: tx.amount,
+              currency: tx.currency,
+              booking_date: tx.date || null,
+              description: tx.description,
+            })),
+            { onConflict: 'account_id,provider_transaction_id', ignoreDuplicates: true }
+          )
+        }
+
+        const matches = matchTransactionsToInvoices(invoices ?? [], transactions)
+        allMatches.push(...matches)
       }
 
-      const matches = matchTransactionsToInvoices(invoices ?? [], transactions)
-      allMatches.push(...matches)
+      await db.from('bank_connections').update({ last_synced_at: new Date().toISOString() }).eq('id', connection.id)
     } catch (err) {
-      console.error(`/api/bank/sync: account ${account.id} failed:`, err)
+      console.error(`/api/bank/sync: connection ${connection.id} failed:`, err)
     }
   }
-
-  await db.from('bank_connections')
-    .update({ last_synced_at: new Date().toISOString() })
-    .eq('user_id', userId)
-    .eq('status', 'active')
 
   return NextResponse.json({ accounts: accountResults, matches: allMatches })
 }

@@ -19,7 +19,7 @@ export default async function SettingsPage() {
   const [{ data: profiles }, { data: user }, { data: bankConnections }, { data: bankAccounts }] = await Promise.all([
     db.from('sender_profiles').select('*').eq('user_id', userId).order('is_default', { ascending: false }),
     db.from('users').select('plan, email, invoice_count_this_month, reminder_days').eq('id', userId).single(),
-    db.from('bank_connections').select('id, institution_name, institution_logo, status').eq('user_id', userId),
+    db.from('bank_connections').select('id, institution_name, status').eq('user_id', userId),
     db.from('bank_accounts').select('iban, currency, balance, display_name').eq('user_id', userId),
   ])
 

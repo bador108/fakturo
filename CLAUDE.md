@@ -220,9 +220,9 @@ STRIPE_PRO_PRICE_ID=
 # Resend
 RESEND_API_KEY=
 
-# GoCardless Bank Account Data (open banking / živá synchronizace plateb)
-GOCARDLESS_SECRET_ID=
-GOCARDLESS_SECRET_KEY=
+# Salt Edge Account Information API (open banking / živá synchronizace plateb)
+SALTEDGE_APP_ID=
+SALTEDGE_SECRET=
 NEXT_PUBLIC_APP_URL=
 ```
 

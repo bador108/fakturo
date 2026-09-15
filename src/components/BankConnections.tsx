@@ -2,15 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { Landmark, Loader2, RefreshCw, CheckCircle2, AlertCircle, Check, FileText, ChevronDown } from 'lucide-react'
+import { Landmark, Loader2, RefreshCw, CheckCircle2, AlertCircle, Check, FileText } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import type { Currency } from '@/types'
-
-interface Institution {
-  id: string
-  name: string
-  logo: string
-}
 
 interface Account {
   iban: string | null
@@ -21,8 +15,7 @@ interface Account {
 
 interface Connection {
   id: string
-  institution_name: string
-  institution_logo: string | null
+  institution_name: string | null
   status: string
 }
 
@@ -46,9 +39,7 @@ export function BankConnections({ initialConnections, initialAccounts }: Props) 
 
   const [connections] = useState(initialConnections)
   const [accounts, setAccounts] = useState(initialAccounts)
-  const [institutions, setInstitutions] = useState<Institution[]>([])
-  const [institutionsLoaded, setInstitutionsLoaded] = useState(false)
-  const [connecting, setConnecting] = useState<string | null>(null)
+  const [connecting, setConnecting] = useState(false)
   const [syncing, setSyncing] = useState(false)
   const [confirming, setConfirming] = useState(false)
   const [error, setError] = useState('')
@@ -68,31 +59,17 @@ export function BankConnections({ initialConnections, initialAccounts }: Props) 
 
   const hasActiveConnection = connections.some(c => c.status === 'active')
 
-  useEffect(() => {
-    if (hasActiveConnection || institutionsLoaded) return
-    fetch('/api/bank/institutions')
-      .then(r => r.json())
-      .then(d => { if (Array.isArray(d)) setInstitutions(d) })
-      .catch(() => {})
-      .finally(() => setInstitutionsLoaded(true))
-  }, [hasActiveConnection, institutionsLoaded])
-
-  async function connect(institutionId: string) {
-    setConnecting(institutionId)
+  async function connect() {
+    setConnecting(true)
     setError('')
     try {
-      const res = await fetch('/api/bank/connect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ institutionId }),
-      })
+      const res = await fetch('/api/bank/connect', { method: 'POST' })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? 'Propojení se nezdařilo'); return }
       window.location.href = data.link
     } catch {
       setError('Propojení se nezdařilo.')
-    } finally {
-      setConnecting(null)
+      setConnecting(false)
     }
   }
 
@@ -218,31 +195,14 @@ export function BankConnections({ initialConnections, initialAccounts }: Props) 
           <p className="text-sm text-slate-500">
             Propojte bankovní účet — faktury se pak automaticky označí jako zaplacené a uvidíte živý zůstatek.
           </p>
-          {!institutionsLoaded ? (
-            <p className="text-sm text-slate-400 flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Načítám banky…</p>
-          ) : institutions.length === 0 ? (
-            <p className="text-sm text-slate-400">Bankovní propojení není zatím nakonfigurované.</p>
-          ) : (
-            <div className="relative">
-              <select
-                disabled={!!connecting}
-                defaultValue=""
-                onChange={e => { if (e.target.value) connect(e.target.value) }}
-                className="w-full appearance-none rounded-lg border border-slate-200 bg-white pl-9 pr-9 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
-              >
-                <option value="" disabled>Vyberte banku…</option>
-                {institutions.map(i => (
-                  <option key={i.id} value={i.id}>{i.name}</option>
-                ))}
-              </select>
-              <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-              {connecting ? (
-                <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 animate-spin" />
-              ) : (
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-              )}
-            </div>
-          )}
+          <button
+            onClick={connect}
+            disabled={connecting}
+            className="flex items-center gap-2 bg-slate-900 hover:bg-slate-700 disabled:opacity-50 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition"
+          >
+            {connecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Landmark className="h-4 w-4" />}
+            Připojit banku
+          </button>
           {error && (
             <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">
               <AlertCircle className="h-4 w-4 shrink-0" />

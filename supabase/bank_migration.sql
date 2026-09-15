@@ -1,23 +1,28 @@
--- Živá bankovní synchronizace (GoCardless Bank Account Data / open banking).
--- bank_connections = jedno propojení s bankou (jedna "requisition" u GoCardless).
+-- Živá bankovní synchronizace přes Salt Edge Account Information API.
+-- (GoCardless Bank Account Data zavřelo nové registrace, viz commit historie —
+-- proto provider-neutrální sloupce, ať další výpadek poskytovatele nevyžaduje
+-- další migraci schématu, jen výměnu src/lib/<provider>.ts.)
+
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS bank_provider_customer_id TEXT;
+
+-- bank_connections = jedno propojení s bankou u daného poskytovatele.
 CREATE TABLE IF NOT EXISTS public.bank_connections (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id TEXT NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
-  institution_id TEXT NOT NULL,
-  institution_name TEXT NOT NULL,
-  institution_logo TEXT,
-  requisition_id TEXT NOT NULL UNIQUE,
+  provider TEXT NOT NULL DEFAULT 'saltedge',
+  provider_connection_id TEXT NOT NULL UNIQUE,
+  institution_name TEXT,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'expired', 'error')),
   last_synced_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- bank_accounts = jeden bankovní účet v rámci propojení (requisition může mít víc účtů).
+-- bank_accounts = jeden bankovní účet v rámci propojení.
 CREATE TABLE IF NOT EXISTS public.bank_accounts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   connection_id UUID NOT NULL REFERENCES public.bank_connections(id) ON DELETE CASCADE,
   user_id TEXT NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
-  gocardless_account_id TEXT NOT NULL UNIQUE,
+  provider_account_id TEXT NOT NULL UNIQUE,
   iban TEXT,
   currency TEXT NOT NULL DEFAULT 'CZK',
   display_name TEXT,
@@ -31,14 +36,14 @@ CREATE TABLE IF NOT EXISTS public.bank_transactions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   account_id UUID NOT NULL REFERENCES public.bank_accounts(id) ON DELETE CASCADE,
   user_id TEXT NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
-  gocardless_transaction_id TEXT NOT NULL,
+  provider_transaction_id TEXT NOT NULL,
   amount NUMERIC NOT NULL,
   currency TEXT NOT NULL DEFAULT 'CZK',
   booking_date DATE,
   description TEXT,
   matched_invoice_id UUID REFERENCES public.invoices(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE (account_id, gocardless_transaction_id)
+  UNIQUE (account_id, provider_transaction_id)
 );
 
 ALTER TABLE public.bank_connections ENABLE ROW LEVEL SECURITY;
