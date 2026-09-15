@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, DM_Sans } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'] })
+const dmSans = DM_Sans({ subsets: ['latin', 'latin-ext'], variable: '--font-dm-sans', display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'Fakturo – Online fakturace',
@@ -21,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <ClerkProvider>
       <html lang="cs">
-        <body className={`${inter.className} bg-slate-50 text-slate-900 antialiased`}>
+        <body className={`${inter.className} ${dmSans.variable} bg-slate-50 text-slate-900 antialiased`}>
           {children}
         </body>
       </html>

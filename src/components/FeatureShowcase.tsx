@@ -10,7 +10,7 @@ const features = [
     id: 'dashboard',
     icon: LayoutDashboard,
     title: 'Přehled na první pohled',
-    desc: 'Cashflow za posledních 6 měsíců, rychlý přehled příjmů a posledních faktur — vše hned po přihlášení.',
+    desc: 'Cashflow za posledních 12 měsíců, rychlý přehled příjmů a posledních faktur — vše hned po přihlášení.',
     img: '/screenshots/dashboard.png',
     color: 'indigo',
   },

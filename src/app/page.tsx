@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation'
 import { PricingSection } from '@/components/PricingSection'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PhoneMockup } from '@/components/PhoneMockup'
+import { FeatureShowcase } from '@/components/FeatureShowcase'
+import { Reveal } from '@/components/Reveal'
 import { LayoutDashboard, FileText, Users, CreditCard } from 'lucide-react'
 
 const C = {
@@ -20,7 +22,7 @@ const disp = { letterSpacing: -2, fontWeight: 600 }
 const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
 const pageStyle: React.CSSProperties = {
   background: C.bg, color: C.fg,
-  fontFamily: "'Inter', -apple-system, system-ui, sans-serif",
+  fontFamily: "var(--font-dm-sans), -apple-system, system-ui, sans-serif",
   width: '100%', minHeight: '100%', WebkitFontSmoothing: 'antialiased',
 }
 
@@ -303,35 +305,6 @@ function FeatureGrid() {
   )
 }
 
-function Testimonials() {
-  return (
-    <section style={{ background: C.bgSoft, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, padding: '80px 0' }}>
-      <div style={{ ...cont, textAlign: 'center', maxWidth: 800 }}>
-        <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Reference</div>
-        <blockquote style={{ ...disp, fontSize: 'clamp(1.5rem,3vw,2.25rem)', lineHeight: 1.25, margin: 0, marginBottom: 32, letterSpacing: -1.2, fontWeight: 500 }}>
-          {`„Konečně nástroj, který nezatěžuje. Vystavím fakturu mezi dvěma e-maily, banka platby spáruje sama a já se nemusím starat. To mi vrátilo víkendy."`}
-        </blockquote>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
-          <div style={{ width: 44, height: 44, borderRadius: 999, background: `linear-gradient(135deg, ${C.primary}, ${C.primaryDark})`, color: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 16 }}>L</div>
-          <div style={{ textAlign: 'left' }}><div style={{ fontSize: 14, fontWeight: 600 }}>Lenka Marková</div><div style={{ fontSize: 13, color: C.muted }}>Copywriterka · Brno · používá 14 měsíců</div></div>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginTop: 64, textAlign: 'left' }}>
-          {([{ q:'Konečně něco rychlejšího než Excel a chytřejšího než Word.', a:'Petr H.', role:'Grafik · Praha' },{ q:'Pravidelné fakturace mě zachránily. Klienti dostávají faktury samy.', a:'Tomáš V.', role:'Vývojář · Olomouc' },{ q:'Líbí se mi, že to neumí všechno. Umí přesně to, co potřebuju.', a:'Markéta D.', role:'Architektka · Brno' }] as {q:string,a:string,role:string}[]).map((t,i) => (
-            <div key={i} style={{ background: C.bg, border: `1px solid ${C.border}`, padding: 24, borderRadius: 12 }}>
-              <div style={{ display: 'flex', gap: 2, marginBottom: 12 }}>
-                {([1,2,3,4,5] as number[]).map(s => <svg key={s} width="14" height="14" viewBox="0 0 14 14" fill={C.primary}><path d="M7 1l1.8 4 4.2.6-3 3 0.7 4.4L7 11l-3.7 2 0.7-4.4-3-3 4.2-.6L7 1z" /></svg>)}
-              </div>
-              <div style={{ fontSize: 15, lineHeight: 1.55, marginBottom: 16, color: C.fg2 }}>{t.q}</div>
-              <div style={{ fontSize: 13, fontWeight: 600 }}>{t.a}</div>
-              <div style={{ fontSize: 12, color: C.muted }}>{t.role}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 function FAQ() {
   const items: [string,string][] = [
     ['Můžu zrušit kdykoliv?','Ano. Žádná výpovědní doba. Klikneš v nastavení a hotovo. Data si stáhneš v PDF i CSV.'],
@@ -355,6 +328,19 @@ function FAQ() {
           <div style={{ fontSize: 15, color: C.muted, marginTop: 12, lineHeight: 1.6, maxWidth: 700 }}>{a}</div>
         </details>
       ))}
+    </section>
+  )
+}
+
+function FeatureShowcaseSection() {
+  return (
+    <section style={{ ...cont, padding: '32px 32px 96px' }}>
+      <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 48px' }}>
+        <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Appka zevnitř</div>
+        <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Žádné mockupy. Skutečná appka.</h2>
+        <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturo zevnitř — přímo ze živého provozu.</p>
+      </div>
+      <FeatureShowcase />
     </section>
   )
 }
@@ -416,33 +402,37 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
     <div style={pageStyle}>
       <Nav userId={userId} />
       <Hero userId={userId} />
-      <TrustBar />
-      <Metrics />
-      <section style={{ ...cont, padding: '80px 32px', textAlign: 'center' }}>
-        <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Demo</div>
-        <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', margin: '0 auto 16px', maxWidth: 600 }}>
-          Faktura za 30 sekund
-        </h2>
-        <p style={{ fontSize: 17, color: C.muted, margin: '0 auto 56px', maxWidth: 460, lineHeight: 1.6 }}>
-          Od dashboardu po platbu. Podívej se, jak to celé funguje.
-        </p>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <PhoneMockup />
-        </div>
-      </section>
-      <Features />
-      <FeatureGrid />
-      <Testimonials />
-      <section id="pricing" style={{ ...cont, padding: '80px 32px' }}>
-        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 56px' }}>
-          <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Ceník</div>
-          <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2, marginBottom: 16 }}>Férová cena, žádné překvapení.</h2>
-          <p style={{ fontSize: 17, color: C.muted, margin: 0, lineHeight: 1.55 }}>Plať měsíčně, zruš kdykoliv. Bez závazků. Začni zdarma.</p>
-        </div>
-        <PricingSection />
-      </section>
-      <FAQ />
-      <CTA userId={userId} />
+      <Reveal><TrustBar /></Reveal>
+      <Reveal><Metrics /></Reveal>
+      <Reveal>
+        <section style={{ ...cont, padding: '80px 32px', textAlign: 'center' }}>
+          <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Demo</div>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', margin: '0 auto 16px', maxWidth: 600 }}>
+            Faktura za 30 sekund
+          </h2>
+          <p style={{ fontSize: 17, color: C.muted, margin: '0 auto 56px', maxWidth: 460, lineHeight: 1.6 }}>
+            Od dashboardu po platbu. Podívej se, jak to celé funguje.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <PhoneMockup />
+          </div>
+        </section>
+      </Reveal>
+      <Reveal><Features /></Reveal>
+      <Reveal><FeatureGrid /></Reveal>
+      <Reveal><FeatureShowcaseSection /></Reveal>
+      <Reveal>
+        <section id="pricing" style={{ ...cont, padding: '80px 32px' }}>
+          <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 56px' }}>
+            <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Ceník</div>
+            <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2, marginBottom: 16 }}>Férová cena, žádné překvapení.</h2>
+            <p style={{ fontSize: 17, color: C.muted, margin: 0, lineHeight: 1.55 }}>Plať měsíčně, zruš kdykoliv. Bez závazků. Začni zdarma.</p>
+          </div>
+          <PricingSection />
+        </section>
+      </Reveal>
+      <Reveal><FAQ /></Reveal>
+      <Reveal><CTA userId={userId} /></Reveal>
       <Footer />
       <BotcraftWidget botId="59438a4b-6478-4993-b935-081e4a7d5aea" />
     </div>
