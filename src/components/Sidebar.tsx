@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UserButton, useUser, useClerk } from '@clerk/nextjs'
-import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, BarChart2, Receipt, Menu, X, LogOut } from 'lucide-react'
+import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, Receipt, Menu, X, LogOut } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { NotificationBell } from '@/components/NotificationBell'
@@ -16,7 +16,6 @@ const links = [
   { href: '/clients', label: 'Klienti', icon: Users },
   { href: '/expenses', label: 'Výdaje', icon: Receipt },
   { href: '/recurring', label: 'Opakující se', icon: RefreshCw },
-  { href: '/finance', label: 'Finance', icon: BarChart2 },
   { href: '/settings', label: 'Nastavení', icon: Settings },
 ]
 
