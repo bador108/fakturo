@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Receipt, Plus, Trash2, X } from 'lucide-react'
+import { Receipt, Plus, Trash2, X, Sparkles } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Expense, ExpenseCategory, Currency } from '@/types'
 
@@ -36,6 +36,9 @@ export default function ExpensesPage() {
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
+  const [quickText, setQuickText] = useState('')
+  const [parsing, setParsing] = useState(false)
+  const [parseNote, setParseNote] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/expenses')
@@ -59,6 +62,41 @@ export default function ExpensesPage() {
       setForm(emptyForm)
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function parseQuickEntry() {
+    if (!quickText.trim()) return
+    setParsing(true)
+    setParseNote(null)
+    try {
+      const res = await fetch('/api/expenses/parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: quickText }),
+      })
+      if (!res.ok) {
+        setParseNote('Nepodařilo se rozpoznat, doplňte ručně.')
+        setShowForm(true)
+        return
+      }
+      const parsed = await res.json() as {
+        amount: number | null; currency: Currency; date: string; category: ExpenseCategory; vendor: string; description: string
+      }
+      setForm({
+        date: parsed.date,
+        vendor: parsed.vendor,
+        description: parsed.description,
+        amount: parsed.amount !== null ? String(parsed.amount) : '',
+        currency: parsed.currency,
+        category: parsed.category,
+        vat_claimable: false,
+      })
+      setParseNote(parsed.amount === null ? 'Částku se nepodařilo najít, doplňte ji ručně.' : null)
+      setShowForm(true)
+      setQuickText('')
+    } finally {
+      setParsing(false)
     }
   }
 
@@ -88,6 +126,37 @@ export default function ExpensesPage() {
         </button>
       </div>
 
+      {/* Quick entry */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-2">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-brand" />
+          <p className="text-sm font-medium text-slate-700">Rychlé zadání</p>
+        </div>
+        <p className="text-xs text-slate-400">Vložte text z účtenky nebo e-mailu (např. &ldquo;Adobe předplatné 599 Kč včera&rdquo;) a doplníme pole za vás.</p>
+        <div className="flex gap-2">
+          <textarea
+            value={quickText}
+            onChange={e => setQuickText(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                parseQuickEntry()
+              }
+            }}
+            rows={1}
+            placeholder="Adobe předplatné 599 Kč včera..."
+            className="flex-1 resize-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+          />
+          <button
+            onClick={parseQuickEntry}
+            disabled={!quickText.trim() || parsing}
+            className="px-4 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-700 transition disabled:opacity-50 font-medium shrink-0"
+          >
+            {parsing ? 'Zpracovávám…' : 'Rozpoznat'}
+          </button>
+        </div>
+      </div>
+
       {/* Totals */}
       {expenses.length > 0 && (
         <div className="flex gap-3 flex-wrap">
@@ -106,10 +175,14 @@ export default function ExpensesPage() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-slate-800">Přidat výdaj</h3>
-              <button onClick={() => setShowForm(false)} className="text-slate-400 hover:text-slate-700">
+              <button onClick={() => { setShowForm(false); setParseNote(null) }} className="text-slate-400 hover:text-slate-700">
                 <X className="h-4 w-4" />
               </button>
             </div>
+
+            {parseNote && (
+              <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">{parseNote}</p>
+            )}
 
             <div className="grid grid-cols-2 gap-3">
               <div>
