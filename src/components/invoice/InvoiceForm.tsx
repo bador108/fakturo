@@ -37,6 +37,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
   const [includePaymentLink, setIncludePaymentLink] = useState(false)
   const [sending, setSending] = useState(false)
   const [sendResult, setSendResult] = useState<'ok' | 'err' | null>(null)
+  const [sendErrorMsg, setSendErrorMsg] = useState<string | null>(null)
   const [aresLoading, setAresLoading] = useState<'sender' | 'client' | null>(null)
   const [aresError, setAresError] = useState<'sender' | 'client' | null>(null)
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
@@ -147,13 +148,20 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     if (!invoiceId || !sendEmail) return
     setSending(true)
     setSendResult(null)
+    setSendErrorMsg(null)
     try {
       const res = await fetch(`/api/invoices/${invoiceId}/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: sendEmail, includePaymentLink }),
       })
-      setSendResult(res.ok ? 'ok' : 'err')
+      if (res.ok) {
+        setSendResult('ok')
+      } else {
+        const data = await res.json().catch(() => null)
+        setSendErrorMsg(data?.error ?? null)
+        setSendResult('err')
+      }
     } catch {
       setSendResult('err')
     } finally {
@@ -672,7 +680,13 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
                   />
                   <span className="text-sm text-slate-600">Přidat tlačítko pro online platbu kartou</span>
                 </label>
-                {sendResult === 'err' && <p className="text-xs text-red-500">Nepodařilo se odeslat. Zkontroluj RESEND_API_KEY.</p>}
+                {sendResult === 'err' && (
+                  <p className="text-xs text-red-500">
+                    {sendErrorMsg?.includes('only send testing emails')
+                      ? 'Appka zatím posílá maily přes testovací režim Resend — smí jen na vlastní adresu účtu, ne na libovolného klienta. Potřeba ověřit doménu v Resendu.'
+                      : sendErrorMsg ?? 'Nepodařilo se odeslat. Zkuste to znovu.'}
+                  </p>
+                )}
                 <div className="flex gap-2 justify-end">
                   <Button variant="secondary" size="sm" onClick={() => setSendModal(false)}>Zrušit</Button>
                   <Button size="sm" onClick={sendInvoiceEmail} loading={sending} disabled={!sendEmail}>
