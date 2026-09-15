@@ -64,15 +64,8 @@ const features = [
   },
 ]
 
-const colorMap: Record<string, { bg: string; text: string; ring: string; dot: string }> = {
-  indigo: { bg: 'bg-brand-soft', text: 'text-brand', ring: 'ring-brand-soft', dot: 'bg-brand' },
-  violet: { bg: 'bg-violet-50', text: 'text-violet-600', ring: 'ring-violet-200', dot: 'bg-violet-500' },
-  sky:    { bg: 'bg-sky-50',    text: 'text-sky-600',    ring: 'ring-sky-200',    dot: 'bg-sky-500'    },
-  emerald:{ bg: 'bg-emerald-50',text: 'text-emerald-600',ring: 'ring-emerald-200',dot: 'bg-emerald-500'},
-  amber:  { bg: 'bg-amber-50',  text: 'text-amber-600',  ring: 'ring-amber-200',  dot: 'bg-amber-500'  },
-  rose:   { bg: 'bg-rose-50',   text: 'text-rose-600',   ring: 'ring-rose-200',   dot: 'bg-rose-500'   },
-  slate:  { bg: 'bg-slate-50',  text: 'text-slate-600',  ring: 'ring-slate-200',  dot: 'bg-slate-400'  },
-}
+// Design je černobílý — jeden neutrální styl pro všechny taby, žádné barvy per-feature.
+const NEUTRAL = { rowBg: 'bg-slate-100', ring: 'ring-slate-300', iconBg: 'bg-slate-900', iconText: 'text-white', dot: 'bg-slate-900' }
 
 function Lightbox({ src, title, onClose }: { src: string; title: string; onClose: () => void }) {
   useEffect(() => {
@@ -102,10 +95,10 @@ function Lightbox({ src, title, onClose }: { src: string; title: string; onClose
         <div className="bg-slate-800 flex items-center gap-2 px-4 py-2.5">
           <button
             onClick={onClose}
-            className="h-3 w-3 rounded-full bg-red-400 hover:bg-red-500 transition flex items-center justify-center"
+            className="h-3 w-3 rounded-full bg-slate-500 hover:bg-slate-400 transition flex items-center justify-center"
           />
-          <span className="h-3 w-3 rounded-full bg-yellow-400" />
-          <span className="h-3 w-3 rounded-full bg-emerald-400" />
+          <span className="h-3 w-3 rounded-full bg-slate-500" />
+          <span className="h-3 w-3 rounded-full bg-slate-500" />
           <div className="ml-3 flex-1 bg-slate-700 rounded-md h-5 flex items-center px-3">
             <span className="text-[10px] text-slate-400 font-mono">fakturo.vercel.app</span>
           </div>
@@ -118,7 +111,7 @@ function Lightbox({ src, title, onClose }: { src: string; title: string; onClose
             src={src}
             alt={title}
             fill
-            className="object-cover object-top"
+            className="object-cover object-top grayscale contrast-105"
             sizes="100vw"
             priority
           />
@@ -132,7 +125,6 @@ export function FeatureShowcase() {
   const [active, setActive] = useState('dashboard')
   const [lightbox, setLightbox] = useState<string | null>(null)
   const current = features.find(f => f.id === active) ?? features[0]
-  const c = colorMap[current.color]
 
   return (
     <>
@@ -141,7 +133,6 @@ export function FeatureShowcase() {
         <div className="space-y-1">
           {features.map(f => {
             const isActive = f.id === active
-            const fc = colorMap[f.color]
             const Icon = f.icon
             return (
               <button
@@ -150,12 +141,12 @@ export function FeatureShowcase() {
                 className={cn(
                   'w-full text-left flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all',
                   isActive
-                    ? `${fc.bg} ring-1 ${fc.ring}`
+                    ? `${NEUTRAL.rowBg} ring-1 ${NEUTRAL.ring}`
                     : 'hover:bg-slate-50 text-slate-500',
                 )}
               >
-                <div className={cn('h-8 w-8 rounded-lg flex items-center justify-center shrink-0', isActive ? fc.bg : 'bg-slate-100')}>
-                  <Icon className={cn('h-4 w-4', isActive ? fc.text : 'text-slate-400')} />
+                <div className={cn('h-8 w-8 rounded-lg flex items-center justify-center shrink-0', isActive ? NEUTRAL.iconBg : 'bg-slate-100')}>
+                  <Icon className={cn('h-4 w-4', isActive ? NEUTRAL.iconText : 'text-slate-400')} />
                 </div>
                 <div className="min-w-0">
                   <p className={cn('text-sm font-semibold leading-tight', isActive ? 'text-slate-900' : 'text-slate-600')}>{f.title}</p>
@@ -163,7 +154,7 @@ export function FeatureShowcase() {
                     <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">{f.desc}</p>
                   )}
                 </div>
-                {isActive && <span className={cn('h-2 w-2 rounded-full shrink-0 ml-auto', fc.dot)} />}
+                {isActive && <span className={cn('h-2 w-2 rounded-full shrink-0 ml-auto', NEUTRAL.dot)} />}
               </button>
             )
           })}
@@ -173,16 +164,13 @@ export function FeatureShowcase() {
         <button
           type="button"
           onClick={() => setLightbox(current.img)}
-          className={cn(
-            'relative rounded-2xl overflow-hidden border shadow-2xl ring-2 transition-all group w-full text-left cursor-zoom-in',
-            c.ring,
-          )}
+          className="relative rounded-2xl overflow-hidden border shadow-2xl ring-2 ring-slate-300 transition-all group w-full text-left cursor-zoom-in"
         >
           {/* Browser chrome */}
           <div className="bg-slate-800 flex items-center gap-2 px-4 py-2.5">
-            <span className="h-3 w-3 rounded-full bg-red-400" />
-            <span className="h-3 w-3 rounded-full bg-yellow-400" />
-            <span className="h-3 w-3 rounded-full bg-emerald-400" />
+            <span className="h-3 w-3 rounded-full bg-slate-500" />
+            <span className="h-3 w-3 rounded-full bg-slate-500" />
+            <span className="h-3 w-3 rounded-full bg-slate-500" />
             <div className="ml-3 flex-1 bg-slate-700 rounded-md h-5 flex items-center px-3">
               <span className="text-[10px] text-slate-400 font-mono">fakturo.vercel.app</span>
             </div>
@@ -197,7 +185,7 @@ export function FeatureShowcase() {
               src={current.img}
               alt={current.title}
               fill
-              className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.01]"
+              className="object-cover object-top grayscale contrast-105 transition-transform duration-300 group-hover:scale-[1.01]"
               sizes="(max-width: 1024px) 100vw, 800px"
             />
             {/* Zoom hint overlay */}

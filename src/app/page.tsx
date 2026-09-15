@@ -258,13 +258,16 @@ function FAQ() {
 
 function FeatureShowcaseSection() {
   return (
-    <section style={{ ...cont, padding: '32px 32px 96px' }}>
-      <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 48px' }}>
-        <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Appka zevnitř</div>
-        <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Žádné mockupy. Skutečná appka.</h2>
-        <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturo zevnitř — přímo ze živého provozu.</p>
+    <section style={{ background: C.bgSoft, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, padding: '88px 0', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(10,10,10,0.08), transparent 70%)', filter: 'blur(50px)', pointerEvents: 'none' }} />
+      <div style={{ ...cont, position: 'relative' }}>
+        <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 56px' }}>
+          <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Appka zevnitř</div>
+          <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Žádné mockupy. Skutečná appka.</h2>
+          <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturo zevnitř — přímo ze živého provozu.</p>
+        </div>
+        <FeatureShowcase />
       </div>
-      <FeatureShowcase />
     </section>
   )
 }
