@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { Zap, Users, Building2, BarChart2, Smartphone, Plug } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Funkce – Fakturo',
+  title: 'Funkce – Fakturka',
   description: 'Vše, co potřebuješ pro profesionální fakturaci. Faktury za 30 sekund, automatické párování plateb, opakované fakturace a export pro účetní.',
 }
 
@@ -98,7 +98,7 @@ const features = [
   },
   {
     title: 'API a integrace',
-    desc: 'Napoj Fakturo na vlastní systémy.',
+    desc: 'Napoj Fakturka na vlastní systémy.',
     items: [
       'REST API pro vývojáře',
       'Webhooky při vytvoření / zaplacení faktury',
@@ -118,7 +118,7 @@ export default function FunkcePage() {
           Vše, co potřebuješ pro fakturaci. Nic navíc.
         </h1>
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 40px', maxWidth: 560 }}>
-          Fakturo je postavené tak, abys vystavil fakturu za 30 sekund — ne za 30 minut.
+          Fakturka je postavené tak, abys vystavil fakturu za 30 sekund — ne za 30 minut.
         </p>
         <Link href="/sign-up" style={{
           background: C.fg, color: C.bg, padding: '14px 28px', borderRadius: 10,

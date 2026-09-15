@@ -124,7 +124,7 @@ export function BotcraftWidget({ botId }: Props) {
           <div className="flex items-center gap-3 px-4 py-3 shrink-0 rounded-t-2xl" style={{ background: theme ?? '#0c0c0e' }}>
             <div className="h-8 w-8 bg-white/20 rounded-full flex items-center justify-center"><Bot className="h-4 w-4 text-white" /></div>
             <div>
-              <p className="font-semibold text-white text-sm leading-tight">Fakturo AI</p>
+              <p className="font-semibold text-white text-sm leading-tight">Fakturka AI</p>
               <p className="text-xs text-white/70">Powered by AI</p>
             </div>
             <button onClick={() => setOpen(false)} className="ml-auto text-white/70 hover:text-white">

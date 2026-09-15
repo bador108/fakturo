@@ -1,7 +1,7 @@
-# Fakturo — CLAUDE.md
+# Fakturka — CLAUDE.md
 
 ## Project Overview
-**Fakturo** is a Czech SaaS invoice generator for freelancers and small businesses.
+**Fakturka** is a Czech SaaS invoice generator for freelancers and small businesses.
 - Next.js 14 App Router + TypeScript + Tailwind CSS
 - Auth: Clerk v7
 - Payments: Stripe v22

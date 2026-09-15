@@ -30,7 +30,7 @@ const CATEGORIES: Record<string, {
       { title: 'Jak přidat prvního klienta', slug: 'jak-pridat-prvniho-klienta', desc: 'Načtení z ARES nebo ruční zadání.' },
       { title: 'Kde najdu své faktury', slug: 'kde-najdu-sve-faktury', desc: 'Přehled faktur, filtrování a vyhledávání.' },
       { title: 'Jak odeslat fakturu e-mailem', slug: 'jak-odeslat-fakturu-emailem', desc: 'Přímé odeslání PDF klientovi z aplikace.' },
-      { title: 'Mobilní přístup k Fakturo', slug: 'mobilni-pristup', desc: 'Fakturo funguje v prohlížeči na mobilu i tabletu.' },
+      { title: 'Mobilní přístup k Fakturka', slug: 'mobilni-pristup', desc: 'Fakturka funguje v prohlížeči na mobilu i tabletu.' },
       { title: 'Jak změnit heslo nebo e-mail', slug: 'jak-zmenit-heslo-nebo-email', desc: 'Správa přihlašovacích údajů.' },
       { title: 'Jak kontaktovat podporu', slug: 'jak-kontaktovat-podporu', desc: 'Způsoby, jak nás rychle oslovit.' },
     ],
@@ -79,7 +79,7 @@ const CATEGORIES: Record<string, {
       { title: 'Přehled nezaplacených faktur', slug: 'prehled-nezaplacenych-faktur', desc: 'Filtrování faktur po splatnosti.' },
       { title: 'Upomínky a připomínky platby', slug: 'upominky-a-pripominky-platby', desc: 'Automatické e-maily klientovi před a po splatnosti.' },
       { title: 'Export plateb pro účetní', slug: 'export-plateb-pro-ucetni', desc: 'Přehled přijatých plateb v CSV/XML.' },
-      { title: 'Přepočet kurzu u cizí měny', slug: 'prepocet-kurzu-u-cizi-meny', desc: 'Jak Fakturo počítá kurz ČNB pro fakturace v EUR/USD.' },
+      { title: 'Přepočet kurzu u cizí měny', slug: 'prepocet-kurzu-u-cizi-meny', desc: 'Jak Fakturka počítá kurz ČNB pro fakturace v EUR/USD.' },
       { title: 'Cashflow přehled', slug: 'cashflow-prehled', desc: 'Celkový přehled příjmů a výdajů po měsících.' },
     ],
   },
@@ -117,7 +117,7 @@ const CATEGORIES: Record<string, {
       { title: 'Přehled tarifů a cen', slug: 'prehled-tarifu-a-cen', desc: 'Free, Profi a Business — co je v každém tarifu.' },
       { title: 'Jak změnit nebo zrušit předplatné', slug: 'jak-zmenit-nebo-zrusit-predplatne', desc: 'Upgrade, downgrade nebo zrušení kdykoli.' },
       { title: 'Roční předplatné a sleva', slug: 'rocni-predplatne-a-sleva', desc: '20% sleva při platbě za rok dopředu.' },
-      { title: 'Co se stane po překročení limitu Free', slug: 'co-se-stane-po-prekroceni-limitu', desc: 'Fakturo tě upozorní a nabídne upgrade.' },
+      { title: 'Co se stane po překročení limitu Free', slug: 'co-se-stane-po-prekroceni-limitu', desc: 'Fakturka tě upozorní a nabídne upgrade.' },
     ],
   },
   'bezpecnost-a-gdpr': {
@@ -126,8 +126,8 @@ const CATEGORIES: Record<string, {
     icon: <Lock size={22} color={fg} />,
     articles: [
       { title: 'Kde jsou uložená moje data', slug: 'kde-jsou-ulozena-moje-data', desc: 'Servery v EU, šifrování HTTPS, GDPR compliance.' },
-      { title: 'Jak Fakturo chrání data', slug: 'jak-fakturo-chrani-data', desc: 'Šifrování, přístupová práva a zálohy.' },
-      { title: 'GDPR a zpracování osobních údajů', slug: 'gdpr-a-zpracovani-osobnich-udaju', desc: 'Ty jsi správce, Fakturo je zpracovatel.' },
+      { title: 'Jak Fakturka chrání data', slug: 'jak-fakturo-chrani-data', desc: 'Šifrování, přístupová práva a zálohy.' },
+      { title: 'GDPR a zpracování osobních údajů', slug: 'gdpr-a-zpracovani-osobnich-udaju', desc: 'Ty jsi správce, Fakturka je zpracovatel.' },
       { title: 'Jak stáhnout nebo smazat svá data', slug: 'jak-stahnout-nebo-smazat-svoja-data', desc: 'Export a právo na výmaz.' },
       { title: 'Dvoufaktorové ověření (2FA)', slug: 'dvoufaktorove-overeni', desc: 'Jak zapnout 2FA pro svůj účet.' },
     ],
@@ -139,9 +139,9 @@ type Props = { params: Promise<{ category: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params
   const cat = CATEGORIES[category]
-  if (!cat) return { title: 'Nápověda – Fakturo' }
+  if (!cat) return { title: 'Nápověda – Fakturka' }
   return {
-    title: `${cat.title} – Nápověda – Fakturo`,
+    title: `${cat.title} – Nápověda – Fakturka`,
     description: cat.desc,
   }
 }

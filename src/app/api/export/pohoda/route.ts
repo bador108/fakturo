@@ -96,7 +96,7 @@ export async function GET(req: Request) {
 <dataPack
   id="fakturo-export-${year}"
   ico="${escapeXml(invoices[0]?.sender_ico ?? '')}"
-  application="Fakturo"
+  application="Fakturka"
   version="2.0"
   xmlns="http://www.stormware.cz/schema/version_2/data.xsd"
 >

@@ -37,7 +37,7 @@ type Props = { params: Promise<{ category: string; article: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { article } = await params
   return {
-    title: `${slugToTitle(article)} – Nápověda – Fakturo`,
+    title: `${slugToTitle(article)} – Nápověda – Fakturka`,
   }
 }
 

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { ContactForm } from './ContactForm'
 
 export const metadata: Metadata = {
-  title: 'Kontakt – Fakturo',
+  title: 'Kontakt – Fakturka',
   description: 'Napiš nám. Rádi odpovíme na dotazy, zpětnou vazbu nebo technické problémy.',
 }
 
@@ -49,7 +49,7 @@ export default function KontaktPage() {
             <div>
               <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1, color: C.muted }}>Sídlo</div>
               <div style={{ fontSize: 15, color: C.fg2, lineHeight: 1.7 }}>
-                Fakturo<br />
+                Fakturka<br />
                 Česká republika
               </div>
             </div>

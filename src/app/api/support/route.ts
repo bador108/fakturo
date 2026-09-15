@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       // verified (Gmail domains aren't ownable via DNS), so onboarding@resend.dev stays the
       // envelope sender. Both the "to" and "reply-to" already point at fakturosupport@gmail.com,
       // which is what actually matters: replies land in the inbox that's checked.
-      from: 'Fakturo <onboarding@resend.dev>',
+      from: 'Fakturka <onboarding@resend.dev>',
       to: 'fakturosupport@gmail.com',
       replyTo: userEmail ?? 'fakturosupport@gmail.com',
       subject: `[${typeLabel}] ${subject}`,

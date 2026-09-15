@@ -1,4 +1,4 @@
-# Fakturo – Setup Guide
+# Fakturka – Setup Guide
 
 ## 1. Clone & install
 
@@ -45,7 +45,7 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 ```
 
 Create a product:
-- Name: Fakturo Pro
+- Name: Fakturka Pro
 - Price: $5.00 / month (recurring)
 - Copy Price ID → `STRIPE_PRO_PRICE_ID`
 

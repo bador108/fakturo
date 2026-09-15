@@ -31,7 +31,7 @@ function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: ()
           <span className="h-3 w-3 rounded-full bg-yellow-400" />
           <span className="h-3 w-3 rounded-full bg-emerald-400" />
           <div className="ml-3 flex-1 bg-slate-700 rounded-md h-5 flex items-center px-3">
-            <span className="text-[10px] text-slate-400 font-mono">fakturo.vercel.app</span>
+            <span className="text-[10px] text-slate-400 font-mono">fakturka.vercel.app</span>
           </div>
           <button onClick={onClose} className="ml-2 text-slate-400 hover:text-white transition">
             <X className="h-4 w-4" />

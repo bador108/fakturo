@@ -2,8 +2,8 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Reference – Fakturo',
-  description: 'Co říkají freelanceři a OSVČ o Fakturo. Přečti si zkušenosti našich uživatelů.',
+  title: 'Reference – Fakturka',
+  description: 'Co říkají freelanceři a OSVČ o Fakturka. Přečti si zkušenosti našich uživatelů.',
 }
 
 const C = {
@@ -58,7 +58,7 @@ const testimonials = [
     name: 'Kateřina Nováková',
     role: 'UX designérka · Praha',
     period: '5 měsíců',
-    quote: 'Estetika aplikace mi sedí. Většina fakturačních nástrojů vypadá jako z roku 2010 — Fakturo vypadá jako produkt, který chci používat.',
+    quote: 'Estetika aplikace mi sedí. Většina fakturačních nástrojů vypadá jako z roku 2010 — Fakturka vypadá jako produkt, který chci používat.',
   },
 ]
 
@@ -84,7 +84,7 @@ export default function ReferencePage() {
           Co říkají lidé, kteří to používají
         </h1>
         <p style={{ fontSize: 18, lineHeight: 1.65, color: C.muted, margin: '0 auto', maxWidth: 520 }}>
-          Přečti si, co říkají ti, kteří fakturují s Fakturo každý den.
+          Přečti si, co říkají ti, kteří fakturují s Fakturka každý den.
         </p>
       </section>
 

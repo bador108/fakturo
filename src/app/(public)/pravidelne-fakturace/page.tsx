@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { Code2, Palette, PenLine, Camera } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Pravidelné fakturace – Fakturo',
+  title: 'Pravidelné fakturace – Fakturka',
   description: 'Vystav fakturu jednou. Posílej ji každý měsíc automaticky. Ideální pro retainery, předplatné a opakované zakázky.',
 }
 
@@ -31,7 +31,7 @@ const steps = [
   },
   {
     num: '03',
-    title: 'Fakturo se postará o zbytek',
+    title: 'Fakturka se postará o zbytek',
     text: 'Faktura se vystaví, odešle klientovi a čeká na zaplacení. Ty jen kontroluješ přehled.',
   },
 ]
@@ -116,7 +116,7 @@ export default function PravidelneFacturacePage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Co umí</div>
-              <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 32px', letterSpacing: -1.5 }}>Pravidelné fakturace v Fakturo</h2>
+              <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 32px', letterSpacing: -1.5 }}>Pravidelné fakturace v Fakturka</h2>
               <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
                 {capabilities.map(item => (
                   <li key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>

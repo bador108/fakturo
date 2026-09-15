@@ -61,7 +61,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     // Vlastní doména (fakturo-seven.vercel.app) není v Resendu ověřená — dokud
     // nebude, posíláme přes jejich sandbox odesílatel (stejně jako cron a support).
     const { error: mailErr } = await resend.emails.send({
-      from: 'Fakturo <onboarding@resend.dev>',
+      from: 'Fakturka <onboarding@resend.dev>',
       to: email,
       subject: `Faktura č. ${invoice.invoice_number} od ${invoice.sender_name}`,
       html: `
@@ -83,7 +83,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:8px">Bezpečná platba kartou přes Stripe</p>
           </div>` : ''}
-          <p style="color:#94a3b8;font-size:12px;">Faktura je přiložena jako PDF. Vystaveno přes <a href="https://fakturo-seven.vercel.app" style="color:#4f46e5">Fakturo</a>.</p>
+          <p style="color:#94a3b8;font-size:12px;">Faktura je přiložena jako PDF. Vystaveno přes <a href="https://fakturo-seven.vercel.app" style="color:#4f46e5">Fakturka</a>.</p>
         </div>
       `,
       attachments: [

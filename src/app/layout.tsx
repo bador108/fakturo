@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin', 'latin-ext'] })
 const dmSans = DM_Sans({ subsets: ['latin', 'latin-ext'], variable: '--font-dm-sans', display: 'swap' })
 
 export const metadata: Metadata = {
-  title: 'Fakturo – Online fakturace',
+  title: 'Fakturka – Online fakturace',
   description: 'Profesionální fakturace pro freelancery a malé firmy.',
 }
 

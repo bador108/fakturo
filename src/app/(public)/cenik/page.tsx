@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { PRICING } from '@/lib/pricing'
 
 export const metadata: Metadata = {
-  title: 'Ceník – Fakturo',
+  title: 'Ceník – Fakturka',
   description: 'Jednoduché ceny bez překvapení. Free plán zdarma, Profi 199 Kč/měsíc, Business 449 Kč/měsíc.',
 }
 

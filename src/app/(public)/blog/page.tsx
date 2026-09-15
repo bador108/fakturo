@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Clock, PenLine } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Blog – Fakturo',
+  title: 'Blog – Fakturka',
   description: 'Tipy, návody a novinky pro freelancery a OSVČ. Jak fakturovat správně, jak ušetřit čas a jak rozvíjet byznys.',
 }
 
@@ -49,7 +49,7 @@ const articles = [
     category: 'Produkt',
     date: '7. 4. 2026',
     title: 'Nová funkce: automatické párování plateb s Fio bankou',
-    perex: 'Jak funguje automatické párování plateb v Fakturo a jak si ho nastavit za 2 minuty.',
+    perex: 'Jak funguje automatické párování plateb v Fakturka a jak si ho nastavit za 2 minuty.',
     readTime: '3 min',
   },
   {
@@ -76,7 +76,7 @@ export default function BlogPage() {
         <div style={{ maxWidth: 640 }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Blog</div>
           <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 0 20px' }}>
-            Blog Fakturo
+            Blog Fakturka
           </h1>
           <p style={{ fontSize: 18, lineHeight: 1.65, color: C.muted, margin: 0 }}>
             Tipy, návody a novinky pro freelancery a OSVČ.

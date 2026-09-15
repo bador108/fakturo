@@ -12,7 +12,7 @@ export default async function SignUpPage() {
     <div className="min-h-screen bg-paper flex flex-col">
       <nav className="h-16 flex items-center px-8 border-b border-slate-100 bg-white">
         <Link href="/">
-          <Image src="/logo.png" alt="Fakturo" width={120} height={32} />
+          <Image src="/logo.png" alt="Fakturka" width={120} height={32} />
         </Link>
       </nav>
       <div className="flex-1 flex items-center justify-center px-4 py-12">

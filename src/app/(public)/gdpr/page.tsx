@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Ochrana osobních údajů (GDPR) – Fakturo',
-  description: 'Zásady ochrany osobních údajů Fakturo. Jak zpracováváme a chráníme tvoje data v souladu s GDPR.',
+  title: 'Ochrana osobních údajů (GDPR) – Fakturka',
+  description: 'Zásady ochrany osobních údajů Fakturka. Jak zpracováváme a chráníme tvoje data v souladu s GDPR.',
 }
 
 const C = {
@@ -55,12 +55,12 @@ export default function GdprPage() {
       <div style={{ ...cont, padding: '0 32px 96px' }}>
 
         <Section title="1. Správce osobních údajů">
-          <p>Správcem osobních údajů je Václav Urbanec, provozovatel služby Fakturo (<strong>fakturo-seven.vercel.app</strong>), Česká republika.</p>
+          <p>Správcem osobních údajů je Václav Urbanec, provozovatel služby Fakturka (<strong>fakturo-seven.vercel.app</strong>), Česká republika.</p>
           <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:fakturosupport@gmail.com" style={{ color: C.primary, textDecoration: 'none' }}>fakturosupport@gmail.com</a></p>
         </Section>
 
         <Section title="2. Jaké osobní údaje zpracováváme">
-          <p>Při užívání služby Fakturo zpracováváme tyto kategorie osobních údajů:</p>
+          <p>Při užívání služby Fakturka zpracováváme tyto kategorie osobních údajů:</p>
           <BulletList items={[
             'Registrační údaje: jméno, e-mailová adresa, heslo (uloženo jako hash)',
             'Fakturační údaje: IČO, DIČ, adresa, bankovní spojení',
@@ -115,7 +115,7 @@ export default function GdprPage() {
         </Section>
 
         <Section title="7. Soubory cookies">
-          <p>Fakturo používá pouze technicky nezbytné cookies pro fungování aplikace (session cookies) a analytické cookies pro zlepšení služby (Google Analytics, Vercel Analytics). Analytické cookies jsou anonymizovány.</p>
+          <p>Fakturka používá pouze technicky nezbytné cookies pro fungování aplikace (session cookies) a analytické cookies pro zlepšení služby (Google Analytics, Vercel Analytics). Analytické cookies jsou anonymizovány.</p>
           <p style={{ marginTop: 12 }}>Cookies můžete spravovat v nastavení vašeho prohlížeče.</p>
         </Section>
 

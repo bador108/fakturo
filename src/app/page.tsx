@@ -42,7 +42,7 @@ function Nav({ userId }: { userId: string | null }) {
       <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 32px', maxWidth: 1280, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <Image src="/logo.png" alt="Fakturo" width={110} height={29} />
+            <Image src="/logo.png" alt="Fakturka" width={110} height={29} />
           </Link>
           <div style={{ display: 'flex', gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
             {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ']] as [string,string][]).map(([href, label]) => (
@@ -68,7 +68,7 @@ function Nav({ userId }: { userId: string | null }) {
 function DashMock() {
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', borderRadius: 16, overflow: 'hidden', background: C.bg, border: `1px solid ${C.border}`, boxShadow: '0 30px 80px rgba(15,15,30,0.12), 0 8px 24px rgba(15,15,30,0.05)', position: 'relative', aspectRatio: '1200/836' }}>
-      <Image src="/screenshots/dashboard.png" alt="Dashboard Fakturo" fill style={{ objectFit: 'cover', objectPosition: 'top' }} sizes="1100px" priority />
+      <Image src="/screenshots/dashboard.png" alt="Dashboard Fakturka" fill style={{ objectFit: 'cover', objectPosition: 'top' }} sizes="1100px" priority />
     </div>
   )
 }
@@ -202,7 +202,7 @@ function Features() {
       </div>
       <FeatureRow tag="Rychlost" title="Vystav fakturu za 30 vteřin." text="Šablony, automatické vyplnění z IČO, autocomplete klientů a sazeb. Pamatuje si tvoje pracovní zvyky a nabízí to, co skutečně používáš." reverse><InvoiceMock /></FeatureRow>
       <FeatureRow tag="Banka" title="Platby se párují automaticky." text="Napojení na Fio, ČSOB, KB, Raiffeisen a Air Bank. Když přijde platba, faktura se sama označí jako zaplacená."><BankMock /></FeatureRow>
-      <FeatureRow tag="Automatizace" title="Pravidelné fakturace bez práce." text="Měsíční retainer s klientem? Nastav opakování — Fakturo vystaví a pošle fakturu samo. Včetně EU faktur s VIES." reverse><AutoMock /></FeatureRow>
+      <FeatureRow tag="Automatizace" title="Pravidelné fakturace bez práce." text="Měsíční retainer s klientem? Nastav opakování — Fakturka vystaví a pošle fakturu samo. Včetně EU faktur s VIES." reverse><AutoMock /></FeatureRow>
     </section>
   )
 }
@@ -216,7 +216,7 @@ function FeatureGrid() {
           { title:'Víceměnové faktury', text:'CZK · EUR · USD s live kurzy ČNB. DPH 0, 12, 21 %.' },
           { title:'EU faktury', text:'VIES, OSS, reverse charge, cizí měny. S DPH i bez.' },
           { title:'Pro účetní', text:'Měsíční podklady jedním kliknutím. Pohoda XML, PDF.' },
-          { title:'API + webhooky', text:'Napoj si Fakturo na cokoliv. REST API, webhooks.' },
+          { title:'API + webhooky', text:'Napoj si Fakturka na cokoliv. REST API, webhooks.' },
           { title:'Bezpečnost', text:'Šifrování v klidu i přenosu, GDPR, 2FA, audit log.' },
         ] as {title:string,text:string}[]).map(f => (
           <div key={f.title} style={{ padding: 28, borderRadius: 14, border: `1px solid ${C.border}`, background: C.bg }}>
@@ -262,7 +262,7 @@ function FeatureShowcaseSection() {
       <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 48px' }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Appka zevnitř</div>
         <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Žádné mockupy. Skutečná appka.</h2>
-        <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturo zevnitř — přímo ze živého provozu.</p>
+        <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturka zevnitř — přímo ze živého provozu.</p>
       </div>
       <FeatureShowcase />
     </section>
@@ -294,7 +294,7 @@ function Footer() {
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: '64px 32px 32px', maxWidth: 1280, margin: '0 auto' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
         <div>
-          <div style={{ marginBottom: 16 }}><Image src="/logo.png" alt="Fakturo" width={110} height={29} /></div>
+          <div style={{ marginBottom: 16 }}><Image src="/logo.png" alt="Fakturka" width={110} height={29} /></div>
           <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.6, maxWidth: 280 }}>Fakturace pro OSVČ a freelancery.</div>
         </div>
         {cols.map(col => (
@@ -307,7 +307,7 @@ function Footer() {
         ))}
       </div>
       <div style={{ paddingTop: 24, borderTop: `1px solid ${C.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: C.muted, flexWrap: 'wrap', gap: 12 }}>
-        <span>© {new Date().getFullYear()} Fakturo · Fakturace pro freelancery</span>
+        <span>© {new Date().getFullYear()} Fakturka · Fakturace pro freelancery</span>
         <div style={{ display: 'flex', gap: 24 }}>
           <Link href="/gdpr" style={{ color: 'inherit', textDecoration: 'none' }}>GDPR</Link>
           <Link href="/bezpecnost" style={{ color: 'inherit', textDecoration: 'none' }}>Bezpečnost</Link>
