@@ -12,6 +12,17 @@ function errMsg(error: { message?: string; longMessage?: string } | null): strin
   return error.longMessage ?? error.message ?? 'Něco se nepovedlo. Zkuste to znovu.'
 }
 
+function GoogleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46c-.28 1.5-1.13 2.78-2.4 3.63v3.02h3.89c2.28-2.1 3.57-5.2 3.57-8.84z" />
+      <path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.9l-3.89-3.02c-1.08.72-2.45 1.15-4.06 1.15-3.13 0-5.78-2.11-6.73-4.96H1.26v3.11C3.24 21.3 7.3 24 12 24z" />
+      <path fill="#FBBC05" d="M5.27 14.27a7.2 7.2 0 010-4.54V6.62H1.26a12 12 0 000 10.76z" />
+      <path fill="#EA4335" d="M12 4.77c1.76 0 3.34.6 4.58 1.79l3.44-3.44C17.95 1.19 15.24 0 12 0 7.3 0 3.24 2.7 1.26 6.62l4.01 3.11C6.22 6.88 8.87 4.77 12 4.77z" />
+    </svg>
+  )
+}
+
 export default function SignUpPage() {
   const { signUp } = useSignUp()
   const { isSignedIn } = useAuth()
@@ -28,6 +39,20 @@ export default function SignUpPage() {
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  async function handleGoogle() {
+    setError(null)
+    try {
+      const { error: err } = await signUp.sso({
+        strategy: 'oauth_google',
+        redirectUrl: '/sign-in/sso-callback',
+        redirectCallbackUrl: '/sign-in/sso-callback',
+      })
+      if (err) setError(errMsg(err))
+    } catch (err) {
+      setError(errMsg(err as { message?: string }))
+    }
+  }
 
   async function handleSignUp(e: FormEvent) {
     e.preventDefault()
@@ -89,6 +114,19 @@ export default function SignUpPage() {
               <div className="text-center mb-8">
                 <h1 className="text-2xl font-semibold text-slate-900">Vytvořte si účet</h1>
                 <p className="text-slate-400 mt-1 text-sm">Zdarma · Bez kreditní karty</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleGoogle}
+                className="w-full flex items-center justify-center gap-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium py-2.5 rounded-lg transition mb-5"
+              >
+                <GoogleIcon className="h-4 w-4" />
+                Pokračovat přes Google
+              </button>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="h-px flex-1 bg-slate-200" />
+                <span className="text-xs text-slate-400">nebo</span>
+                <div className="h-px flex-1 bg-slate-200" />
               </div>
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div>
