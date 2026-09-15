@@ -293,9 +293,18 @@ function FeatureGrid() {
   return (
     <section style={{ ...cont, padding: '64px 32px 80px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
-        {([{ title:'Slušné upomínky', text:'Mile, ale jasně. Tři varianty zdvořilosti, ty si vybereš.', icon:'📬' },{ title:'Víceměnové faktury', text:'CZK · EUR · USD s live kurzy ČNB. DPH 0, 12, 21 %.', icon:'🌍' },{ title:'EU faktury', text:'VIES, OSS, reverse charge, cizí měny. S DPH i bez.', icon:'🇪🇺' },{ title:'Pro účetní', text:'Měsíční podklady jedním kliknutím. Pohoda XML, PDF.', icon:'📊' },{ title:'API + webhooky', text:'Napoj si Fakturo na cokoliv. REST API, webhooks.', icon:'🔌' },{ title:'Bezpečnost', text:'Šifrování v klidu i přenosu, GDPR, 2FA, audit log.', icon:'🔒' }] as {title:string,text:string,icon:string}[]).map(f => (
+        {([
+          { title:'Slušné upomínky', text:'Mile, ale jasně. Tři varianty zdvořilosti, ty si vybereš.', img:'/features/reminders.jpg' },
+          { title:'Víceměnové faktury', text:'CZK · EUR · USD s live kurzy ČNB. DPH 0, 12, 21 %.', img:'/features/multicurrency.jpg' },
+          { title:'EU faktury', text:'VIES, OSS, reverse charge, cizí měny. S DPH i bez.', img:'/features/eu-invoices.jpg' },
+          { title:'Pro účetní', text:'Měsíční podklady jedním kliknutím. Pohoda XML, PDF.', img:'/features/accounting.jpg' },
+          { title:'API + webhooky', text:'Napoj si Fakturo na cokoliv. REST API, webhooks.', img:'/features/api.jpg' },
+          { title:'Bezpečnost', text:'Šifrování v klidu i přenosu, GDPR, 2FA, audit log.', img:'/features/security.jpg' },
+        ] as {title:string,text:string,img:string}[]).map(f => (
           <div key={f.title} style={{ padding: 28, borderRadius: 14, border: `1px solid ${C.border}`, background: C.bg }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: C.bgSoft, border: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, marginBottom: 16 }}>{f.icon}</div>
+            <div style={{ width: 64, height: 64, borderRadius: 12, background: C.bgSoft, border: `1px solid ${C.border}`, overflow: 'hidden', marginBottom: 16, position: 'relative' }}>
+              <Image src={f.img} alt="" fill style={{ objectFit: 'cover' }} sizes="64px" />
+            </div>
             <h3 style={{ fontSize: 17, fontWeight: 600, margin: 0, marginBottom: 8, letterSpacing: -0.3 }}>{f.title}</h3>
             <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.55 }}>{f.text}</p>
           </div>
