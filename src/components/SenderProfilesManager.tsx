@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { Plus, Trash2, Check, ChevronDown, ChevronUp, Upload, Loader2, X } from 'lucide-react'
+import { Plus, Trash2, Check, ChevronDown, ChevronUp, Upload, Loader2, X, Crown } from 'lucide-react'
+import Link from 'next/link'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import type { SenderProfile } from '@/types'
@@ -10,6 +11,7 @@ interface Props {
   userId: string
   profiles: SenderProfile[]
   canBrand: boolean
+  isPro: boolean
 }
 
 const DEFAULT_ACCENT = '#0c0c0e'
@@ -20,12 +22,14 @@ function ProfileForm({
   onDelete,
   defaultOpen = false,
   canBrand,
+  isPro,
 }: {
   profile?: SenderProfile
   onSave: (p: SenderProfile) => void
   onDelete?: () => void
   defaultOpen?: boolean
   canBrand: boolean
+  isPro: boolean
 }) {
   const [open, setOpen] = useState(defaultOpen)
   const [saving, setSaving] = useState(false)
@@ -127,37 +131,44 @@ function ProfileForm({
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
               <label className="text-sm font-medium text-slate-600 mb-1 block">Logo</label>
-              <div className="flex items-center gap-3">
-                {form.logo_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={form.logo_url} alt="Logo" className="h-12 max-w-[160px] object-contain border border-slate-100 rounded-lg p-1" />
-                ) : (
-                  <div className="h-12 w-12 rounded-lg border border-dashed border-slate-200 flex items-center justify-center text-slate-300">
-                    <Upload className="h-4 w-4" />
-                  </div>
-                )}
-                <input
-                  ref={logoInputRef}
-                  type="file"
-                  accept="image/png,image/jpeg,image/svg+xml,image/webp"
-                  className="hidden"
-                  onChange={e => { const f = e.target.files?.[0]; if (f) uploadLogo(f) }}
-                />
-                <button
-                  type="button"
-                  onClick={() => logoInputRef.current?.click()}
-                  disabled={uploadingLogo}
-                  className="flex items-center gap-1.5 text-xs text-brand hover:underline disabled:opacity-40"
-                >
-                  {uploadingLogo ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
-                  {form.logo_url ? 'Změnit logo' : 'Nahrát logo'}
-                </button>
-                {form.logo_url && (
-                  <button type="button" onClick={() => set('logo_url', '')} className="text-slate-300 hover:text-red-400">
-                    <X className="h-3.5 w-3.5" />
+              {isPro ? (
+                <div className="flex items-center gap-3">
+                  {form.logo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={form.logo_url} alt="Logo" className="h-12 max-w-[160px] object-contain border border-slate-100 rounded-lg p-1" />
+                  ) : (
+                    <div className="h-12 w-12 rounded-lg border border-dashed border-slate-200 flex items-center justify-center text-slate-300">
+                      <Upload className="h-4 w-4" />
+                    </div>
+                  )}
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                    className="hidden"
+                    onChange={e => { const f = e.target.files?.[0]; if (f) uploadLogo(f) }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => logoInputRef.current?.click()}
+                    disabled={uploadingLogo}
+                    className="flex items-center gap-1.5 text-xs text-brand hover:underline disabled:opacity-40"
+                  >
+                    {uploadingLogo ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                    {form.logo_url ? 'Změnit logo' : 'Nahrát logo'}
                   </button>
-                )}
-              </div>
+                  {form.logo_url && (
+                    <button type="button" onClick={() => set('logo_url', '')} className="text-slate-300 hover:text-red-400">
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs text-slate-400 flex items-center gap-1.5">
+                  <Crown className="h-3.5 w-3.5 text-violet-400" />
+                  Logo na faktuře je součástí Pro plánu. <Link href="/cenik" className="text-brand hover:underline">Upgradovat</Link>
+                </p>
+              )}
               {logoError && <p className="text-xs text-red-500 mt-1">{logoError}</p>}
             </div>
             <div className="col-span-2">
@@ -228,9 +239,10 @@ function ProfileForm({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function SenderProfilesManager({ userId, profiles: initial, canBrand }: Props) {
+export function SenderProfilesManager({ userId, profiles: initial, canBrand, isPro }: Props) {
   const [profiles, setProfiles] = useState<SenderProfile[]>(initial)
   const [showNew, setShowNew] = useState(false)
+  const canAddMore = isPro || profiles.length === 0
 
   return (
     <div className="space-y-3">
@@ -239,6 +251,7 @@ export function SenderProfilesManager({ userId, profiles: initial, canBrand }: P
           key={p.id}
           profile={p}
           canBrand={canBrand}
+          isPro={isPro}
           onSave={updated => setProfiles(ps => ps.map(x => x.id === updated.id ? updated : x))}
           onDelete={() => setProfiles(ps => ps.filter(x => x.id !== p.id))}
         />
@@ -248,12 +261,13 @@ export function SenderProfilesManager({ userId, profiles: initial, canBrand }: P
         <ProfileForm
           defaultOpen
           canBrand={canBrand}
+          isPro={isPro}
           onSave={newProfile => {
             setProfiles(ps => [...ps, newProfile])
             setShowNew(false)
           }}
         />
-      ) : (
+      ) : canAddMore ? (
         <button
           onClick={() => setShowNew(true)}
           className="flex items-center gap-2 text-sm text-brand hover:text-brand-dark border-2 border-dashed border-brand-soft hover:border-brand-soft rounded-xl px-4 py-3 w-full transition"
@@ -261,6 +275,11 @@ export function SenderProfilesManager({ userId, profiles: initial, canBrand }: P
           <Plus className="h-4 w-4" />
           Přidat profil dodavatele
         </button>
+      ) : (
+        <p className="text-xs text-slate-400 flex items-center gap-1.5 px-1">
+          <Crown className="h-3.5 w-3.5 text-violet-400" />
+          Víc profilů dodavatele je součástí Pro plánu. <Link href="/cenik" className="text-brand hover:underline">Upgradovat</Link>
+        </p>
       )}
     </div>
   )

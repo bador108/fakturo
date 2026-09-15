@@ -16,6 +16,7 @@ interface InvoiceFormProps {
   defaultValues?: Partial<InvoiceFormData>
   invoiceId?: string
   nextInvoiceNumber: string
+  isProPlan?: boolean
 }
 
 const DEFAULT_ITEM: InvoiceItemDraft = {
@@ -26,7 +27,7 @@ const DEFAULT_ITEM: InvoiceItemDraft = {
   vat_rate: 21,
 }
 
-export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: InvoiceFormProps) {
+export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber, isProPlan = false }: InvoiceFormProps) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [copying, setCopying] = useState(false)
@@ -395,7 +396,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         <Select label="Typ dokladu" value={form.invoice_type} onChange={e => set('invoice_type', e.target.value as InvoiceType)}>
           <option value="faktura">Faktura</option>
           <option value="zalohova">Zálohová faktura</option>
-          <option value="nabidka">Cenová nabídka</option>
+          <option value="nabidka" disabled={!isProPlan}>Cenová nabídka{!isProPlan ? ' (Pro)' : ''}</option>
           <option value="opravny">Opravný daňový doklad</option>
         </Select>
         <Input label="Číslo faktury" value={form.invoice_number} onChange={e => set('invoice_number', e.target.value)} />
@@ -549,10 +550,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className="font-semibold text-slate-800">Položky</h2>
-            <ItemTemplatesPicker
-              onAdd={item => setForm(f => ({ ...f, items: [...f.items, item] }))}
-              currentItems={form.items}
-            />
+            {isProPlan && (
+              <ItemTemplatesPicker
+                onAdd={item => setForm(f => ({ ...f, items: [...f.items, item] }))}
+                currentItems={form.items}
+              />
+            )}
           </div>
           <div className="flex items-center gap-2">
             <label className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer select-none">

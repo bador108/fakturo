@@ -1,6 +1,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
 import type { RecurringInvoice } from '@/types'
 
 export async function GET() {
@@ -25,6 +27,11 @@ export async function POST(req: Request) {
   const body = await req.json() as Omit<RecurringInvoice, 'id' | 'user_id' | 'created_at' | 'updated_at'>
 
   const db = createServiceClient()
+  const { data: user } = await db.from('users').select('plan, email').eq('id', userId).single()
+  if (!isPro(getEffectivePlan(user?.plan ?? 'free', user?.email))) {
+    return NextResponse.json({ error: 'Opakující se faktury jsou součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 })
+  }
+
   const { data, error } = await db
     .from('recurring_invoices')
     .insert({ ...body, user_id: userId })

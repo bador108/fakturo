@@ -1,6 +1,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
 import { listAccounts, listTransactions } from '@/lib/saltedge'
 import { matchTransactionsToInvoices } from '@/lib/bankMatch'
 
@@ -9,6 +11,11 @@ export async function POST() {
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const db = createServiceClient()
+
+  const { data: user } = await db.from('users').select('plan, email').eq('id', userId).single()
+  if (!isPro(getEffectivePlan(user?.plan ?? 'free', user?.email))) {
+    return NextResponse.json({ error: 'Propojení s bankou je součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 })
+  }
 
   const { data: connections } = await db
     .from('bank_connections')

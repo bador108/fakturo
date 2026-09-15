@@ -1,6 +1,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
 
 export async function GET() {
   const { userId } = await auth()
@@ -23,6 +25,14 @@ export async function POST(req: Request) {
 
   const body = await req.json()
   const db = createServiceClient()
+
+  const [{ data: user }, { count }] = await Promise.all([
+    db.from('users').select('plan, email').eq('id', userId).single(),
+    db.from('sender_profiles').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+  ])
+  if (!isPro(getEffectivePlan(user?.plan ?? 'free', user?.email)) && (count ?? 0) >= 1) {
+    return NextResponse.json({ error: 'Víc profilů dodavatele je součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 })
+  }
 
   const { data, error } = await db
     .from('sender_profiles')

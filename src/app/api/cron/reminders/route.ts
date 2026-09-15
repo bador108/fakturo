@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
 import { Resend } from 'resend'
 
 export async function GET(req: Request) {
@@ -27,7 +29,7 @@ export async function GET(req: Request) {
   const userIds = Array.from(new Set(invoices.map(i => i.user_id)))
   const { data: users } = await db
     .from('users')
-    .select('id, email, reminder_days')
+    .select('id, email, plan, reminder_days')
     .in('id', userIds)
 
   const userMap = new Map((users ?? []).map(u => [u.id, u]))
@@ -37,6 +39,7 @@ export async function GET(req: Request) {
 
     const user = userMap.get(inv.user_id)
     if (!user) continue
+    if (!isPro(getEffectivePlan(user.plan, user.email))) continue // Upomínky jsou Pro funkce
 
     const reminderDays: number[] = user.reminder_days ?? [3, 7, 14]
     const dueDate = new Date(inv.due_date)

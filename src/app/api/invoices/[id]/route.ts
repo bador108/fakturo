@@ -1,6 +1,8 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
+import { getEffectivePlan } from '@/lib/stripe';
+import { isPro } from '@/lib/plan';
 import type { InvoiceItemDraft } from '@/types';
 
 // GET /api/invoices/[id] - Načtení detailu faktury
@@ -55,6 +57,13 @@ export async function PUT(
 
     if (!existing) {
       return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
+    }
+
+    if (invoiceData.invoice_type === 'nabidka') {
+      const { data: user } = await db.from('users').select('plan, email').eq('id', userId).single();
+      if (!isPro(getEffectivePlan(user?.plan ?? 'free', user?.email))) {
+        return NextResponse.json({ error: 'Cenové nabídky jsou součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 });
+      }
     }
 
     // Aktualizace faktury

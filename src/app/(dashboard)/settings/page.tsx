@@ -9,7 +9,9 @@ import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
 import { BankConnections } from '@/components/BankConnections'
 import { SetPasswordCard } from '@/components/SetPasswordCard'
+import { ProUpsell } from '@/components/ProUpsell'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
 
 export default async function SettingsPage() {
   const { userId } = await auth()
@@ -25,6 +27,7 @@ export default async function SettingsPage() {
 
   const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
   const canBrand = plan === 'start' || plan === 'pro'
+  const pro = isPro(plan)
   const used = user?.invoice_count_this_month ?? 0
   const reminderDays: number[] = user?.reminder_days ?? [3, 7, 14]
 
@@ -61,34 +64,42 @@ export default async function SettingsPage() {
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-1">Profily dodavatele</h2>
         <p className="text-xs text-slate-400 mb-4">Uložte údaje pro různé firmy nebo živnosti. Vybraný profil se automaticky načte do nové faktury.</p>
-        <SenderProfilesManager userId={userId} profiles={profiles ?? []} canBrand={canBrand} />
+        <SenderProfilesManager userId={userId} profiles={profiles ?? []} canBrand={canBrand} isPro={pro} />
       </div>
 
       {/* Item templates */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-1">Šablony položek</h2>
         <p className="text-xs text-slate-400 mb-4">Uložte si oblíbené položky pro rychlé vyplnění faktury.</p>
-        <ItemTemplatesManager />
+        {pro ? <ItemTemplatesManager /> : (
+          <ProUpsell title="Šablony položek" description="Uložte si oblíbené položky pro rychlé vyplnění faktury — součást Pro plánu." />
+        )}
       </div>
 
       {/* Reminder settings */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-1">Upomínky</h2>
-        <ReminderSettings userId={userId} initialDays={reminderDays} />
+        {pro ? <ReminderSettings userId={userId} initialDays={reminderDays} /> : (
+          <ProUpsell title="Automatické upomínky" description="Fakturo samo pošle klientovi upomínku před i po splatnosti — součást Pro plánu." />
+        )}
       </div>
 
       {/* Live bank sync */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-1">Bankovní účet</h2>
         <p className="text-xs text-slate-400 mb-4">Živé propojení s bankou — zůstatek a párování plateb bez ručního nahrávání.</p>
-        <Suspense fallback={null}>
-          <BankConnections
-            initialConnections={bankConnections ?? []}
-            initialAccounts={(bankAccounts ?? []).map(a => ({
-              iban: a.iban, currency: a.currency, balance: a.balance, displayName: a.display_name,
-            }))}
-          />
-        </Suspense>
+        {pro ? (
+          <Suspense fallback={null}>
+            <BankConnections
+              initialConnections={bankConnections ?? []}
+              initialAccounts={(bankAccounts ?? []).map(a => ({
+                iban: a.iban, currency: a.currency, balance: a.balance, displayName: a.display_name,
+              }))}
+            />
+          </Suspense>
+        ) : (
+          <ProUpsell title="Živý bankovní účet" description="Zůstatek a automatické párování plateb přímo z banky — součást Pro plánu." />
+        )}
       </div>
 
       {/* Bank statement upload (manual fallback) */}

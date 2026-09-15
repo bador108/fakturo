@@ -1,6 +1,8 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
+import { getEffectivePlan } from '@/lib/stripe';
+import { isPro } from '@/lib/plan';
 import type { Invoice, InvoiceItem } from '@/types';
 
 function escapeXml(str: string | null | undefined): string {
@@ -21,6 +23,11 @@ export async function GET(req: Request) {
   const year = url.searchParams.get('year') ?? new Date().getFullYear().toString();
 
   const db = createServiceClient();
+  const { data: user } = await db.from('users').select('plan, email').eq('id', userId).single();
+  if (!isPro(getEffectivePlan(user?.plan ?? 'free', user?.email))) {
+    return NextResponse.json({ error: 'Export do Pohoda XML je součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 });
+  }
+
   const { data, error } = await db
     .from('invoices')
     .select('*, invoice_items(*)')

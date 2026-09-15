@@ -2,6 +2,8 @@ import { auth } from '@clerk/nextjs/server'
 import { createServiceClient } from '@/lib/supabase'
 import { generateInvoiceNumber } from '@/lib/utils'
 import { InvoiceForm } from '@/components/invoice/InvoiceForm'
+import { getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
 
 export default async function NewInvoicePage() {
   const { userId } = await auth()
@@ -10,23 +12,14 @@ export default async function NewInvoicePage() {
   const db = createServiceClient()
 
   // Get last invoice number to determine the next one
-  const { data: lastInvoice } = await db
-    .from('invoices')
-    .select('invoice_number')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle()
+  const [{ data: lastInvoice }, { data: profile }, { data: user }] = await Promise.all([
+    db.from('invoices').select('invoice_number').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle(),
+    db.from('sender_profiles').select('*').eq('user_id', userId).eq('is_default', true).single(),
+    db.from('users').select('plan, email').eq('id', userId).single(),
+  ])
 
   const nextNumber = generateInvoiceNumber(lastInvoice?.invoice_number)
-
-  // Load default sender profile
-  const { data: profile } = await db
-    .from('sender_profiles')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('is_default', true)
-    .single()
+  const isProPlan = isPro(getEffectivePlan(user?.plan ?? 'free', user?.email))
 
   const defaultValues = profile
     ? {
@@ -52,6 +45,7 @@ export default async function NewInvoicePage() {
     <InvoiceForm
       nextInvoiceNumber={nextNumber}
       defaultValues={defaultValues}
+      isProPlan={isProPlan}
     />
   )
 }

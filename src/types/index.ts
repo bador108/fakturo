@@ -200,6 +200,8 @@ export interface RecurringInvoice {
   client_zip?: string;
   client_country: string;
   client_ico?: string;
+  client_dic?: string;
+  client_email?: string;
   currency: string;
   vat_rate: VatRate;
   notes?: string;

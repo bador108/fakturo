@@ -2,6 +2,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
 import type { InvoiceFormData } from '@/types'
 
 async function ensureUser(userId: string, db: ReturnType<typeof createServiceClient>) {
@@ -70,6 +71,10 @@ export async function POST(req: Request) {
 
   const body = await req.json() as InvoiceFormData & {
     subtotal: number; vat_amount: number; total: number; status: string
+  }
+
+  if (body.invoice_type === 'nabidka' && !isPro(getEffectivePlan(user.plan, user.email))) {
+    return NextResponse.json({ error: 'Cenové nabídky jsou součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 })
   }
 
   const { items, ...invoiceData } = body

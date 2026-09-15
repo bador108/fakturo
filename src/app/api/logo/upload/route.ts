@@ -1,6 +1,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
 
 const MAX_SIZE = 2 * 1024 * 1024 // 2 MB — logo do faktury, není důvod řešit víc
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp']
@@ -8,6 +10,12 @@ const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp']
 export async function POST(req: Request) {
   const { userId } = await auth()
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const db = createServiceClient()
+  const { data: user } = await db.from('users').select('plan, email').eq('id', userId).single()
+  if (!isPro(getEffectivePlan(user?.plan ?? 'free', user?.email))) {
+    return NextResponse.json({ error: 'Logo na faktuře je součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 })
+  }
 
   const formData = await req.formData()
   const file = formData.get('file') as File | null
@@ -19,7 +27,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Logo může mít max. 2 MB' }, { status: 400 })
   }
 
-  const db = createServiceClient()
   const ext = file.name.split('.').pop() ?? 'png'
   // Cesta začíná user_id, ať jde storage policy jednoduše omezit na "vlastní složku".
   const path = `${userId}/${Date.now()}.${ext}`
