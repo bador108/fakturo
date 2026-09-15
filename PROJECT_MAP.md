@@ -140,7 +140,7 @@ Migrace: `supabase/migration2.sql` … `migration7.sql` (accent_color, poslední
 - [ ] `invoices.vat_rate` legacy sloupec s DPH check `[0,15,21]` (skutečné sazby jsou `0,12,21` per-item) — matoucí, ale neškodí
 - [ ] Client portal (sledování stavu faktury klientem) neexistuje
 - [ ] Proforma/dobropis/nabídka typy v DB/TS existují (`invoice_type`), ale nejsou tier-gatovaný ani zvlášť promovaný jako feature
-- [ ] Test user (`test`/`test0987`) — script `scripts/create-test-user.mjs` existuje, nespuštěný (potřeba Clerk "Username" identifier enabled + reálné klíče)
+- [x] Test user (username `test`, pro plán) — hotovo přes `scripts/create-test-user.mjs` (heslo se nezapisuje do repa, jen do Clerk databáze)
 
 ---
 
