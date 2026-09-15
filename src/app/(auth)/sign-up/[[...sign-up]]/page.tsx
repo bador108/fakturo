@@ -64,6 +64,10 @@ export default function SignUpPage() {
     setLoading(true)
     setError(null)
     try {
+      // Client si drží stavy z předchozích pokusů (i neúspěšných) — bez resetu na ně
+      // .password() naváže a Clerk pak vrací "No sign up attempt was found" při dalším
+      // kroku, protože navázaný attempt je na serveru mrtvý/expirovaný.
+      await signUp.reset()
       const { error: passErr } = await signUp.password({ emailAddress: email, password })
       if (passErr) {
         setError(errMsg(passErr))
