@@ -166,6 +166,7 @@ export default function SignUpPage() {
                   </div>
                 </div>
                 {error && <p className="text-xs text-red-500">{error}</p>}
+                <div id="clerk-captcha" data-cl-theme="light" />
                 <button
                   type="submit"
                   disabled={loading}
