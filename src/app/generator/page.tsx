@@ -18,6 +18,7 @@ const defaultForm: InvoiceFormData = {
   invoice_type: 'faktura',
   sender_name: '', sender_address: '', sender_city: '', sender_zip: '', sender_country: 'CZ',
   sender_ico: '', sender_dic: '', sender_bank: '', sender_iban: '', sender_email: '', sender_phone: '',
+  sender_logo_url: '', sender_business_registry: '', sender_web: '',
   client_name: '', client_address: '', client_city: '', client_zip: '', client_country: 'CZ', client_ico: '',
   client_dic: '', client_email: '',
   invoice_number: `${year}0001`, issue_date: today, duzp: today, due_date: due,

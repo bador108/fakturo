@@ -74,6 +74,9 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       sender_iban: profile.iban ?? '',
       sender_email: profile.email ?? '',
       sender_phone: profile.phone ?? '',
+      sender_logo_url: profile.logo_url ?? '',
+      sender_business_registry: profile.business_registry ?? '',
+      sender_web: profile.web ?? '',
       accent_color: profile.accent_color ?? '#0c0c0e',
     }))
   }
@@ -107,6 +110,11 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
       sender_dic: c.dic ?? '',
       sender_email: c.email ?? '',
       sender_phone: c.phone ?? '',
+      // Klient v adresáři nemá logo/OR zápis/web — vyčistit, ať nezůstane logo
+      // z dřívějšího zvoleného profilu na cizím dodavateli.
+      sender_logo_url: '',
+      sender_business_registry: '',
+      sender_web: '',
     }))
   }
 
@@ -214,6 +222,9 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
     sender_iban: '',
     sender_email: '',
     sender_phone: '',
+    sender_logo_url: '',
+    sender_business_registry: '',
+    sender_web: '',
     client_name: '',
     client_address: '',
     client_city: '',
@@ -454,6 +465,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             <Input label="DIČ" value={form.sender_dic} onChange={e => set('sender_dic', e.target.value)} />
           </div>
           <Input
+            label="Zápis v obchodním rejstříku"
+            placeholder="zapsaná v OR vedeném Městským soudem v Praze, sp. zn. B 12345"
+            value={form.sender_business_registry}
+            onChange={e => set('sender_business_registry', e.target.value)}
+          />
+          <Input
             label="Číslo účtu / IBAN"
             placeholder="CZ65 0800 0000 1920 0014 5399"
             value={form.sender_iban}
@@ -463,6 +480,7 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber }: Inv
             <Input label="E-mail" type="email" value={form.sender_email} onChange={e => set('sender_email', e.target.value)} />
             <Input label="Telefon" value={form.sender_phone} onChange={e => set('sender_phone', e.target.value)} />
           </div>
+          <Input label="Web" placeholder="www.firma.cz" value={form.sender_web} onChange={e => set('sender_web', e.target.value)} />
         </section>
 
         <section className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm space-y-4">

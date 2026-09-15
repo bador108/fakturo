@@ -82,6 +82,9 @@ export interface Invoice {
   sender_bank?: string;
   sender_email?: string;
   sender_phone?: string;
+  sender_logo_url?: string;
+  sender_business_registry?: string;
+  sender_web?: string;
 
   // Odběratel
   client_name: string;
@@ -126,6 +129,9 @@ export interface InvoiceFormData {
   sender_iban: string;
   sender_email: string;
   sender_phone: string;
+  sender_logo_url: string;
+  sender_business_registry: string;
+  sender_web: string;
   client_name: string;
   client_address: string;
   client_city: string;
@@ -163,6 +169,9 @@ export interface SenderProfile {
   email?: string;
   phone?: string;
   accent_color?: string;
+  logo_url?: string;
+  business_registry?: string;
+  web?: string;
   is_default: boolean;
   created_at?: string;
 }

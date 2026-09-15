@@ -125,14 +125,21 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
     ${qrCode ? `
     <div class="summary-col summary-qr">
       <img src="${qrCode}" alt="QR platba" />
+      <span class="summary-qr-caption">QR platba</span>
     </div>` : ''}
   </div>`
+
+  const paymentTerms = `<p class="payment-terms">Splatnost je uvedena výše. Úhrada se považuje za provedenou dnem připsání částky na účet dodavatele.</p>`
 
   const legalNotice = !invoice.vat_payer
     ? '<p class="legal-notice">Dodavatel není plátcem DPH.</p>'
     : (invoice.reverse_charge
       ? '<p class="legal-notice">Daň odvede zákazník (přenesená daňová povinnost, § 92a zákona o DPH).</p>'
       : '')
+
+  const logoBlock = invoice.sender_logo_url
+    ? `<img class="sender-logo" src="${esc(invoice.sender_logo_url)}" alt="${esc(invoice.sender_name)}" />`
+    : ''
 
   return `<!doctype html>
 <html lang="cs">
@@ -151,7 +158,9 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
     background: #ffffff;
     padding: 48px;
   }
-  .header { display: flex; justify-content: space-between; margin-bottom: 32px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 36px; }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .sender-logo { height: 48px; max-width: 140px; object-fit: contain; }
   .sender-name { font-size: 19pt; font-weight: 700; color: ${accent}; letter-spacing: -0.2px; margin: 0; }
   .invoice-label { font-size: 10.5pt; font-weight: 700; color: ${accent}; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
   .invoice-number { font-size: 12pt; color: #71717A; margin-top: 1px; }
@@ -162,14 +171,14 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   .meta-value { font-size: 9.5pt; font-weight: 700; }
   .meta-value.accent { color: ${accent}; }
 
-  .parties { display: flex; gap: 24px; margin-bottom: 28px; }
-  .party-box { flex: 1; background: #FAFAFA; border-radius: 6px; padding: 14px; }
+  .parties { display: flex; gap: 24px; margin-bottom: 32px; }
+  .party-box { flex: 1; background: #FAFAFA; border-radius: 6px; padding: 16px 18px; }
   .party-title { font-size: 7.5pt; color: #71717A; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
   .party-name { font-size: 11.5pt; font-weight: 700; color: ${accent}; margin-bottom: 4px; }
   .party-line { font-size: 9.5pt; color: #71717A; line-height: 1.5; }
 
-  .summary-card { display: flex; align-items: stretch; background: #FAFAFA; border: 1px solid #ECECEF; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
-  .summary-col { padding: 16px 20px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+  .summary-card { display: flex; align-items: stretch; background: #FAFAFA; border: 1px solid #ECECEF; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+  .summary-col { padding: 18px 22px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
   .summary-col + .summary-col { border-left: 1px solid #E4E4E7; }
   .summary-payment { flex: 1.1; }
   .summary-totals { flex: 1; gap: 4px; }
@@ -180,8 +189,11 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   .summary-grand { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-top: 6px; padding-top: 8px; border-top: 1px solid #E4E4E7; }
   .summary-grand-label { font-size: 9pt; font-weight: 700; color: #18181B; text-transform: uppercase; letter-spacing: 0.5px; }
   .summary-grand-value { font-size: 15pt; font-weight: 700; color: ${accent}; }
-  .summary-qr { flex: 0 0 auto; align-items: center; }
+  .summary-qr { flex: 0 0 auto; align-items: center; gap: 4px; }
   .summary-qr img { width: 84px; height: 84px; display: block; }
+  .summary-qr-caption { font-size: 6.5pt; color: #71717A; text-transform: uppercase; letter-spacing: 0.4px; text-align: center; }
+
+  .payment-terms { font-size: 8pt; color: #A1A1AA; margin: 0 0 24px; }
 
   .recap-table { width: 100%; border-collapse: collapse; margin: 4px 0 20px; }
   .recap-table th { font-size: 7.5pt; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; padding: 4px 0 6px; border-bottom: 1px solid #E4E4E7; }
@@ -189,7 +201,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   .recap-table td { font-size: 9pt; padding: 5px 0; text-align: right; border-bottom: 1px solid #F4F4F5; }
   .recap-table td:first-child { text-align: left; font-weight: 600; }
 
-  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 22px; }
   thead tr { background: ${accent}; }
   thead th { color: #fff; font-size: 8.5pt; font-weight: 700; padding: 7px 10px; text-align: left; }
   tbody td { font-size: 9.5pt; padding: 7px 10px; border-bottom: 1px solid #E4E4E7; }
@@ -203,16 +215,21 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   .notes-label { font-size: 7.5pt; color: #71717A; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
   .notes-text { font-size: 9.5pt; line-height: 1.6; white-space: pre-wrap; }
 
-  .footer { border-top: 1px solid #E4E4E7; padding-top: 10px; display: flex; justify-content: space-between; font-size: 8.5pt; color: #71717A; }
+  .footer { border-top: 1px solid #E4E4E7; padding-top: 14px; margin-top: 8px; }
+  .footer-thanks { font-size: 9.5pt; font-weight: 700; color: #18181B; margin: 0 0 4px; }
+  .footer-meta { display: flex; justify-content: space-between; font-size: 8.5pt; color: #71717A; }
 </style>
 </head>
 <body>
 
   <div class="header">
-    <div>
-      <p class="sender-name">${esc(invoice.sender_name)}</p>
-      <div class="invoice-label">${esc(invoiceTypeLabel[invoice.invoice_type] ?? 'Faktura')}</div>
-      <div class="invoice-number">č. ${esc(invoice.invoice_number)}</div>
+    <div class="header-left">
+      ${logoBlock}
+      <div>
+        <p class="sender-name">${esc(invoice.sender_name)}</p>
+        <div class="invoice-label">${esc(invoiceTypeLabel[invoice.invoice_type] ?? 'Faktura')}</div>
+        <div class="invoice-number">č. ${esc(invoice.invoice_number)}</div>
+      </div>
     </div>
     <div class="meta-block">
       <div class="meta-row">
@@ -227,7 +244,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
     <div class="party-box">
       <div class="party-title">Dodavatel</div>
       <div class="party-name">${esc(invoice.sender_name)}</div>
-      ${partyLines([invoice.sender_address, senderCityLine || null, invoice.sender_ico ? `IČO: ${invoice.sender_ico}` : null, invoice.sender_dic ? `DIČ: ${invoice.sender_dic}` : null, invoice.sender_email, invoice.sender_phone])}
+      ${partyLines([invoice.sender_address, senderCityLine || null, invoice.sender_ico ? `IČO: ${invoice.sender_ico}` : null, invoice.sender_dic ? `DIČ: ${invoice.sender_dic}` : null, invoice.sender_business_registry, invoice.sender_email, invoice.sender_web, invoice.sender_phone])}
     </div>
     <div class="party-box">
       <div class="party-title">Odběratel</div>
@@ -254,6 +271,8 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
 
   ${summaryCard}
 
+  ${paymentTerms}
+
   ${recapTable}
 
   ${legalNotice}
@@ -265,8 +284,11 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
   </div>` : ''}
 
   <div class="footer">
-    <span>Faktura č. ${esc(invoice.invoice_number)}</span>
-    <span>Vystaveno přes Fakturo · ${esc(formatDate(invoice.issue_date))}</span>
+    <p class="footer-thanks">Děkujeme za spolupráci</p>
+    <div class="footer-meta">
+      <span>Faktura č. ${esc(invoice.invoice_number)}</span>
+      <span>Vystaveno přes Fakturo · ${esc(formatDate(invoice.issue_date))}</span>
+    </div>
   </div>
 
 </body>

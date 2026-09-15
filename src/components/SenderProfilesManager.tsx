@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { Plus, Trash2, Check, ChevronDown, ChevronUp } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Plus, Trash2, Check, ChevronDown, ChevronUp, Upload, Loader2, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import type { SenderProfile } from '@/types'
@@ -30,6 +30,9 @@ function ProfileForm({
   const [open, setOpen] = useState(defaultOpen)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [uploadingLogo, setUploadingLogo] = useState(false)
+  const [logoError, setLogoError] = useState('')
+  const logoInputRef = useRef<HTMLInputElement>(null)
   const [form, setForm] = useState({
     name: profile?.name ?? '',
     address: profile?.address ?? '',
@@ -43,10 +46,30 @@ function ProfileForm({
     email: profile?.email ?? '',
     phone: profile?.phone ?? '',
     accent_color: profile?.accent_color ?? DEFAULT_ACCENT,
+    logo_url: profile?.logo_url ?? '',
+    business_registry: profile?.business_registry ?? '',
+    web: profile?.web ?? '',
   })
 
   function set(key: keyof typeof form, val: string) {
     setForm(f => ({ ...f, [key]: val }))
+  }
+
+  async function uploadLogo(file: File) {
+    setUploadingLogo(true)
+    setLogoError('')
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/logo/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (!res.ok) { setLogoError(data.error ?? 'Nahrání se nezdařilo'); return }
+      set('logo_url', data.url)
+    } catch {
+      setLogoError('Nahrání se nezdařilo.')
+    } finally {
+      setUploadingLogo(false)
+    }
   }
 
   async function save() {
@@ -103,6 +126,41 @@ function ProfileForm({
         <div className="p-4 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
+              <label className="text-sm font-medium text-slate-600 mb-1 block">Logo</label>
+              <div className="flex items-center gap-3">
+                {form.logo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={form.logo_url} alt="Logo" className="h-12 max-w-[160px] object-contain border border-slate-100 rounded-lg p-1" />
+                ) : (
+                  <div className="h-12 w-12 rounded-lg border border-dashed border-slate-200 flex items-center justify-center text-slate-300">
+                    <Upload className="h-4 w-4" />
+                  </div>
+                )}
+                <input
+                  ref={logoInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                  className="hidden"
+                  onChange={e => { const f = e.target.files?.[0]; if (f) uploadLogo(f) }}
+                />
+                <button
+                  type="button"
+                  onClick={() => logoInputRef.current?.click()}
+                  disabled={uploadingLogo}
+                  className="flex items-center gap-1.5 text-xs text-brand hover:underline disabled:opacity-40"
+                >
+                  {uploadingLogo ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                  {form.logo_url ? 'Změnit logo' : 'Nahrát logo'}
+                </button>
+                {form.logo_url && (
+                  <button type="button" onClick={() => set('logo_url', '')} className="text-slate-300 hover:text-red-400">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+              {logoError && <p className="text-xs text-red-500 mt-1">{logoError}</p>}
+            </div>
+            <div className="col-span-2">
               <Input label="Jméno / firma" value={form.name} onChange={e => set('name', e.target.value)} />
             </div>
             <div className="col-span-2">
@@ -113,10 +171,21 @@ function ProfileForm({
             <Input label="IČO" value={form.ico} onChange={e => set('ico', e.target.value)} />
             <Input label="DIČ" value={form.dic} onChange={e => set('dic', e.target.value)} />
             <div className="col-span-2">
+              <Input
+                label="Zápis v obchodním rejstříku"
+                placeholder="zapsaná v OR vedeném Městským soudem v Praze, sp. zn. B 12345"
+                value={form.business_registry}
+                onChange={e => set('business_registry', e.target.value)}
+              />
+            </div>
+            <div className="col-span-2">
               <Input label="Číslo účtu / IBAN" value={form.bank_account} onChange={e => set('bank_account', e.target.value)} />
             </div>
             <Input label="E-mail" type="email" value={form.email} onChange={e => set('email', e.target.value)} />
             <Input label="Telefon" value={form.phone} onChange={e => set('phone', e.target.value)} />
+            <div className="col-span-2">
+              <Input label="Web" placeholder="www.firma.cz" value={form.web} onChange={e => set('web', e.target.value)} />
+            </div>
             <div className="col-span-2">
               <label className="text-sm font-medium text-slate-600 mb-1 block">Barva faktury</label>
               {canBrand ? (

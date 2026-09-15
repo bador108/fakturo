@@ -41,6 +41,9 @@ export default async function NewInvoicePage() {
         sender_iban: profile.iban ?? '',
         sender_email: profile.email ?? '',
         sender_phone: profile.phone ?? '',
+        sender_logo_url: profile.logo_url ?? '',
+        sender_business_registry: profile.business_registry ?? '',
+        sender_web: profile.web ?? '',
         accent_color: profile.accent_color ?? '#0c0c0e',
       }
     : {}
