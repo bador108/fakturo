@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { auth } from '@clerk/nextjs/server'
 import { createServiceClient } from '@/lib/supabase'
 import { SenderProfilesManager } from '@/components/SenderProfilesManager'
@@ -6,6 +7,7 @@ import { ReminderSettings } from '@/components/ReminderSettings'
 import { UpgradeButton } from '@/components/UpgradeButton'
 import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
+import { BankConnections } from '@/components/BankConnections'
 import { SetPasswordCard } from '@/components/SetPasswordCard'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
 
@@ -14,9 +16,11 @@ export default async function SettingsPage() {
   if (!userId) return null
 
   const db = createServiceClient()
-  const [{ data: profiles }, { data: user }] = await Promise.all([
+  const [{ data: profiles }, { data: user }, { data: bankConnections }, { data: bankAccounts }] = await Promise.all([
     db.from('sender_profiles').select('*').eq('user_id', userId).order('is_default', { ascending: false }),
     db.from('users').select('plan, email, invoice_count_this_month, reminder_days').eq('id', userId).single(),
+    db.from('bank_connections').select('id, institution_name, institution_logo, status').eq('user_id', userId),
+    db.from('bank_accounts').select('iban, currency, balance, display_name').eq('user_id', userId),
   ])
 
   const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
@@ -73,9 +77,23 @@ export default async function SettingsPage() {
         <ReminderSettings userId={userId} initialDays={reminderDays} />
       </div>
 
-      {/* Bank statement upload */}
+      {/* Live bank sync */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
-        <h2 className="font-semibold mb-1">Párování plateb</h2>
+        <h2 className="font-semibold mb-1">Bankovní účet</h2>
+        <p className="text-xs text-slate-400 mb-4">Živé propojení s bankou — zůstatek a párování plateb bez ručního nahrávání.</p>
+        <Suspense fallback={null}>
+          <BankConnections
+            initialConnections={bankConnections ?? []}
+            initialAccounts={(bankAccounts ?? []).map(a => ({
+              iban: a.iban, currency: a.currency, balance: a.balance, displayName: a.display_name,
+            }))}
+          />
+        </Suspense>
+      </div>
+
+      {/* Bank statement upload (manual fallback) */}
+      <div className="p-5 bg-white rounded-xl border border-zinc-200">
+        <h2 className="font-semibold mb-1">Párování plateb ručně</h2>
         <p className="text-xs text-slate-400 mb-4">Nahrajte výpis z banky a faktury se automaticky označí jako zaplacené · Funguje se všemi bankami</p>
         <BankStatementUpload />
       </div>

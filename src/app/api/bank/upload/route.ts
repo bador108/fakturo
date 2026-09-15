@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { parseBankFile } from '@/lib/bankParser'
+import { matchTransactionsToInvoices } from '@/lib/bankMatch'
 
 export async function POST(req: Request) {
   const { userId } = await auth()
@@ -25,32 +26,7 @@ export async function POST(req: Request) {
     .eq('user_id', userId)
     .eq('status', 'sent')
 
-  const matches: { invoiceId: string; invoiceNumber: string; clientName: string; amount: number; currency: string; txDate: string }[] = []
-  const usedTxAmounts = new Set<string>()
-
-  for (const invoice of invoices ?? []) {
-    const invoiceTotal = parseFloat(invoice.total)
-    const match = transactions.find(tx => {
-      const key = `${tx.amount}-${tx.date}`
-      if (usedTxAmounts.has(key)) return false
-      return (
-        tx.currency === invoice.currency &&
-        Math.abs(tx.amount - invoiceTotal) < 0.02
-      )
-    })
-    if (match) {
-      const key = `${match.amount}-${match.date}`
-      usedTxAmounts.add(key)
-      matches.push({
-        invoiceId: invoice.id,
-        invoiceNumber: invoice.invoice_number,
-        clientName: invoice.client_name,
-        amount: match.amount,
-        currency: match.currency,
-        txDate: match.date,
-      })
-    }
-  }
+  const matches = matchTransactionsToInvoices(invoices ?? [], transactions)
 
   return NextResponse.json({ transactions: transactions.length, matches })
 }
