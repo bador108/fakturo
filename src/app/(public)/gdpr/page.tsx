@@ -56,7 +56,7 @@ export default function GdprPage() {
 
         <Section title="1. Správce osobních údajů">
           <p>Správcem osobních údajů je Jiří Zahrádka, IČO 29695759, fyzická osoba podnikající dle živnostenského zákona, provozovatel služby Fakturo (<strong>fakturo.online</strong>), Česká republika.</p>
-          <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none' }}>support@fakturo.online</a></p>
+          <p style={{ marginTop: 12 }}>Kontaktní email: <strong>support@fakturo.online</strong></p>
         </Section>
 
         <Section title="2. Jaké osobní údaje zpracováváme">
@@ -111,7 +111,7 @@ export default function GdprPage() {
             'Právo vznést námitku (čl. 21 GDPR)',
             'Právo podat stížnost u Úřadu pro ochranu osobních údajů (uoou.cz)',
           ]} />
-          <p style={{ marginTop: 12 }}>Žádost o uplatnění práv zasílejte na: <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none' }}>support@fakturo.online</a>. Odpovídáme do 30 dnů.</p>
+          <p style={{ marginTop: 12 }}>Žádost o uplatnění práv zasílejte na: <strong>support@fakturo.online</strong>. Odpovídáme do 30 dnů.</p>
         </Section>
 
         <Section title="7. Soubory cookies">

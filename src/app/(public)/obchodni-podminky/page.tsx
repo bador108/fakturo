@@ -57,7 +57,7 @@ export default function ObchodniPodminkyPage() {
         <Section title="1. Poskytovatel a úvodní ustanovení">
           <p>Provozovatelem služby Fakturo (<strong>fakturo.online</strong>) je Jiří Zahrádka, IČO 29695759, fyzická osoba podnikající dle živnostenského zákona (dále jen „Poskytovatel“). Sídlo je dohledatelné ve veřejném živnostenském rejstříku.</p>
           <p style={{ marginTop: 12 }}>Tyto obchodní podmínky upravují vzájemná práva a povinnosti Poskytovatele a osoby, která užívá službu Fakturo (dále jen „Uživatel“). Registrací účtu nebo užíváním služby Uživatel vyjadřuje souhlas s těmito podmínkami.</p>
-          <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none' }}>support@fakturo.online</a></p>
+          <p style={{ marginTop: 12 }}>Kontaktní email: <strong>support@fakturo.online</strong></p>
         </Section>
 
         <Section title="2. Popis služby">
@@ -87,7 +87,7 @@ export default function ObchodniPodminkyPage() {
         <Section title="5. Odstoupení od smlouvy">
           <p>Je-li Uživatel spotřebitelem, má dle § 1829 občanského zákoníku právo odstoupit od smlouvy do 14 dnů od jejího uzavření bez udání důvodu.</p>
           <p style={{ marginTop: 12 }}>Vzhledem k povaze služby (digitální obsah/služba dodávaná okamžitě) bere Uživatel na vědomí, že aktivním využitím placené funkce před uplynutím 14denní lhůty (např. vygenerováním faktury v placeném tarifu) v souladu s § 1837 písm. l) občanského zákoníku právo na odstoupení od smlouvy v příslušném rozsahu zaniká.</p>
-          <p style={{ marginTop: 12 }}>Žádost o odstoupení lze zaslat na <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none' }}>support@fakturo.online</a>.</p>
+          <p style={{ marginTop: 12 }}>Žádost o odstoupení lze zaslat na <strong>support@fakturo.online</strong>.</p>
         </Section>
 
         <Section title="6. Práva a povinnosti Uživatele">
