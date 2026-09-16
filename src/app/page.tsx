@@ -45,7 +45,7 @@ function Nav({ userId }: { userId: string | null }) {
             <Image src="/logo.png" alt="Fakturo" width={144} height={29} />
           </Link>
           <div style={{ display: 'flex', gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
-            {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ']] as [string,string][]).map(([href, label]) => (
+            {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ'],['/kontakt','Kontakt']] as [string,string][]).map(([href, label]) => (
               <a key={href} href={href} style={{ color: 'inherit', textDecoration: 'none', padding: '8px 12px', borderRadius: 6 }}>{label}</a>
             ))}
           </div>

@@ -20,6 +20,7 @@ export function PublicNav() {
   const navLinks: [string, string][] = [
     ['/funkce', 'Funkce'],
     ['/cenik', 'Ceník'],
+    ['/kontakt', 'Kontakt'],
   ]
 
   return (

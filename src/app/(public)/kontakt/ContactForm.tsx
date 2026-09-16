@@ -29,10 +29,30 @@ export function ContactForm() {
     jmeno: '', email: '', predmet: '', zprava: '', souhlas: false,
   })
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSubmitted(true)
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        setError(data?.error ?? 'Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.')
+        return
+      }
+      setSubmitted(true)
+    } catch {
+      setError('Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (submitted) {
@@ -114,14 +134,17 @@ export function ContactForm() {
           <a href="/gdpr" style={{ color: C.primary, textDecoration: 'none' }}>zásad GDPR</a>.
         </label>
       </div>
+      {error && <p style={{ fontSize: 13, color: '#dc2626', margin: 0 }}>{error}</p>}
       <button
         type="submit"
+        disabled={loading}
         style={{
           background: C.fg, color: C.bg, padding: '13px 24px', borderRadius: 10,
-          fontSize: 15, fontWeight: 600, border: 'none', cursor: 'pointer',
+          fontSize: 15, fontWeight: 600, border: 'none', cursor: loading ? 'default' : 'pointer',
+          opacity: loading ? 0.6 : 1,
         }}
       >
-        Odeslat zprávu →
+        {loading ? 'Odesílám…' : 'Odeslat zprávu →'}
       </button>
     </form>
   )
