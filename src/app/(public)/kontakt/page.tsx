@@ -38,7 +38,7 @@ export default function KontaktPage() {
           <div>
             <div style={{ marginBottom: 40 }}>
               <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1, color: C.muted }}>Email</div>
-              <a href="mailto:support@fakturo.online" style={{ fontSize: 16, color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
+              <a href="#kontaktni-formular" style={{ fontSize: 16, color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
                 support@fakturo.online
               </a>
             </div>
@@ -56,7 +56,7 @@ export default function KontaktPage() {
           </div>
 
           {/* Form */}
-          <div style={{ padding: 40, borderRadius: 16, border: `1px solid ${C.border}`, background: C.bg }}>
+          <div id="kontaktni-formular" style={{ padding: 40, borderRadius: 16, border: `1px solid ${C.border}`, background: C.bg, scrollMarginTop: 96 }}>
             <ContactForm />
           </div>
         </div>
