@@ -31,15 +31,15 @@ export function PublicNav() {
       WebkitBackdropFilter: 'blur(12px)',
       borderBottom: `1px solid ${C.border}`,
     }}>
-      <nav style={{
+      <nav className="px-4 md:px-8" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '14px 32px', maxWidth: 1280, margin: '0 auto',
+        padding: '12px 0', maxWidth: 1280, margin: '0 auto',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <Image src="/logo.png" alt="Fakturo" width={144} height={29} />
+          <Link href="/" className="shrink-0" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <Image src="/logo.png" alt="Fakturo" width={130} height={26} className="w-[110px] md:w-[144px] h-auto" />
           </Link>
-          <div style={{ display: 'flex', gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
+          <div className="hidden md:flex" style={{ gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
             {navLinks.map(([href, label]) => (
               <Link
                 key={href}
@@ -64,7 +64,7 @@ export function PublicNav() {
               className="transition-transform duration-150 ease-out hover:-translate-y-0.5"
               style={{
                 background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8,
-                fontSize: 14, fontWeight: 600, textDecoration: 'none',
+                fontSize: 14, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap',
               }}
             >
               Dashboard →
@@ -73,6 +73,7 @@ export function PublicNav() {
             <>
               <Link
                 href="/sign-in"
+                className="hidden md:inline-block"
                 style={{ color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }}
               >
                 Přihlásit se
@@ -83,10 +84,10 @@ export function PublicNav() {
                 style={{
                   background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8,
                   fontSize: 14, fontWeight: 600, textDecoration: 'none',
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)', whiteSpace: 'nowrap',
                 }}
               >
-                Vyzkoušet zdarma →
+                Zdarma →
               </Link>
             </>
           )}

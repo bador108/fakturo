@@ -62,12 +62,12 @@ function CheckIcon({ small }: { small?: boolean }) {
 function Nav({ userId }: { userId: string | null }) {
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}>
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 32px', maxWidth: 1280, margin: '0 auto' }}>
+      <nav className="px-4 md:px-8" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', maxWidth: 1280, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <Image src="/logo.png" alt="Fakturo" width={144} height={29} />
+          <Link href="/" className="shrink-0" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <Image src="/logo.png" alt="Fakturo" width={130} height={26} className="w-[110px] md:w-[144px] h-auto" />
           </Link>
-          <div style={{ display: 'flex', gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
+          <div className="hidden md:flex" style={{ gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
             {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ'],['/kontakt','Kontakt']] as [string,string][]).map(([href, label]) => (
               <a key={href} href={href} style={{ color: 'inherit', textDecoration: 'none', padding: '8px 12px', borderRadius: 6 }}>{label}</a>
             ))}
@@ -75,11 +75,11 @@ function Nav({ userId }: { userId: string | null }) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {userId ? (
-            <Link href="/dashboard" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Dashboard →</Link>
+            <Link href="/dashboard" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>Dashboard →</Link>
           ) : (
             <>
-              <Link href="/sign-in" style={{ color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }}>Přihlásit se</Link>
-              <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)' }}>Začít zdarma →</Link>
+              <Link href="/sign-in" className="hidden md:inline-block" style={{ color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }}>Přihlásit se</Link>
+              <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)', whiteSpace: 'nowrap' }}>Začít →</Link>
             </>
           )}
         </div>
