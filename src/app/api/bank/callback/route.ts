@@ -5,7 +5,7 @@ import { getConnection, listAccounts } from '@/lib/saltedge'
 
 export async function GET(req: Request) {
   const { userId } = await auth()
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.online'
   if (!userId) return NextResponse.redirect(`${appUrl}/sign-in`)
 
   const url = new URL(req.url)

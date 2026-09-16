@@ -172,7 +172,7 @@ export default async function DashboardPage() {
   // ČNB rates
   let cnbRates: Record<string, number> = {}
   try {
-    const ratesRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/api/cnb-rates`, { next: { revalidate: 14400 } })
+    const ratesRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.online'}/api/cnb-rates`, { next: { revalidate: 14400 } })
     if (ratesRes.ok) cnbRates = await ratesRes.json()
   } catch { /* fallback */ }
 

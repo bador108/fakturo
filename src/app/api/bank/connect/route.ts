@@ -21,7 +21,7 @@ export async function POST() {
       await db.from('users').update({ bank_provider_customer_id: customerId }).eq('id', userId)
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.online'
     const connectUrl = await createConnectSession(customerId, `${appUrl}/api/bank/callback`)
 
     return NextResponse.json({ link: connectUrl })

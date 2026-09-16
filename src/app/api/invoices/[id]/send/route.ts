@@ -44,7 +44,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     let paymentUrl: string | null = null
     if (includePaymentLink && process.env.STRIPE_SECRET_KEY) {
       try {
-        const linkRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/api/invoices/${params.id}/payment-link`, {
+        const linkRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.online'}/api/invoices/${params.id}/payment-link`, {
           method: 'POST',
           headers: { Cookie: req.headers.get('cookie') ?? '' },
         })

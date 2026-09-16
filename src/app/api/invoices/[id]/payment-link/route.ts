@@ -38,8 +38,8 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
       },
     }],
     metadata: { invoiceId: params.id },
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/invoices/${params.id}?paid=1`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo-seven.vercel.app'}/invoices/${params.id}`,
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.online'}/invoices/${params.id}?paid=1`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.online'}/invoices/${params.id}`,
   })
 
   return NextResponse.json({ url: session.url })
