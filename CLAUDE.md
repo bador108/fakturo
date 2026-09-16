@@ -9,7 +9,7 @@
 - PDF generation: `@react-pdf/renderer`
 - Deployed on Vercel
 
-Free tier: 5 invoices/month. Start tier: 99 Kč/month (unlimited invoices, expenses, cashflow). Pro tier: 249 Kč/month (everything + recurring invoices, reminders, Pohoda export, item templates, multiple sender profiles, price quotes, invoice logo, live bank sync).
+Free tier: 5 invoices/month. Start tier: 99 Kč/month (unlimited invoices, expenses, cashflow). Pro tier: 249 Kč/month (everything + recurring invoices, reminders, Pohoda export, item templates, multiple sender profiles, price quotes, invoice logo).
 
 ---
 
@@ -220,9 +220,6 @@ STRIPE_PRO_PRICE_ID=
 # Resend
 RESEND_API_KEY=
 
-# Salt Edge Account Information API (open banking / živá synchronizace plateb)
-SALTEDGE_APP_ID=
-SALTEDGE_SECRET=
 NEXT_PUBLIC_APP_URL=
 ```
 

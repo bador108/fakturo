@@ -111,7 +111,6 @@ const plans: Plan[] = [
       { text: 'Více profilů dodavatele', included: true },
       { text: 'Cenové nabídky', included: true },
       { text: 'Logo na faktuře', included: true },
-      { text: 'Živé propojení s bankou', included: true },
       { text: 'Prioritní podpora', included: true },
     ],
   },

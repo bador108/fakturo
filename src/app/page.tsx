@@ -154,8 +154,8 @@ function BankMock() {
   return (
     <div style={{ background: C.bg, borderRadius: 14, border: `1px solid ${C.border}`, boxShadow: '0 12px 32px rgba(15,15,30,0.06)', padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-        <span style={{ width: 8, height: 8, borderRadius: 999, background: C.green, display: 'block', boxShadow: `0 0 8px ${C.green}` }} />
-        <span style={{ fontSize: 12, color: C.muted, fontWeight: 500 }}>Live · Fio Bank · sync před 12 s</span>
+        <span style={{ width: 8, height: 8, borderRadius: 999, background: C.green, display: 'block' }} />
+        <span style={{ fontSize: 12, color: C.muted, fontWeight: 500 }}>Výpis nahrán · Fio Bank · dnes 14:32</span>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {([{ from:'Studio Pixel s.r.o.', amount:'+24 850', vs:'2026042', match:'2026/042', hl:true },{ from:'Atelier Holub', amount:'+18 200', vs:'2026041', match:'2026/041', hl:false },{ from:'Káva & Kód', amount:'+12 000', vs:'2026040', match:'2026/040', hl:false },{ from:'Vodafone CZ', amount:'−849', vs:'—', match:null, hl:false }] as {from:string,amount:string,vs:string,match:string|null,hl:boolean}[]).map((tx,i) => (
@@ -225,7 +225,7 @@ function Features() {
         <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Vše, co OSVČ potřebuje k profesionální fakturaci. Nic, co nepotřebuje.</p>
       </div>
       <FeatureRow tag="Rychlost" title="Vystav fakturu za 30 vteřin" text="Šablony, automatické vyplnění z IČO, autocomplete klientů a sazeb. Pamatuje si tvoje pracovní zvyky a nabízí to, co skutečně používáš." reverse><InvoiceMock /></FeatureRow>
-      <FeatureRow tag="Banka" title="Platby se párují automaticky" text="Propojíš účet a Fakturo samo pozná, která platba patří ke které faktuře. Když přijde platba, faktura se sama označí jako zaplacená."><BankMock /></FeatureRow>
+      <FeatureRow tag="Banka" title="Platby se párují automaticky" text="Nahraješ výpis z banky a Fakturo samo pozná, která platba patří ke které faktuře. Faktura se pak sama označí jako zaplacená."><BankMock /></FeatureRow>
       <FeatureRow tag="Automatizace" title="Pravidelné fakturace bez práce" text="Měsíční retainer s klientem? Nastav opakování — Fakturo vystaví a pošle fakturu samo. Včetně EU faktur s VIES." reverse><AutoMock /></FeatureRow>
     </section>
   )

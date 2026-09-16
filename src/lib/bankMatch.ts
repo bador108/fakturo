@@ -18,7 +18,7 @@ export interface BankMatch {
 }
 
 // Sdílené párování transakce -> faktura (částka + měna, do 2 haléřů kvůli zaokrouhlení).
-// Používá jak ruční CSV/ABO import (api/bank/upload), tak živá synchronizace (api/bank/sync).
+// Používá ruční CSV/ABO import výpisu (api/bank/upload).
 export function matchTransactionsToInvoices(
   invoices: InvoiceForMatching[],
   transactions: BankTransaction[]
