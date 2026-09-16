@@ -52,6 +52,7 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
 
   async function handleGoogle() {
     setError(null)
@@ -75,6 +76,7 @@ export default function SignUpPage() {
     if (!isLoaded) return
     setLoading(true)
     setError(null)
+    setNotice(null)
     try {
       await signUp.create({ emailAddress: email, password })
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
@@ -83,7 +85,7 @@ export default function SignUpPage() {
       console.error('Sign-up failed:', err)
       const msg = errMsg(err)
       if (looksLikeStaleClientError(msg)) {
-        setError('Chvilku strpení, dokončujeme registraci…')
+        setNotice('Chvilku strpení, dokončujeme registraci…')
         window.setTimeout(() => window.location.reload(), 1200)
       } else {
         setError(msg)
@@ -98,6 +100,7 @@ export default function SignUpPage() {
     if (!isLoaded) return
     setLoading(true)
     setError(null)
+    setNotice(null)
     try {
       const result = await signUp.attemptEmailAddressVerification({ code })
       if (result.status === 'complete') {
@@ -110,7 +113,7 @@ export default function SignUpPage() {
       console.error('Verification failed:', err)
       const msg = errMsg(err)
       if (looksLikeStaleClientError(msg)) {
-        setError('Chvilku strpení, dokončujeme registraci…')
+        setNotice('Chvilku strpení, dokončujeme registraci…')
         window.setTimeout(() => window.location.reload(), 1200)
       } else {
         setError(msg)
@@ -181,6 +184,7 @@ export default function SignUpPage() {
                   </div>
                 </div>
                 {error && <p className="text-xs text-red-500">{error}</p>}
+                {notice && <p className="text-xs text-emerald-600">{notice}</p>}
                 <div id="clerk-captcha" data-cl-theme="light" />
                 <button
                   type="submit"
@@ -218,6 +222,7 @@ export default function SignUpPage() {
                   />
                 </div>
                 {error && <p className="text-xs text-red-500">{error}</p>}
+                {notice && <p className="text-xs text-emerald-600">{notice}</p>}
                 <button
                   type="submit"
                   disabled={loading}
