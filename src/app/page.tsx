@@ -88,9 +88,6 @@ function Hero({ userId }: { userId: string | null }) {
         filter: 'blur(10px)',
       }} />
       <div style={{ ...cont, textAlign: 'center', position: 'relative' }}>
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ margin: '0 auto 20px', display: 'block' }}>
-          <path d="M11 2v18M2 11h18" stroke={C.primary} strokeWidth="2.4" strokeLinecap="round" />
-        </svg>
         <h1 style={{ ...disp, fontSize: 'clamp(2.5rem, 5.5vw, 4.75rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 900 }}>
           Faktura za <span style={{ color: C.primary }}>30 vteřin</span><br />Ne za 30 minut
         </h1>
@@ -207,16 +204,13 @@ function Highlights() {
   return (
     <section style={{ ...cont, padding: '0 32px 64px' }}>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {items.map((it, i) => {
-          const dark = i > 0
-          return (
-            <div key={it.n} style={{ background: dark ? C.fg : C.primarySoft, borderRadius: 16, padding: 28 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: dark ? C.primary : C.primaryDark, marginBottom: 14, letterSpacing: 1 }}>{it.n}</div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: dark ? C.bg : C.fg, margin: '0 0 8px', letterSpacing: -0.3 }}>{it.title}</h3>
-              <p style={{ fontSize: 14, color: dark ? 'rgba(255,255,255,0.6)' : C.fg2, margin: 0, lineHeight: 1.6 }}>{it.text}</p>
-            </div>
-          )
-        })}
+        {items.map((it) => (
+          <div key={it.n} style={{ background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 16, padding: 28 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.primaryDark, marginBottom: 14, letterSpacing: 1 }}>{it.n}</div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: C.fg, margin: '0 0 8px', letterSpacing: -0.3 }}>{it.title}</h3>
+            <p style={{ fontSize: 14, color: C.fg2, margin: 0, lineHeight: 1.6 }}>{it.text}</p>
+          </div>
+        ))}
       </div>
     </section>
   )

@@ -107,10 +107,10 @@ export default async function DashboardPage() {
       pending: invoices.filter(i => i.status === 'sent' && i.due_date >= today).reduce((s, i) => s + Number(i.total), 0),
     }
     const statCards = [
-      { label: 'Celkový příjem', value: formatCurrency(stats.revenue, 'CZK'), icon: TrendingUp, color: 'text-brand', bg: 'bg-brand-soft' },
-      { label: 'Zaplaceno', value: stats.paid, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-      { label: 'Čeká na platbu', value: formatCurrency(stats.pending, 'CZK'), icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
-      { label: 'Po splatnosti', value: overdueCount, icon: AlertCircle, color: 'text-red-500', bg: 'bg-red-50' },
+      { label: 'Celkový příjem', value: formatCurrency(stats.revenue, 'CZK'), icon: TrendingUp, bg: 'bg-brand' },
+      { label: 'Zaplaceno', value: stats.paid, icon: CheckCircle, bg: 'bg-emerald-600' },
+      { label: 'Čeká na platbu', value: formatCurrency(stats.pending, 'CZK'), icon: Clock, bg: 'bg-amber-600' },
+      { label: 'Po splatnosti', value: overdueCount, icon: AlertCircle, bg: 'bg-red-500' },
     ]
     const recent = invoices.slice(0, 8)
 
@@ -120,10 +120,10 @@ export default async function DashboardPage() {
         {overdueAlert}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {statCards.map(({ label, value, icon: Icon, color, bg }) => (
+          {statCards.map(({ label, value, icon: Icon, bg }) => (
             <div key={label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-3 md:p-5">
-              <div className={`inline-flex items-center justify-center h-8 w-8 md:h-9 md:w-9 rounded-xl ${bg} mb-2 md:mb-3`}>
-                <Icon className={`h-4 w-4 ${color}`} />
+              <div className={`inline-flex items-center justify-center h-8 w-8 md:h-9 md:w-9 rounded-full ${bg} mb-2 md:mb-3`}>
+                <Icon className="h-4 w-4 text-white" />
               </div>
               <p className="text-lg md:text-2xl font-bold text-slate-900 leading-tight break-all">{value}</p>
               <p className="text-xs text-slate-400 mt-0.5">{label}</p>
