@@ -82,7 +82,7 @@ const WIDGET_CATALOG: WidgetDef[] = [
   { id: 'stat-clients', title: 'Počet klientů', desc: 'Kolik klientů máš v evidenci', icon: Users, colorizable: true, size: { w: 2, h: 4, minW: 2, minH: 3 } },
   { id: 'stat-avg-invoice', title: 'Průměrná faktura', desc: 'Průměrná hodnota faktury', icon: Calculator, colorizable: true, size: { w: 2, h: 4, minW: 2, minH: 3 } },
   { id: 'stat-margin', title: 'Zisková marže', desc: 'Marže v % z příjmů', icon: Percent, colorizable: true, size: { w: 2, h: 4, minW: 2, minH: 3 } },
-  { id: 'chart-revenue', title: 'Příjmy vs. výdaje', desc: 'Sloupcový graf posledních měsíců', icon: BarChart3, colorizable: true, size: { w: 6, h: 6, minW: 4, minH: 5 } },
+  { id: 'chart-revenue', title: 'Příjmy vs. výdaje', desc: 'Sloupcový graf posledních měsíců', icon: BarChart3, colorizable: true, size: { w: 6, h: 7, minW: 4, minH: 6 } },
   { id: 'chart-category', title: 'Výdaje podle kategorií', desc: 'Donut graf kategorií výdajů', icon: PieChart, colorizable: false, size: { w: 6, h: 6, minW: 4, minH: 5 } },
   { id: 'chart-status', title: 'Stav faktur', desc: 'Rozložení podle stavu', icon: PieChart, colorizable: false, size: { w: 6, h: 8, minW: 4, minH: 5 } },
   { id: 'chart-currency', title: 'Rozložení měn', desc: 'Fakturováno v CZK/EUR/USD', icon: Coins, colorizable: false, size: { w: 6, h: 8, minW: 4, minH: 5 } },
@@ -109,9 +109,9 @@ const DEFAULT_LAYOUT: ResponsiveLayouts = {
     { i: 'stat-profit', x: 4, y: 0, w: 2, h: 4, minW: 2, minH: 3 },
     { i: 'stat-vat', x: 6, y: 0, w: 2, h: 4, minW: 2, minH: 3 },
     { i: 'stat-pending', x: 8, y: 0, w: 2, h: 4, minW: 2, minH: 3 },
-    { i: 'chart-revenue', x: 0, y: 4, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'chart-revenue', x: 0, y: 4, w: 6, h: 7, minW: 4, minH: 6 },
     { i: 'chart-category', x: 6, y: 4, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'table-monthly', x: 0, y: 10, w: 12, h: 7, minW: 6, minH: 4 },
+    { i: 'table-monthly', x: 0, y: 11, w: 12, h: 7, minW: 6, minH: 4 },
   ],
 }
 

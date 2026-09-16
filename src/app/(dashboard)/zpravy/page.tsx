@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import { isProOverride } from '@/lib/stripe'
 import { cn } from '@/lib/utils'
+import { SendRemindersButton } from '@/components/SendRemindersButton'
 
 interface InboxMessage {
   id: string
@@ -37,7 +38,10 @@ export default async function ZpravyPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <h1 className="text-xl font-bold text-slate-900 mb-1">Zprávy</h1>
-      <p className="text-sm text-slate-500 mb-6">Kontaktní formulář a in-app zpětná vazba. {messages.length} zpráv.</p>
+      <p className="text-sm text-slate-500 mb-4">Kontaktní formulář a in-app zpětná vazba. {messages.length} zpráv.</p>
+      <div className="mb-6">
+        <SendRemindersButton />
+      </div>
 
       {messages.length === 0 ? (
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-8 text-center text-sm text-slate-400">
