@@ -164,7 +164,7 @@ export default function PravidelneFacturacePage() {
             Nastav si to ještě dnes
           </h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
-            14 dní zdarma, bez kreditní karty. Opakující se fakturace najdeš v nastavení faktury.
+            5 faktur měsíčně zdarma, bez kreditní karty. Opakující se fakturace najdeš v nastavení faktury.
           </p>
           <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{
             background: C.primary, color: C.bg, padding: '13px 26px', borderRadius: 10,

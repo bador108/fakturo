@@ -62,7 +62,7 @@ export default function CenikPage() {
         <div style={{ ...cont, background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 20, padding: '64px 48px', textAlign: 'center' }}>
           <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px' }}>Začni ještě dnes</h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
-            14 dní zdarma, bez kreditní karty. Zruš kdykoliv.
+            5 faktur měsíčně zdarma, bez kreditní karty. Zruš kdykoliv.
           </p>
           <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{
             background: C.primary, color: C.bg, padding: '13px 26px', borderRadius: 10,

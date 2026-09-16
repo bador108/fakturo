@@ -106,14 +106,14 @@ function Hero({ userId }: { userId: string | null }) {
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
           <Link href={userId ? '/dashboard' : '/sign-up'} className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40` }}>
-            {userId ? 'Přejít do dashboardu →' : 'Začít zdarma — 14 dní'}
+            {userId ? 'Přejít do dashboardu →' : 'Začít zdarma →'}
           </Link>
           <Link href="/generator" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.bg, color: C.fg, border: `1.5px solid ${C.borderStrong}`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             Podívat se, jak to funguje →
           </Link>
         </div>
         <div style={{ display: 'inline-flex', gap: 24, fontSize: 13, color: C.muted, fontWeight: 500, flexWrap: 'wrap', justifyContent: 'center' }}>
-          {(['Bez kreditní karty','14 dní zdarma','Zruš kdykoliv'] as string[]).map(t => (
+          {(['Bez kreditní karty','5 faktur měsíčně zdarma','Zruš kdykoliv'] as string[]).map(t => (
             <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><CheckIcon small /> {t}</span>
           ))}
         </div>
@@ -367,7 +367,7 @@ function CTA({ userId }: { userId: string | null }) {
         <div style={{ position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)', width: 800, height: 600, background: `radial-gradient(ellipse, ${C.primary}33, transparent 70%)`, filter: 'blur(40px)' }} />
         <div style={{ position: 'relative' }}>
           <h2 style={{ ...disp, fontSize: 'clamp(2rem,4.5vw,3.5rem)', margin: 0, marginBottom: 16, lineHeight: 1.05, letterSpacing: -2, color: C.bg }}>Vystav první fakturu ještě dnes</h2>
-          <p style={{ fontSize: 17, opacity: 0.7, marginBottom: 32, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.55 }}>14 dní zdarma, bez kreditní karty. Žádný závazek. Žádné překvapení.</p>
+          <p style={{ fontSize: 17, opacity: 0.7, marginBottom: 32, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.55 }}>5 faktur měsíčně zdarma, bez kreditní karty. Žádný závazek. Žádné překvapení.</p>
           <Link href={userId ? '/dashboard' : '/sign-up'} className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.bg, color: C.fg, padding: '14px 26px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>Začít zdarma →</Link>
         </div>
       </div>
