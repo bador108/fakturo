@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useEffect, type FormEvent } from 'react'
-import { useSignUp, useAuth, useClerk } from '@clerk/nextjs'
+import { useSignUp } from '@clerk/nextjs/legacy'
+import { useAuth, useClerk } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
-function errMsg(error: { message?: string; longMessage?: string } | null): string | null {
-  if (!error) return null
-  return error.longMessage ?? error.message ?? 'Něco se nepovedlo. Zkuste to znovu.'
+function errMsg(err: unknown): string {
+  const e = err as { errors?: { message?: string; longMessage?: string }[]; message?: string }
+  return e?.errors?.[0]?.longMessage ?? e?.errors?.[0]?.message ?? e?.message ?? 'Něco se nepovedlo. Zkuste to znovu.'
 }
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -24,7 +25,7 @@ function GoogleIcon({ className }: { className?: string }) {
 }
 
 export default function SignUpPage() {
-  const { signUp } = useSignUp()
+  const { isLoaded, signUp, setActive } = useSignUp()
   const { isSignedIn } = useAuth()
   const clerk = useClerk()
   const router = useRouter()
@@ -54,33 +55,23 @@ export default function SignUpPage() {
       })
     } catch (err) {
       console.error('Google sign-up failed:', err)
-      setError(errMsg(err as { message?: string }))
+      setError(errMsg(err))
       setGoogleLoading(false)
     }
   }
 
   async function handleSignUp(e: FormEvent) {
     e.preventDefault()
+    if (!isLoaded) return
     setLoading(true)
     setError(null)
     try {
-      // Client si drží stavy z předchozích pokusů (i neúspěšných) — bez resetu na ně
-      // .password() naváže a Clerk pak vrací "No sign up attempt was found" při dalším
-      // kroku, protože navázaný attempt je na serveru mrtvý/expirovaný.
-      await signUp.reset()
-      const { error: passErr } = await signUp.password({ emailAddress: email, password })
-      if (passErr) {
-        setError(errMsg(passErr))
-        return
-      }
-      const { error: sendErr } = await signUp.verifications.sendEmailCode()
-      if (sendErr) {
-        setError(errMsg(sendErr))
-        return
-      }
+      await signUp.create({ emailAddress: email, password })
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
       setPendingVerification(true)
     } catch (err) {
-      setError(errMsg(err as { message?: string }))
+      console.error('Sign-up failed:', err)
+      setError(errMsg(err))
     } finally {
       setLoading(false)
     }
@@ -88,22 +79,20 @@ export default function SignUpPage() {
 
   async function handleVerify(e: FormEvent) {
     e.preventDefault()
+    if (!isLoaded) return
     setLoading(true)
     setError(null)
     try {
-      const { error: verifyErr } = await signUp.verifications.verifyEmailCode({ code })
-      if (verifyErr) {
-        setError(errMsg(verifyErr))
-        return
-      }
-      if (signUp.status === 'complete') {
-        await signUp.finalize()
+      const result = await signUp.attemptEmailAddressVerification({ code })
+      if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId })
         router.push('/dashboard')
       } else {
         setError('Ověření se nepodařilo dokončit. Zkontrolujte kód.')
       }
     } catch (err) {
-      setError(errMsg(err as { message?: string }))
+      console.error('Verification failed:', err)
+      setError(errMsg(err))
     } finally {
       setLoading(false)
     }
