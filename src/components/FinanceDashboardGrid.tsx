@@ -9,7 +9,7 @@ import {
   BarChart3, Target, StickyNote, Sparkles,
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
-import { RevenueExpensesChart, CategoryDonut, ProfitSparkline } from '@/components/FinanceCharts'
+import { RevenueExpensesChart, CategoryDonut, ValueBubble } from '@/components/FinanceCharts'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
@@ -82,8 +82,8 @@ const WIDGET_CATALOG: WidgetDef[] = [
   { id: 'stat-clients', title: 'Počet klientů', desc: 'Kolik klientů máš v evidenci', icon: Users, colorizable: true, size: { w: 2, h: 4, minW: 2, minH: 3 } },
   { id: 'stat-avg-invoice', title: 'Průměrná faktura', desc: 'Průměrná hodnota faktury', icon: Calculator, colorizable: true, size: { w: 2, h: 4, minW: 2, minH: 3 } },
   { id: 'stat-margin', title: 'Zisková marže', desc: 'Marže v % z příjmů', icon: Percent, colorizable: true, size: { w: 2, h: 4, minW: 2, minH: 3 } },
-  { id: 'chart-revenue', title: 'Příjmy vs. výdaje', desc: 'Sloupcový graf posledních měsíců', icon: BarChart3, colorizable: true, size: { w: 6, h: 8, minW: 4, minH: 5 } },
-  { id: 'chart-category', title: 'Výdaje podle kategorií', desc: 'Donut graf kategorií výdajů', icon: PieChart, colorizable: false, size: { w: 6, h: 8, minW: 4, minH: 5 } },
+  { id: 'chart-revenue', title: 'Příjmy vs. výdaje', desc: 'Sloupcový graf posledních měsíců', icon: BarChart3, colorizable: true, size: { w: 6, h: 6, minW: 4, minH: 5 } },
+  { id: 'chart-category', title: 'Výdaje podle kategorií', desc: 'Donut graf kategorií výdajů', icon: PieChart, colorizable: false, size: { w: 6, h: 6, minW: 4, minH: 5 } },
   { id: 'chart-status', title: 'Stav faktur', desc: 'Rozložení podle stavu', icon: PieChart, colorizable: false, size: { w: 6, h: 8, minW: 4, minH: 5 } },
   { id: 'chart-currency', title: 'Rozložení měn', desc: 'Fakturováno v CZK/EUR/USD', icon: Coins, colorizable: false, size: { w: 6, h: 8, minW: 4, minH: 5 } },
   { id: 'chart-weekly', title: 'Týdenní příjmy', desc: 'Posledních 8 týdnů', icon: BarChart3, colorizable: true, size: { w: 6, h: 6, minW: 4, minH: 4 } },
@@ -109,9 +109,9 @@ const DEFAULT_LAYOUT: ResponsiveLayouts = {
     { i: 'stat-profit', x: 4, y: 0, w: 2, h: 4, minW: 2, minH: 3 },
     { i: 'stat-vat', x: 6, y: 0, w: 2, h: 4, minW: 2, minH: 3 },
     { i: 'stat-pending', x: 8, y: 0, w: 2, h: 4, minW: 2, minH: 3 },
-    { i: 'chart-revenue', x: 0, y: 4, w: 6, h: 8, minW: 4, minH: 5 },
-    { i: 'chart-category', x: 6, y: 4, w: 6, h: 8, minW: 4, minH: 5 },
-    { i: 'table-monthly', x: 0, y: 12, w: 12, h: 7, minW: 6, minH: 4 },
+    { i: 'chart-revenue', x: 0, y: 4, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'chart-category', x: 6, y: 4, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'table-monthly', x: 0, y: 10, w: 12, h: 7, minW: 6, minH: 4 },
   ],
 }
 
@@ -150,6 +150,10 @@ export function FinanceDashboardGrid(props: Props) {
   const [goal, setGoal] = useState<number>(initialLayout?.goal ?? 100000)
   const [note, setNote] = useState<string>(initialLayout?.note ?? '')
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // react-grid-layout fires onLayoutChange once on mount just from computing the
+  // responsive breakpoint — ignore that first call so it can't silently overwrite
+  // a fresh dashboard_layout row with whatever DEFAULT_LAYOUT happened to be.
+  const firstLayoutChange = useRef(true)
 
   const persist = useCallback((next: Partial<DashboardLayout>) => {
     if (saveTimeout.current) clearTimeout(saveTimeout.current)
@@ -168,6 +172,10 @@ export function FinanceDashboardGrid(props: Props) {
 
   function handleLayoutChange(_current: Layout, allLayouts: ResponsiveLayouts) {
     setLayouts(allLayouts)
+    if (firstLayoutChange.current) {
+      firstLayoutChange.current = false
+      return
+    }
     persist({ layouts: allLayouts })
   }
 
@@ -396,20 +404,21 @@ function StatBody({ value, icon, tint }: { value: string; icon: React.ReactNode;
 function WeeklyBarChart({ data, color = '#4F46E5' }: { data: { label: string; revenue: number }[]; color?: string }) {
   const max = Math.max(...data.map(d => d.revenue), 1)
   const H = 100
+  const TOP_PAD = 24
   const barW = 20
   const gap = 12
   const W = data.length * (barW + gap)
   return (
-    <svg width={W} height={H + 24} className="max-w-full">
+    <svg width={W} height={H + 24 + TOP_PAD} className="max-w-full">
       {data.map((d, i) => {
         const h = Math.max(Math.round((d.revenue / max) * H), d.revenue > 0 ? 3 : 0)
         const x = i * (barW + gap)
+        const label = `${d.revenue.toLocaleString('cs-CZ')} Kč`
         return (
-          <g key={i}>
-            <rect x={x} y={H - h} width={barW} height={h} rx={4} fill={color} opacity={0.85}>
-              <title>{`${d.label}: ${d.revenue.toLocaleString('cs-CZ')} Kč`}</title>
-            </rect>
-            <text x={x + barW / 2} y={H + 16} textAnchor="middle" style={{ fontSize: 9, fill: '#94a3b8' }}>{d.label}</text>
+          <g key={i} className="group cursor-default">
+            <rect x={x} y={TOP_PAD + H - h} width={barW} height={h} rx={4} fill={color} opacity={0.85} />
+            <ValueBubble x={x + barW / 2} y={TOP_PAD + H - h} text={label} />
+            <text x={x + barW / 2} y={TOP_PAD + H + 16} textAnchor="middle" style={{ fontSize: 9, fill: '#94a3b8' }}>{d.label}</text>
           </g>
         )
       })}
@@ -490,14 +499,7 @@ function WidgetBody(p: WidgetBodyProps) {
       return <StatBody value={`${stats.marginPct.toFixed(1)} %`} tint={color} icon={<Percent className="h-4 w-4 text-white" />} />
 
     case 'chart-revenue':
-      return (
-        <div>
-          <RevenueExpensesChart months={chartMonths} color={color} />
-          <div className="mt-4 pt-4 border-t border-slate-50">
-            <ProfitSparkline months={chartMonths} color={color} />
-          </div>
-        </div>
-      )
+      return <RevenueExpensesChart months={chartMonths} color={color} />
     case 'chart-category':
       return catSlices.length === 0 ? <EmptyState text="Žádné výdaje" /> : <CategoryDonut slices={catSlices} />
     case 'chart-status':

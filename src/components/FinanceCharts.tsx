@@ -12,10 +12,21 @@ interface CategorySlice {
   color: string
 }
 
+export function ValueBubble({ x, y, text }: { x: number; y: number; text: string }) {
+  const w = text.length * 5.6 + 14
+  return (
+    <g className="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+      <rect x={x - w / 2} y={y - 20} width={w} height={18} rx={5} fill="#0c0c0e" />
+      <text x={x} y={y - 7} textAnchor="middle" style={{ fontSize: 9, fill: '#fff', fontWeight: 600, fontFamily: 'inherit' }}>{text}</text>
+    </g>
+  )
+}
+
 // ── Revenue vs Expenses bar chart ─────────────────────────────────
 export function RevenueExpensesChart({ months, color = '#6366f1' }: { months: MonthBar[]; color?: string }) {
   const maxVal = Math.max(...months.flatMap(m => [m.revenue, m.expenses]), 1)
   const H = 140
+  const TOP_PAD = 26
   const barW = 16
   const gap = 4
   const groupW = barW * 2 + gap + 16
@@ -34,25 +45,29 @@ export function RevenueExpensesChart({ months, color = '#6366f1' }: { months: Mo
         </span>
       </div>
       <div className="overflow-x-auto">
-        <svg width={W} height={H + 30} className="min-w-full">
+        <svg width={W} height={H + 30 + TOP_PAD} className="min-w-full">
           {/* Grid lines */}
           {[0.25, 0.5, 0.75, 1].map(f => (
-            <line key={f} x1={0} x2={W} y1={H - H * f} y2={H - H * f}
+            <line key={f} x1={0} x2={W} y1={TOP_PAD + H - H * f} y2={TOP_PAD + H - H * f}
               stroke="#f1f5f9" strokeWidth={1} />
           ))}
           {months.map((m, i) => {
             const x = i * groupW + 8
             const rH = Math.max(Math.round((m.revenue / maxVal) * H), m.revenue > 0 ? 3 : 0)
             const eH = Math.max(Math.round((m.expenses / maxVal) * H), m.expenses > 0 ? 3 : 0)
+            const revLabel = `${m.revenue.toLocaleString('cs-CZ')} Kč`
+            const expLabel = `${m.expenses.toLocaleString('cs-CZ')} Kč`
             return (
               <g key={m.label}>
-                <rect x={x} y={H - rH} width={barW} height={rH} rx={3} fill={color} opacity={0.9}>
-                  <title>{`Příjmy ${m.label}: ${m.revenue.toLocaleString('cs-CZ')} Kč`}</title>
-                </rect>
-                <rect x={x + barW + gap} y={H - eH} width={barW} height={eH} rx={3} fill="#fb7185" opacity={0.85}>
-                  <title>{`Výdaje ${m.label}: ${m.expenses.toLocaleString('cs-CZ')} Kč`}</title>
-                </rect>
-                <text x={x + barW + gap / 2} y={H + 18} textAnchor="middle"
+                <g className="group cursor-default">
+                  <rect x={x} y={TOP_PAD + H - rH} width={barW} height={rH} rx={3} fill={color} opacity={0.9} />
+                  <ValueBubble x={x + barW / 2} y={TOP_PAD + H - rH} text={revLabel} />
+                </g>
+                <g className="group cursor-default">
+                  <rect x={x + barW + gap} y={TOP_PAD + H - eH} width={barW} height={eH} rx={3} fill="#fb7185" opacity={0.85} />
+                  <ValueBubble x={x + barW + gap + barW / 2} y={TOP_PAD + H - eH} text={expLabel} />
+                </g>
+                <text x={x + barW + gap / 2} y={TOP_PAD + H + 18} textAnchor="middle"
                   style={{ fontSize: 10, fill: '#94a3b8', fontFamily: 'inherit' }}>
                   {m.label}
                 </text>
@@ -70,9 +85,9 @@ export function CategoryDonut({ slices }: { slices: CategorySlice[] }) {
   const total = slices.reduce((s, x) => s + x.amount, 0)
   if (total === 0) return <p className="text-sm text-slate-400 py-6 text-center">Žádné výdaje</p>
 
-  const R = 56
-  const cx = 72
-  const cy = 72
+  const R = 76
+  const cx = 96
+  const cy = 96
   let cursor = -Math.PI / 2
 
   const paths = slices.map(s => {
@@ -89,14 +104,14 @@ export function CategoryDonut({ slices }: { slices: CategorySlice[] }) {
 
   return (
     <div className="flex items-center gap-5">
-      <svg width={144} height={144} className="shrink-0">
+      <svg width={192} height={192} className="shrink-0">
         {paths.map((p, i) => (
           <path key={i} d={p.d} fill={p.color} opacity={0.9}>
             <title>{`${p.label}: ${p.amount.toLocaleString('cs-CZ')} Kč (${Math.round(p.pct * 100)} %)`}</title>
           </path>
         ))}
         {/* Center hole */}
-        <circle cx={cx} cy={cy} r={32} fill="white" />
+        <circle cx={cx} cy={cy} r={44} fill="white" />
         <text x={cx} y={cy - 6} textAnchor="middle" style={{ fontSize: 11, fill: '#64748b', fontFamily: 'inherit' }}>Výdaje</text>
         <text x={cx} y={cy + 10} textAnchor="middle" style={{ fontSize: 10, fill: '#94a3b8', fontFamily: 'inherit' }}>celkem</text>
       </svg>
@@ -111,41 +126,6 @@ export function CategoryDonut({ slices }: { slices: CategorySlice[] }) {
           </div>
         ))}
       </div>
-    </div>
-  )
-}
-
-// ── Profit line sparkline ─────────────────────────────────────────
-export function ProfitSparkline({ months, color = '#6366f1' }: { months: MonthBar[]; color?: string }) {
-  const profits = months.map(m => m.revenue - m.expenses)
-  const min = Math.min(...profits, 0)
-  const max = Math.max(...profits, 1)
-  const H = 60
-  const W = 280
-  const step = W / Math.max(months.length - 1, 1)
-
-  const points = profits.map((p, i) => {
-    const x = i * step
-    const y = H - ((p - min) / (max - min)) * H
-    return `${x},${y}`
-  }).join(' ')
-
-  const zeroY = H - ((0 - min) / (max - min)) * H
-
-  return (
-    <div>
-      <p className="text-xs text-slate-400 mb-2">Zisk / ztráta po měsících</p>
-      <svg width={W} height={H + 4} className="w-full">
-        {/* Zero line */}
-        <line x1={0} x2={W} y1={zeroY} y2={zeroY} stroke="#e2e8f0" strokeWidth={1} strokeDasharray="4 2" />
-        <polyline points={points} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-        {profits.map((p, i) => (
-          <circle key={i} cx={i * step} cy={H - ((p - min) / (max - min)) * H} r={3}
-            fill={p >= 0 ? color : '#fb7185'}>
-            <title>{`${months[i].label}: ${p >= 0 ? '+' : ''}${p.toLocaleString('cs-CZ')} Kč`}</title>
-          </circle>
-        ))}
-      </svg>
     </div>
   )
 }

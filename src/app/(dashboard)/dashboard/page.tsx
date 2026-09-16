@@ -6,7 +6,6 @@ import { isPaid } from '@/lib/plan'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { Plus, AlertCircle, FileText, TrendingUp, CheckCircle, Clock } from 'lucide-react'
 import type { Invoice, Expense } from '@/types'
-import { PohodaExportButton } from '@/components/PohodaExportButton'
 import { FinanceDashboardGrid } from '@/components/FinanceDashboardGrid'
 import { ProUpsell } from '@/components/ProUpsell'
 import { StatusBadge } from '@/components/ui/badge'
@@ -76,7 +75,6 @@ export default async function DashboardPage() {
         <p className="text-sm text-slate-400 mt-0.5">{planLabel}</p>
       </div>
       <div className="flex items-center gap-2">
-        {paidPlan && <PohodaExportButton />}
         <Link
           href="/invoices/new"
           className="inline-flex items-center gap-2 bg-brand text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm shadow-brand-soft"

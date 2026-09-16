@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { UserButton, useUser, useClerk } from '@clerk/nextjs'
+import { useClerk } from '@clerk/nextjs'
 import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, Receipt, Menu, X, LogOut, Mail } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
@@ -49,21 +49,9 @@ function NavLinks({ onNavigate, isOwner }: { onNavigate?: () => void; isOwner?: 
 }
 
 function UserSection() {
-  const { user } = useUser()
   const { signOut } = useClerk()
   return (
-    <div className="border-t border-slate-100 pt-4 mt-1 space-y-1">
-      <div className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 transition">
-        <UserButton />
-        <div className="min-w-0">
-          <p className="text-sm font-medium text-slate-700 truncate">
-            {user?.firstName ?? user?.emailAddresses[0]?.emailAddress ?? 'Účet'}
-          </p>
-          <p className="text-xs text-slate-400 truncate">
-            {user?.emailAddresses[0]?.emailAddress}
-          </p>
-        </div>
-      </div>
+    <div className="border-t border-slate-100 pt-4 mt-1">
       <button
         onClick={() => signOut({ redirectUrl: '/sign-in' })}
         className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all"
