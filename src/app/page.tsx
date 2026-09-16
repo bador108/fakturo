@@ -40,10 +40,11 @@ const pageStyle: React.CSSProperties = {
 const meshBg: React.CSSProperties = {
   position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
   background: [
-    `radial-gradient(820px 620px at 8% 0%, ${C.primary}14, transparent 60%)`,
-    `radial-gradient(760px 580px at 96% 8%, ${C.primary}10, transparent 58%)`,
-    `radial-gradient(700px 560px at 50% 100%, ${C.primary}0d, transparent 55%)`,
-    `radial-gradient(640px 520px at 2% 60%, ${C.fg}08, transparent 55%)`,
+    `radial-gradient(900px 700px at 10% 0%, ${C.primary}22, transparent 62%)`,
+    `radial-gradient(820px 640px at 100% 10%, ${C.gold}1c, transparent 60%)`,
+    `radial-gradient(760px 620px at 90% 90%, ${C.primary}1e, transparent 58%)`,
+    `radial-gradient(700px 580px at 0% 85%, ${C.fg}14, transparent 58%)`,
+    `radial-gradient(1000px 800px at 50% 45%, ${C.primary}0a, transparent 65%)`,
   ].join(', '),
 }
 
