@@ -385,7 +385,7 @@ function WidgetHeader({ id, editing, onRemove }: { id: string; editing: boolean;
 function StatBody({ value, icon, tint }: { value: string; icon: React.ReactNode; tint?: string }) {
   return (
     <div className="h-full flex flex-col justify-center">
-      <div className="h-8 w-8 rounded-xl flex items-center justify-center mb-2" style={{ backgroundColor: tint ? `${tint}1A` : '#f1f5f9' }}>
+      <div className="h-8 w-8 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: tint ?? '#94a3b8' }}>
         {icon}
       </div>
       <p className="text-lg font-bold text-slate-900 tabular-nums truncate">{value}</p>
@@ -460,15 +460,15 @@ function WidgetBody(p: WidgetBodyProps) {
 
   switch (id) {
     case 'stat-revenue':
-      return <StatBody value={formatCurrency(stats.totalRevenue, 'CZK')} tint={color} icon={<TrendingUp className="h-4 w-4" style={{ color }} />} />
+      return <StatBody value={formatCurrency(stats.totalRevenue, 'CZK')} tint={color} icon={<TrendingUp className="h-4 w-4 text-white" />} />
     case 'stat-expenses':
-      return <StatBody value={formatCurrency(stats.totalExpenses, 'CZK')} tint={color} icon={<TrendingDown className="h-4 w-4" style={{ color }} />} />
+      return <StatBody value={formatCurrency(stats.totalExpenses, 'CZK')} tint={color} icon={<TrendingDown className="h-4 w-4 text-white" />} />
     case 'stat-profit': {
       const positive = stats.netProfit >= 0
       return (
         <div className="h-full flex flex-col justify-center">
-          <div className={`h-8 w-8 rounded-xl flex items-center justify-center mb-2 ${positive ? 'bg-emerald-100' : 'bg-red-100'}`}>
-            <Wallet className={`h-4 w-4 ${positive ? 'text-emerald-600' : 'text-red-500'}`} />
+          <div className={`h-8 w-8 rounded-full flex items-center justify-center mb-2 ${positive ? 'bg-emerald-600' : 'bg-red-500'}`}>
+            <Wallet className="h-4 w-4 text-white" />
           </div>
           <p className={`text-lg font-bold tabular-nums truncate ${positive ? 'text-emerald-700' : 'text-red-600'}`}>
             {positive ? '+' : ''}{formatCurrency(stats.netProfit, 'CZK')}
@@ -477,15 +477,15 @@ function WidgetBody(p: WidgetBodyProps) {
       )
     }
     case 'stat-vat':
-      return <StatBody value={formatCurrency(stats.totalVat, 'CZK')} tint={color} icon={<Receipt className="h-4 w-4" style={{ color }} />} />
+      return <StatBody value={formatCurrency(stats.totalVat, 'CZK')} tint={color} icon={<Receipt className="h-4 w-4 text-white" />} />
     case 'stat-pending':
-      return <StatBody value={formatCurrency(stats.totalPendingAndOverdue, 'CZK')} tint={color} icon={<AlertCircle className="h-4 w-4" style={{ color }} />} />
+      return <StatBody value={formatCurrency(stats.totalPendingAndOverdue, 'CZK')} tint={color} icon={<AlertCircle className="h-4 w-4 text-white" />} />
     case 'stat-clients':
-      return <StatBody value={String(stats.clientCount)} tint={color} icon={<Users className="h-4 w-4" style={{ color }} />} />
+      return <StatBody value={String(stats.clientCount)} tint={color} icon={<Users className="h-4 w-4 text-white" />} />
     case 'stat-avg-invoice':
-      return <StatBody value={formatCurrency(stats.avgInvoiceValue, 'CZK')} tint={color} icon={<Calculator className="h-4 w-4" style={{ color }} />} />
+      return <StatBody value={formatCurrency(stats.avgInvoiceValue, 'CZK')} tint={color} icon={<Calculator className="h-4 w-4 text-white" />} />
     case 'stat-margin':
-      return <StatBody value={`${stats.marginPct.toFixed(1)} %`} tint={color} icon={<Percent className="h-4 w-4" style={{ color }} />} />
+      return <StatBody value={`${stats.marginPct.toFixed(1)} %`} tint={color} icon={<Percent className="h-4 w-4 text-white" />} />
 
     case 'chart-revenue':
       return (
