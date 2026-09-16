@@ -11,8 +11,8 @@ import { FeatureShowcase } from '@/components/FeatureShowcase'
 import { Reveal } from '@/components/Reveal'
 
 export const metadata: Metadata = {
-  title: 'Fakturo – Fakturace za 30 vteřin pro OSVČ a freelancery',
-  description: 'Vystav fakturu za 30 vteřin, sleduj platby a posílej upomínky automaticky. Jednoduchá fakturace pro OSVČ a freelancery v Česku. 14 dní zdarma, bez kreditní karty.',
+  title: 'Fakturo – faktura za 30 vteřin | appka pro OSVČ',
+  description: 'Vystav fakturu za 30 vteřin, ne za 30 minut. Fakturo hlídá platby a posílá upomínky za tebe. 5 faktur měsíčně zdarma, bez karty.',
 }
 
 const C = {
@@ -225,10 +225,13 @@ function FAQ() {
     ['Můžu zrušit kdykoliv?','Ano. Žádná výpovědní doba. Klikneš v nastavení a hotovo. Data si stáhneš v PDF i CSV.'],
     ['Fakturo je nové — proč bych mu měl věřit?','Fakturo je nové — a je to tak vidět. Nemá desítky let starý kód ani rozhraní z roku 2012. Stavíme ho přímo pro aktuální českou legislativu. Riziko si nemusíš brát na víru: začneš zdarma, bez karty, a data si kdykoliv odneseš. Když ti to nesedne, nic tě nedrží.'],
     ['Funguje to s českou legislativou?','Plátce i neplátce DPH, OSS, reverse charge. Vše, co OSVČ v ČR potřebuje.'],
+    ['Umí Fakturo počítat DPH?','Jasně. U každé položky vybereš sazbu (0 %, 12 % nebo 21 %), Fakturo si samo spočítá základ i DPH a rozpad na faktuře. Sazbu ti dokonce umí i navrhnout podle toho, co fakturuješ.'],
+    ['Jak funguje platba přes QR kód?','Každá faktura má vygenerovaný QR kód se všemi platebními údaji (formát SPAYD). Klient ho naskenuje bankovní appkou v mobilu a částka i variabilní symbol se vyplní samy — nic nepřepisuje.'],
     ['Co když už používám něco jiného?','Pošli nám export (Fakturoid, iDoklad, Money) a data převedeme zdarma.'],
     ['Co když mám účetní?','Stáhne si měsíční podklady jedním kliknutím — XML pro Pohodu i jiné programy.'],
     ['Funguje to v EU?','Cizí měny, VIES validace, OSS pro digitální služby, reverse charge.'],
     ['Jsou moje data v bezpečí?','Šifrování v klidu i přenosu, GDPR, 2FA, denní zálohy. Servery v EU.'],
+    ['Co se stane s mými daty, když appku přestanu používat?','Nic — jsou pořád tvoje. Export všech faktur do PDF nebo CSV je součástí i plánu zdarma, takže tě appka nikdy nedrží jako rukojmí.'],
   ]
   return (
     <section id="faq" style={{ ...cont, padding: '32px 32px 80px', maxWidth: 880 }}>
@@ -361,8 +364,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         <section id="pricing" style={{ ...cont, padding: '80px 32px' }}>
           <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 56px' }}>
             <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Ceník</div>
-            <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2, marginBottom: 16 }}>Férová cena, žádné překvapení.</h2>
-            <p style={{ fontSize: 17, color: C.muted, margin: 0, lineHeight: 1.55 }}>Plať měsíčně, zruš kdykoliv. Bez závazků. Začni zdarma.</p>
+            <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2, marginBottom: 16 }}>Ceny bez háčku</h2>
+            <p style={{ fontSize: 17, color: C.muted, margin: 0, lineHeight: 1.55 }}>Začni zdarma, plať jen když to appka fakt využiješ.</p>
           </div>
           <PricingSection />
         </section>

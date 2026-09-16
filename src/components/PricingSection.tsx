@@ -14,6 +14,7 @@ interface Plan {
   annual: number
   annualTotal: number
   subtitle: string
+  description: string
   accentColor: string
   cardClass: string
   btnClass: string
@@ -29,6 +30,7 @@ const plans: Plan[] = [
     annual: 0,
     annualTotal: 0,
     subtitle: 'Pro vyzkoušení bez závazků',
+    description: '5 faktur měsíčně a základní správa klientů — stačí na vyzkoušení, jestli ti Fakturo sedne. Žádná karta, žádný časový limit.',
     accentColor: 'text-slate-900',
     cardClass: 'border border-slate-200 bg-white shadow-sm',
     btnClass: 'border-2 border-slate-200 text-slate-700 hover:border-brand-soft hover:text-brand',
@@ -57,6 +59,7 @@ const plans: Plan[] = [
     annual: 79,
     annualTotal: 79 * 12,
     subtitle: 'Pro aktivní freelancery',
+    description: 'Pro každýho, kdo fakturuje pravidelně. Neomezené faktury a klienti, evidence výdajů a přehled cashflow — víš přesně, na čem jsi.',
     accentColor: 'text-brand',
     cardClass: 'border-2 border-brand bg-gradient-to-b from-brand-soft to-white shadow-xl shadow-brand-soft',
     btnClass: 'bg-brand text-white hover:bg-brand-dark shadow-lg shadow-brand-soft',
@@ -85,6 +88,7 @@ const plans: Plan[] = [
     annual: 199,
     annualTotal: 199 * 12,
     subtitle: 'Pro profesionály a firmy',
+    description: 'Pro profíky a firmy, co chtějí mít fakturaci na autopilota. Opakující se faktury, automatické upomínky, Pohoda export a víc profilů dodavatele — appka pracuje, ty fakturuješ.',
     accentColor: 'text-violet-600',
     cardClass: 'border-2 border-violet-400 bg-gradient-to-b from-violet-50 to-white shadow-xl shadow-violet-100',
     btnClass: 'bg-violet-600 text-white hover:bg-violet-700 shadow-lg shadow-violet-200',
@@ -127,12 +131,8 @@ export function PricingSection() {
     <section className="bg-white border-y border-slate-100 py-20" id="pricing">
       <div className="max-w-6xl mx-auto px-6">
 
-        {/* Header */}
+        {/* Toggle */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-slate-900 mb-3">Jednoduché ceny</h2>
-          <p className="text-slate-400 mb-7">Začni zdarma, upgraduj až budeš potřebovat</p>
-
-          {/* Toggle */}
           <div className="inline-flex items-center gap-1 bg-slate-100 rounded-full p-1">
             <button
               onClick={() => setAnnual(false)}
@@ -202,6 +202,8 @@ export function PricingSection() {
                     </p>
                   )}
                 </div>
+
+                <p className="text-sm text-slate-500 leading-relaxed mb-6">{plan.description}</p>
 
                 {/* Features */}
                 <ul className="space-y-2 text-sm mb-7 flex-1">
