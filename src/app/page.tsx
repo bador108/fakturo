@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { PricingSection } from '@/components/PricingSection'
@@ -8,6 +9,11 @@ import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PhoneMockup } from '@/components/PhoneMockup'
 import { FeatureShowcase } from '@/components/FeatureShowcase'
 import { Reveal } from '@/components/Reveal'
+
+export const metadata: Metadata = {
+  title: 'Fakturo – Fakturace za 30 vteřin pro OSVČ a freelancery',
+  description: 'Vystav fakturu za 30 vteřin, sleduj platby a posílej upomínky automaticky. Jednoduchá fakturace pro OSVČ a freelancery v Česku. 14 dní zdarma, bez kreditní karty.',
+}
 
 const C = {
   bg: '#ffffff', bgSoft: '#fafafa', bgDark: '#0c0c0e',
@@ -70,10 +76,10 @@ function Hero({ userId }: { userId: string | null }) {
     <section style={{ padding: '88px 0 64px' }}>
       <div style={{ ...cont, textAlign: 'center' }}>
         <h1 style={{ ...disp, fontSize: 'clamp(2.5rem, 5.5vw, 4.75rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 900 }}>
-          Fakturace pro lidi,<br />kteří dělají skutečnou práci.
+          Faktura za 30 vteřin.<br />Ne za 30 minut.
         </h1>
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 36px', maxWidth: 580 }}>
-          Vystav fakturu za půl minuty, hlídej platby a posílej upomínky. Pro OSVČ a freelancery, kteří chtějí strávit méně času papírováním.
+          Vystavíš fakturu za půl minutu. Systém sám hlídá platby a posílá upomínky. Pro OSVČ a freelancery, kteří nechtějí trávit čas v účetním systému.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
           <Link href={userId ? '/dashboard' : '/sign-up'} style={{ background: C.fg, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.08)' }}>
@@ -81,7 +87,7 @@ function Hero({ userId }: { userId: string | null }) {
           </Link>
           <Link href="/generator" style={{ background: C.bg, color: C.fg, border: `1px solid ${C.borderStrong}`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke={C.fg} strokeWidth="1.3" /><path d="M5.5 4.5L9.5 7L5.5 9.5V4.5Z" fill={C.fg} /></svg>
-            Podívat se na ukázku
+            Podívat se, jak to funguje
           </Link>
         </div>
         <div style={{ display: 'inline-flex', gap: 24, fontSize: 13, color: C.muted, fontWeight: 500, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -186,7 +192,7 @@ function Features() {
         <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Vše, co OSVČ potřebuje k profesionální fakturaci. Nic, co nepotřebuje.</p>
       </div>
       <FeatureRow tag="Rychlost" title="Vystav fakturu za 30 vteřin." text="Šablony, automatické vyplnění z IČO, autocomplete klientů a sazeb. Pamatuje si tvoje pracovní zvyky a nabízí to, co skutečně používáš." reverse><InvoiceMock /></FeatureRow>
-      <FeatureRow tag="Banka" title="Platby se párují automaticky." text="Napojení na Fio, ČSOB, KB, Raiffeisen a Air Bank. Když přijde platba, faktura se sama označí jako zaplacená."><BankMock /></FeatureRow>
+      <FeatureRow tag="Banka" title="Platby se párují automaticky." text="Propojíš účet a Fakturo samo pozná, která platba patří ke které faktuře. Když přijde platba, faktura se sama označí jako zaplacená."><BankMock /></FeatureRow>
       <FeatureRow tag="Automatizace" title="Pravidelné fakturace bez práce." text="Měsíční retainer s klientem? Nastav opakování — Fakturo vystaví a pošle fakturu samo. Včetně EU faktur s VIES." reverse><AutoMock /></FeatureRow>
     </section>
   )
@@ -217,6 +223,7 @@ function FeatureGrid() {
 function FAQ() {
   const items: [string,string][] = [
     ['Můžu zrušit kdykoliv?','Ano. Žádná výpovědní doba. Klikneš v nastavení a hotovo. Data si stáhneš v PDF i CSV.'],
+    ['Fakturo je nové — proč bych mu měl věřit?','Fakturo je nové — a je to tak vidět. Nemá desítky let starý kód ani rozhraní z roku 2012. Stavíme ho přímo pro aktuální českou legislativu. Riziko si nemusíš brát na víru: začneš zdarma, bez karty, a data si kdykoliv odneseš. Když ti to nesedne, nic tě nedrží.'],
     ['Funguje to s českou legislativou?','Plátce i neplátce DPH, OSS, reverse charge. Vše, co OSVČ v ČR potřebuje.'],
     ['Co když už používám něco jiného?','Pošli nám export (Fakturoid, iDoklad, Money) a data převedeme zdarma.'],
     ['Co když mám účetní?','Stáhne si měsíční podklady jedním kliknutím — XML pro Pohodu i jiné programy.'],
@@ -252,6 +259,24 @@ function FeatureShowcaseSection() {
           <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturo zevnitř — přímo ze živého provozu.</p>
         </div>
         <FeatureShowcase />
+      </div>
+    </section>
+  )
+}
+
+function TrustBlock() {
+  return (
+    <section style={{ ...cont, padding: '0 32px 80px' }}>
+      <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
+        <p style={{ fontSize: 17, lineHeight: 1.65, color: C.fg2, margin: '0 0 16px' }}>
+          Žádná kreditní karta. Žádný závazek. Vyzkoušíš zdarma a uvidíš sám, jestli ti to sedí — nemusíš věřit nikomu na slovo.
+        </p>
+        <p style={{ fontSize: 17, lineHeight: 1.65, color: C.fg2, margin: '0 0 16px' }}>
+          A kdyby se ti to nesedlo: tvoje data jsou tvoje. Export do PDF i CSV kdykoliv, jedním klikem. Nic tě nedrží.
+        </p>
+        <p style={{ fontSize: 14, color: C.muted, margin: 0 }}>
+          Data jsou šifrovaná a servery běží v EU.
+        </p>
       </div>
     </section>
   )
@@ -331,6 +356,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       <Reveal><Features /></Reveal>
       <Reveal><FeatureGrid /></Reveal>
       <Reveal><FeatureShowcaseSection /></Reveal>
+      <Reveal><TrustBlock /></Reveal>
       <Reveal>
         <section id="pricing" style={{ ...cont, padding: '80px 32px' }}>
           <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 56px' }}>
