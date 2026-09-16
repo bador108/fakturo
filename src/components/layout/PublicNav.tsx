@@ -10,7 +10,7 @@ const C = {
   fg: '#0c0c0e', fg2: '#1f1f23',
   muted: '#6b7280',
   border: '#ececef',
-  primary: '#3a59ff',
+  primary: '#16a34a',
 }
 
 export function PublicNav() {

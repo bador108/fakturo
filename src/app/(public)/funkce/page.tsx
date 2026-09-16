@@ -12,8 +12,9 @@ const C = {
   fg: '#0c0c0e', fg2: '#1f1f23',
   muted: '#6b7280', muted2: '#9ca3af',
   border: '#ececef', borderStrong: '#d4d4d8',
-  primary: '#3a59ff', primarySoft: '#eef0ff',
+  primary: '#16a34a', primarySoft: '#dcfce7',
   green: '#16a34a', greenSoft: '#dcfce7',
+  gold: '#EAB308', goldDark: '#A16207',
 }
 const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
 const disp = { letterSpacing: -2, fontWeight: 600 }

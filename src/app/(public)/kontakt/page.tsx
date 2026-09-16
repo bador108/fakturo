@@ -11,7 +11,7 @@ const C = {
   fg: '#0c0c0e', fg2: '#1f1f23',
   muted: '#6b7280',
   border: '#ececef',
-  primary: '#3a59ff',
+  primary: '#16a34a',
 }
 const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
 const disp = { letterSpacing: -2, fontWeight: 600 }

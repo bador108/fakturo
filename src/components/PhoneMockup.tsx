@@ -6,7 +6,7 @@ const C = {
   fg: '#0c0c0e',
   muted: '#6b7280',
   border: '#ececef',
-  primary: '#3a59ff',
+  primary: '#16a34a',
   green: '#16a34a',
   greenSoft: '#dcfce7',
   bgSoft: '#f5f5f5',

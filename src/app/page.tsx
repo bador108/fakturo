@@ -26,8 +26,9 @@ const C = {
   fg: '#0c0c0e', fg2: '#1f1f23',
   muted: '#6b7280', muted2: '#9ca3af',
   border: '#ececef', borderStrong: '#d4d4d8',
-  primary: '#3a59ff', primaryDark: '#2a47e0', primarySoft: '#eef0ff',
+  primary: '#16a34a', primaryDark: '#15803d', primarySoft: '#dcfce7',
   green: '#16a34a', greenSoft: '#dcfce7',
+  gold: '#EAB308', goldDark: '#A16207', goldSoft: '#FEF9C3',
 }
 const disp = { letterSpacing: -2, fontWeight: 600 }
 const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
@@ -87,6 +88,9 @@ function Hero({ userId }: { userId: string | null }) {
         filter: 'blur(10px)',
       }} />
       <div style={{ ...cont, textAlign: 'center', position: 'relative' }}>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ margin: '0 auto 20px', display: 'block' }}>
+          <path d="M11 2v18M2 11h18" stroke={C.primary} strokeWidth="2.4" strokeLinecap="round" />
+        </svg>
         <h1 style={{ ...disp, fontSize: 'clamp(2.5rem, 5.5vw, 4.75rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 900 }}>
           Faktura za <span style={{ color: C.primary }}>30 vteřin</span><br />Ne za 30 minut
         </h1>
@@ -97,9 +101,8 @@ function Hero({ userId }: { userId: string | null }) {
           <Link href={userId ? '/dashboard' : '/sign-up'} className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40` }}>
             {userId ? 'Přejít do dashboardu →' : 'Začít zdarma — 14 dní'}
           </Link>
-          <Link href="/generator" style={{ background: C.bg, color: C.primaryDark, border: `1px solid ${C.primary}44`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke={C.primary} strokeWidth="1.3" /><path d="M5.5 4.5L9.5 7L5.5 9.5V4.5Z" fill={C.primary} /></svg>
-            Podívat se, jak to funguje
+          <Link href="/generator" style={{ color: C.goldDark, padding: '13px 10px', fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            Podívat se, jak to funguje →
           </Link>
         </div>
         <div style={{ display: 'inline-flex', gap: 24, fontSize: 13, color: C.muted, fontWeight: 500, flexWrap: 'wrap', justifyContent: 'center' }}>

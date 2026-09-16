@@ -12,7 +12,7 @@ const C = {
   fg: '#0c0c0e', fg2: '#1f1f23',
   muted: '#6b7280',
   border: '#ececef', borderStrong: '#d4d4d8',
-  primary: '#3a59ff', primaryDark: '#2a47e0', primarySoft: '#eef0ff',
+  primary: '#16a34a', primaryDark: '#15803d', primarySoft: '#dcfce7',
   green: '#16a34a', greenSoft: '#dcfce7',
 }
 const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
