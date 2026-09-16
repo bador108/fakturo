@@ -1,6 +1,7 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { notifyOwner } from '@/lib/notifyOwner'
 
 export async function POST(req: Request) {
   const { userId } = await auth()
@@ -37,6 +38,8 @@ export async function POST(req: Request) {
     console.error('/api/support: insert error:', error)
     return NextResponse.json({ error: 'Nepodařilo se odeslat zprávu' }, { status: 500 })
   }
+
+  await notifyOwner(`${typeLabel}: ${subject}`, userEmail ?? userId, message)
 
   return NextResponse.json({ success: true })
 }
