@@ -84,7 +84,7 @@ function Hero({ userId }: { userId: string | null }) {
           <Link href={userId ? '/dashboard' : '/sign-up'} style={{ background: C.fg, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.08)' }}>
             {userId ? 'Přejít do dashboardu →' : 'Začít zdarma — 14 dní'}
           </Link>
-          <Link href="/sign-in" style={{ background: C.bg, color: C.fg, border: `1px solid ${C.borderStrong}`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <Link href="/generator" style={{ background: C.bg, color: C.fg, border: `1px solid ${C.borderStrong}`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke={C.fg} strokeWidth="1.3" /><path d="M5.5 4.5L9.5 7L5.5 9.5V4.5Z" fill={C.fg} /></svg>
             Podívat se na ukázku
           </Link>

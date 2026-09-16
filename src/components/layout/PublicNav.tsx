@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
 
 const C = {
   bg: '#ffffff', bgSoft: '#fafafa',
@@ -14,6 +15,7 @@ const C = {
 
 export function PublicNav() {
   const pathname = usePathname()
+  const { isSignedIn } = useUser()
 
   const navLinks: [string, string][] = [
     ['/funkce', 'Funkce'],
@@ -55,22 +57,36 @@ export function PublicNav() {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Link
-            href="/sign-in"
-            style={{ color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }}
-          >
-            Přihlásit se
-          </Link>
-          <Link
-            href="/sign-up"
-            style={{
-              background: C.fg, color: C.bg, padding: '9px 16px', borderRadius: 8,
-              fontSize: 14, fontWeight: 600, textDecoration: 'none',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
-            }}
-          >
-            Vyzkoušet zdarma →
-          </Link>
+          {isSignedIn ? (
+            <Link
+              href="/dashboard"
+              style={{
+                background: C.fg, color: C.bg, padding: '9px 16px', borderRadius: 8,
+                fontSize: 14, fontWeight: 600, textDecoration: 'none',
+              }}
+            >
+              Dashboard →
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/sign-in"
+                style={{ color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }}
+              >
+                Přihlásit se
+              </Link>
+              <Link
+                href="/sign-up"
+                style={{
+                  background: C.fg, color: C.bg, padding: '9px 16px', borderRadius: 8,
+                  fontSize: 14, fontWeight: 600, textDecoration: 'none',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
+                }}
+              >
+                Vyzkoušet zdarma →
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </header>
