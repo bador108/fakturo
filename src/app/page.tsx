@@ -101,7 +101,7 @@ function Hero({ userId }: { userId: string | null }) {
           <Link href={userId ? '/dashboard' : '/sign-up'} className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40` }}>
             {userId ? 'Přejít do dashboardu →' : 'Začít zdarma — 14 dní'}
           </Link>
-          <Link href="/generator" style={{ color: C.goldDark, padding: '13px 10px', fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Link href="/generator" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.bg, color: C.fg, border: `1.5px solid ${C.borderStrong}`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             Podívat se, jak to funguje →
           </Link>
         </div>
@@ -195,6 +195,27 @@ function AutoMock() {
         </div>
       ))}
     </div>
+  )
+}
+
+function Highlights() {
+  const items: { n: string; title: string; text: string }[] = [
+    { n: '01', title: 'Rychlost', text: 'Fakturu vystavíš a odešleš za 30 vteřin — méně klikání, víc práce, která tě baví.' },
+    { n: '02', title: 'Platby samy', text: 'Propojíš účet a Fakturo pozná, která platba patří ke které faktuře. Bez ručního hlídání.' },
+    { n: '03', title: 'Bez ruční práce', text: 'Opakující se faktury a upomínky odejdou samy, přesně podle rozvrhu, kterej si nastavíš jednou.' },
+  ]
+  return (
+    <section style={{ ...cont, padding: '0 32px 64px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {items.map(it => (
+          <div key={it.n} style={{ background: C.fg, borderRadius: 16, padding: 28 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.primary, marginBottom: 14, letterSpacing: 1 }}>{it.n}</div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: C.bg, margin: '0 0 8px', letterSpacing: -0.3 }}>{it.title}</h3>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: 0, lineHeight: 1.6 }}>{it.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
   )
 }
 
@@ -387,19 +408,29 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       <Nav userId={userId} />
       <Hero userId={userId} />
       <Reveal>
-        <section style={{ ...cont, padding: '80px 32px', textAlign: 'center' }}>
-          <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Jak to funguje</div>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', margin: '0 auto 16px', maxWidth: 600 }}>
-            Faktura za 30 sekund
-          </h2>
-          <p style={{ fontSize: 17, color: C.muted, margin: '0 auto 56px', maxWidth: 460, lineHeight: 1.6 }}>
-            Od dashboardu po platbu. Podívej se, jak to celé funguje.
-          </p>
+        <section style={{ ...cont, padding: '80px 32px' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16" style={{ alignItems: 'end', marginBottom: 56 }}>
+            <div>
+              <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Jak to funguje</div>
+              <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', margin: 0, maxWidth: 420 }}>
+                Faktura za 30 sekund
+              </h2>
+            </div>
+            <div>
+              <p style={{ fontSize: 17, color: C.muted, margin: '0 0 16px', lineHeight: 1.6, maxWidth: 460 }}>
+                Od dashboardu po platbu. Podívej se, jak to celé funguje.
+              </p>
+              <Link href="/generator" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', borderRadius: 999, background: C.bgSoft, border: `1px solid ${C.border}`, fontSize: 13, fontWeight: 600, color: C.fg2, textDecoration: 'none' }}>
+                Zjistit víc <span style={{ color: C.primary }}>→</span>
+              </Link>
+            </div>
+          </div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <PhoneMockup />
           </div>
         </section>
       </Reveal>
+      <Reveal><Highlights /></Reveal>
       <Reveal><Features /></Reveal>
       <Reveal><FeatureGrid /></Reveal>
       <Reveal><FeatureShowcaseSection /></Reveal>
