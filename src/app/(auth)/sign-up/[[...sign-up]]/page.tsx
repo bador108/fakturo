@@ -13,6 +13,16 @@ function errMsg(err: unknown): string {
   return e?.errors?.[0]?.longMessage ?? e?.errors?.[0]?.message ?? e?.message ?? 'Něco se nepovedlo. Zkuste to znovu.'
 }
 
+// Clerkův JS klient si na custom doméně občas nestihne správně dotáhnout skript
+// (viditelné jako 400/422 na clerk.<domena>/npm/... v konzoli) přesně ve chvíli, kdy
+// má potvrdit dokončení sign-upu — účet/session se přitom na serveru VYTVOŘÍ, jen se
+// to nepropíše do UI a zůstane viset generická "No sign up attempt was found" chyba.
+// Obyčejný refresh stránku spraví (Clerk si při startu přečte reálnou session cookie),
+// takže to samý zkusíme automaticky, ať uživatel nekouká na chybu u hotový registrace.
+function looksLikeStaleClientError(message: string): boolean {
+  return message.includes('No sign up attempt was found') || message.includes('unable to complete a')
+}
+
 function GoogleIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -71,7 +81,13 @@ export default function SignUpPage() {
       setPendingVerification(true)
     } catch (err) {
       console.error('Sign-up failed:', err)
-      setError(errMsg(err))
+      const msg = errMsg(err)
+      if (looksLikeStaleClientError(msg)) {
+        setError('Chvilku strpení, dokončujeme registraci…')
+        window.setTimeout(() => window.location.reload(), 1200)
+      } else {
+        setError(msg)
+      }
     } finally {
       setLoading(false)
     }
@@ -92,7 +108,13 @@ export default function SignUpPage() {
       }
     } catch (err) {
       console.error('Verification failed:', err)
-      setError(errMsg(err))
+      const msg = errMsg(err)
+      if (looksLikeStaleClientError(msg)) {
+        setError('Chvilku strpení, dokončujeme registraci…')
+        window.setTimeout(() => window.location.reload(), 1200)
+      } else {
+        setError(msg)
+      }
     } finally {
       setLoading(false)
     }
