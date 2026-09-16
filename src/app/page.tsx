@@ -87,10 +87,6 @@ function Hero({ userId }: { userId: string | null }) {
         filter: 'blur(10px)',
       }} />
       <div style={{ ...cont, textAlign: 'center', position: 'relative' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px', borderRadius: 999, background: C.primarySoft, fontSize: 13, color: C.primaryDark, fontWeight: 600, marginBottom: 28 }}>
-          <span style={{ width: 6, height: 6, borderRadius: 999, background: C.primary, display: 'block' }} />
-          Fakturace pro OSVČ a freelancery v Česku
-        </div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.5rem, 5.5vw, 4.75rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 900 }}>
           Faktura za <span style={{ color: C.primary }}>30 vteřin.</span><br />Ne za 30 minut.
         </h1>
