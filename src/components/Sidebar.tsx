@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UserButton, useUser, useClerk } from '@clerk/nextjs'
-import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, Receipt, Menu, X, LogOut } from 'lucide-react'
+import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, Receipt, Menu, X, LogOut, Mail } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { NotificationBell } from '@/components/NotificationBell'
@@ -19,14 +19,15 @@ const links = [
   { href: '/settings', label: 'Nastavení', icon: Settings },
 ]
 
-function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
+function NavLinks({ onNavigate, isOwner }: { onNavigate?: () => void; isOwner?: boolean }) {
   const path = usePathname()
   const isActive = (href: string) =>
     href === '/dashboard' ? path === href : path.startsWith(href)
+  const allLinks = isOwner ? [...links, { href: '/zpravy', label: 'Zprávy', icon: Mail }] : links
 
   return (
     <nav className="flex-1 space-y-0.5">
-      {links.map(({ href, label, icon: Icon }) => {
+      {allLinks.map(({ href, label, icon: Icon }) => {
         const active = isActive(href)
         return (
           <Link
@@ -74,7 +75,7 @@ function UserSection() {
   )
 }
 
-export function Sidebar() {
+export function Sidebar({ isOwner }: { isOwner?: boolean }) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
@@ -87,7 +88,7 @@ export function Sidebar() {
           </Link>
           <NotificationBell />
         </div>
-        <NavLinks />
+        <NavLinks isOwner={isOwner} />
         <UserSection />
       </aside>
 
@@ -127,7 +128,7 @@ export function Sidebar() {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <NavLinks onNavigate={() => setMobileOpen(false)} />
+            <NavLinks onNavigate={() => setMobileOpen(false)} isOwner={isOwner} />
             <UserSection />
           </aside>
         </div>

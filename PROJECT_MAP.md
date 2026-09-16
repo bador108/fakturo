@@ -34,7 +34,7 @@ Provozovatel v `gdpr/page.tsx` i `obchodni-podminky/page.tsx`: Jiří Zahrádka,
 `sign-in`, `sign-up` — Clerk prebuilt komponenty
 
 ### Dashboard (`src/app/(dashboard)/`) — za přihlášením
-`dashboard`, `invoices`, `invoices/new`, `invoices/[id]`, `clients`, `clients/[name]`, `expenses`, `finance`, `recurring`, `settings`
+`dashboard`, `invoices`, `invoices/new`, `invoices/[id]`, `clients`, `clients/[name]`, `expenses`, `finance`, `recurring`, `settings`, `zprávy` (jen owner — `isProOverride()`, čte `inbox_messages`)
 
 ### API routy (`src/app/api/`)
 | Route | Účel | Auth |
@@ -59,7 +59,7 @@ Provozovatel v `gdpr/page.tsx` i `obchodni-podminky/page.tsx`: Jiří Zahrádka,
 | `dashboard-layout` | GET/PUT `users.dashboard_layout` (drag/resize widgety) | ✓ |
 | `notifications` | notifikace | ✓ |
 | `settings/reminders` | dny upomínek | ✓ |
-| `support`, `contact` | kontaktní formulář → Resend → `support@fakturo.online` (MX = ImprovMX forwarding) | ✓ / ✗ |
+| `support`, `contact` | kontaktní formulář + in-app feedback → zapisuje do `inbox_messages` (ne přes email — Resend→ImprovMX bouncelo jako spam) | ✓ / ✗ |
 | `stripe/create-checkout`, `stripe/portal`, `stripe/webhook` | subscription platby | ✓ / webhook |
 | `cron/reminders` | Vercel cron (`vercel.json`), denní upomínky na splatnost | cron |
 | `clerk` | — | — |
@@ -79,6 +79,7 @@ Provozovatel v `gdpr/page.tsx` i `obchodni-podminky/page.tsx`: Jiří Zahrádka,
 - **`recurring_invoices`** — šablony pro opakované fakturace, `items` jako jsonb (ne FK na invoice_items)
 - **`expenses`** — `category` CHECK omezený na pevný seznam (kancelar/cestovne/software/hardware/marketing/ostatni) — `ExpenseCategory` typ v TS má navíc `| string` fallback, ale DB to nepustí
 - **`item_templates`**, **`notifications`**, **`invoice_reminders`**, **`clients`**
+- **`inbox_messages`** — kontaktní formulář (`source='contact'`) + in-app support/feedback (`source='support'`), čte se na `/zprávy` (owner-only)
 
 Migrace: `supabase/migration2.sql` … `migration7.sql` (accent_color, poslední). `schema.sql` = baseline, může být pozadu za migracemi — **věřit `list_tables`, ne schema.sql**.
 

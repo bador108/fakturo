@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
 import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
-import { escapeHtml as esc } from '@/lib/utils'
+import { createServiceClient } from '@/lib/supabase'
 
 const RATE_LIMIT_MAX = 5
 const RATE_LIMIT_WINDOW_MIN = 60
@@ -26,11 +25,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Text je příliš dlouhý.' }, { status: 400 })
   }
 
-  if (!process.env.RESEND_API_KEY) {
-    console.error('/api/contact: RESEND_API_KEY není nastaven')
-    return NextResponse.json({ error: 'Odesílání zpráv není nakonfigurováno' }, { status: 503 })
-  }
-
   const predmetLabel: Record<string, string> = {
     dotaz: 'Dotaz k produktu',
     'technicka-podpora': 'Technická podpora',
@@ -39,30 +33,21 @@ export async function POST(req: Request) {
     jine: 'Jiné',
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY)
+  const db = createServiceClient()
 
-  try {
-    const { error } = await resend.emails.send({
-      from: 'Fakturo <info@fakturo.online>',
-      to: 'support@fakturo.online',
-      subject: `[Kontakt] ${predmetLabel[predmet] ?? predmet}`,
-      html: `
-        <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
-          <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">${esc(predmetLabel[predmet] ?? predmet)}</h2>
-          <p style="color: #94a3b8; font-size: 12px; margin-bottom: 20px;">Od: ${esc(jmeno)} (${esc(email)})</p>
-          <div style="background: #f8fafc; border-radius: 8px; padding: 16px; font-size: 14px; white-space: pre-wrap;">${esc(zprava)}</div>
-        </div>
-      `,
-    })
+  const { error } = await db.from('inbox_messages').insert({
+    source: 'contact',
+    category: predmet,
+    name: jmeno,
+    email,
+    subject: predmetLabel[predmet] ?? predmet,
+    message: zprava,
+  })
 
-    if (error) {
-      console.error('/api/contact: Resend error:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-
-    return NextResponse.json({ success: true })
-  } catch (err) {
-    console.error('/api/contact: unexpected error:', err)
+  if (error) {
+    console.error('/api/contact: insert error:', error)
     return NextResponse.json({ error: 'Nepodařilo se odeslat zprávu' }, { status: 500 })
   }
+
+  return NextResponse.json({ success: true })
 }
