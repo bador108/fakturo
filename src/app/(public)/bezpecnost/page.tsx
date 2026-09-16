@@ -69,7 +69,7 @@ const sections = [
     title: 'Nahlásit problém',
     items: [
       'Zodpovědné hlášení bezpečnostních zranitelností vítáme',
-      'Email: fakturosupport@gmail.com',
+      'Email: support@fakturo.online',
       'Odpovídáme co nejdřív',
     ],
   },
@@ -138,8 +138,8 @@ export default function BezpecnostPage() {
           </h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 24px', lineHeight: 1.6 }}>
             Nahlašuj zodpovědně na{' '}
-            <a href="mailto:fakturosupport@gmail.com" style={{ color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
-              fakturosupport@gmail.com
+            <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
+              support@fakturo.online
             </a>.
           </p>
           <Link href="/kontakt" style={{

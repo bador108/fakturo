@@ -137,7 +137,7 @@ export async function GET(req: Request) {
           const pdfBuffer = await renderPdfFromHtml(html)
           const resend = new Resend(process.env.RESEND_API_KEY)
           const { error: mailErr } = await resend.emails.send({
-            from: 'Fakturo <onboarding@resend.dev>',
+            from: 'Fakturo <info@fakturo.online>',
             to: template.client_email,
             subject: `Faktura č. ${invoiceNumber} od ${template.sender_name}`,
             html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#1e293b">

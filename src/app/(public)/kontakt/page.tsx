@@ -38,8 +38,8 @@ export default function KontaktPage() {
           <div>
             <div style={{ marginBottom: 40 }}>
               <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1, color: C.muted }}>Email</div>
-              <a href="mailto:fakturosupport@gmail.com" style={{ fontSize: 16, color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
-                fakturosupport@gmail.com
+              <a href="mailto:support@fakturo.online" style={{ fontSize: 16, color: C.primary, textDecoration: 'none', fontWeight: 500 }}>
+                support@fakturo.online
               </a>
             </div>
             <div style={{ marginBottom: 40 }}>

@@ -55,8 +55,8 @@ export default function GdprPage() {
       <div style={{ ...cont, padding: '0 32px 96px' }}>
 
         <Section title="1. Správce osobních údajů">
-          <p>Správcem osobních údajů je Václav Urbanec, provozovatel služby Fakturo (<strong>fakturo-seven.vercel.app</strong>), Česká republika.</p>
-          <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:fakturosupport@gmail.com" style={{ color: C.primary, textDecoration: 'none' }}>fakturosupport@gmail.com</a></p>
+          <p>Správcem osobních údajů je Václav Urbanec, provozovatel služby Fakturo (<strong>fakturo.online</strong>), Česká republika.</p>
+          <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none' }}>support@fakturo.online</a></p>
         </Section>
 
         <Section title="2. Jaké osobní údaje zpracováváme">
@@ -111,7 +111,7 @@ export default function GdprPage() {
             'Právo vznést námitku (čl. 21 GDPR)',
             'Právo podat stížnost u Úřadu pro ochranu osobních údajů (uoou.cz)',
           ]} />
-          <p style={{ marginTop: 12 }}>Žádost o uplatnění práv zasílejte na: <a href="mailto:fakturosupport@gmail.com" style={{ color: C.primary, textDecoration: 'none' }}>fakturosupport@gmail.com</a>. Odpovídáme do 30 dnů.</p>
+          <p style={{ marginTop: 12 }}>Žádost o uplatnění práv zasílejte na: <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none' }}>support@fakturo.online</a>. Odpovídáme do 30 dnů.</p>
         </Section>
 
         <Section title="7. Soubory cookies">
@@ -140,8 +140,8 @@ export default function GdprPage() {
         <Section title="10. Kontakt">
           <p>Pro jakékoli dotazy ke zpracování osobních údajů nás kontaktujte:</p>
           <BulletList items={[
-            'Email: fakturosupport@gmail.com',
-            'Formulář: fakturo-seven.vercel.app/kontakt',
+            'Email: support@fakturo.online',
+            'Formulář: fakturo.online/kontakt',
           ]} />
         </Section>
       </div>

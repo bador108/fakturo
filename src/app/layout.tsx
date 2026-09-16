@@ -21,7 +21,20 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorPrimary: '#4f46e5',
+          colorText: '#0f172a',
+          colorTextSecondary: '#64748b',
+          colorBackground: '#ffffff',
+          colorInputBackground: '#ffffff',
+          colorInputText: '#0f172a',
+          fontFamily: 'var(--font-dm-sans), sans-serif',
+          borderRadius: '0.75rem',
+        },
+      }}
+    >
       <html lang="cs">
         <body className={`${inter.className} ${dmSans.variable} bg-slate-50 text-slate-900 antialiased`}>
           <ToastProvider>{children}</ToastProvider>

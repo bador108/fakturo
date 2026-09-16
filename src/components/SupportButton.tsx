@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { HelpCircle, X, Mail, Lightbulb, MessageSquare, Send, ChevronLeft } from 'lucide-react'
+import Image from 'next/image'
+import { X, Mail, Lightbulb, MessageSquare, Send, ChevronLeft } from 'lucide-react'
 
 type ContactType = 'support' | 'idea' | 'feedback'
 
@@ -109,7 +110,7 @@ export function SupportButton() {
                 {(['support', 'idea', 'feedback'] as ContactType[]).map((type) => {
                   const m = TYPE_META[type]
                   const bg = type === 'support' ? 'bg-brand-soft' : type === 'idea' ? 'bg-amber-50' : 'bg-emerald-50'
-                  const sub = type === 'support' ? 'fakturosupport@gmail.com' : type === 'idea' ? 'Váš nápad nás posouvá dál' : 'Řekněte nám co si myslíte'
+                  const sub = type === 'support' ? 'support@fakturo.online' : type === 'idea' ? 'Váš nápad nás posouvá dál' : 'Řekněte nám co si myslíte'
                   return (
                     <button
                       key={type}
@@ -188,7 +189,7 @@ export function SupportButton() {
         className="h-12 w-12 bg-brand hover:bg-brand-dark text-white rounded-full shadow-lg shadow-brand-soft flex items-center justify-center transition"
         title="Podpora"
       >
-        {open ? <X className="h-5 w-5" /> : <HelpCircle className="h-5 w-5" />}
+        {open ? <X className="h-5 w-5" /> : <Image src="/icon.png" alt="Podpora" width={24} height={24} className="rounded" />}
       </button>
     </div>
   )
