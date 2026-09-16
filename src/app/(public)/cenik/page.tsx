@@ -64,8 +64,8 @@ export default function CenikPage() {
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
             14 dní zdarma, bez kreditní karty. Zruš kdykoliv.
           </p>
-          <Link href="/sign-up" style={{
-            background: C.fg, color: C.bg, padding: '13px 26px', borderRadius: 10,
+          <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{
+            background: C.primary, color: C.bg, padding: '13px 26px', borderRadius: 10,
             fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block',
           }}>
             Vyzkoušet zdarma →

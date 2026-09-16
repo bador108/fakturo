@@ -60,10 +60,10 @@ export default function PravidelneFacturacePage() {
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 40px', maxWidth: 560 }}>
           Ideální pro retainery, předplatné a opakované zakázky. Jednou nastavíš, pak se staráš o práci — ne o papírování.
         </p>
-        <Link href="/sign-up" style={{
-          background: C.fg, color: C.bg, padding: '14px 28px', borderRadius: 10,
+        <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{
+          background: C.primary, color: C.bg, padding: '14px 28px', borderRadius: 10,
           fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.08)',
+          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40`,
         }}>
           Vyzkoušet zdarma →
         </Link>
@@ -166,8 +166,8 @@ export default function PravidelneFacturacePage() {
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
             14 dní zdarma, bez kreditní karty. Opakující se fakturace najdeš v nastavení faktury.
           </p>
-          <Link href="/sign-up" style={{
-            background: C.fg, color: C.bg, padding: '13px 26px', borderRadius: 10,
+          <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{
+            background: C.primary, color: C.bg, padding: '13px 26px', borderRadius: 10,
             fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block',
           }}>
             Vyzkoušet zdarma →

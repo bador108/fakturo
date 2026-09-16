@@ -83,8 +83,8 @@ export default function ONasPage() {
         <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
           Máš nápad, zpětnou vazbu nebo chceš spolupracovat? Rádi se ozveme.
         </p>
-        <Link href="/kontakt" style={{
-          background: C.fg, color: C.bg, padding: '13px 26px', borderRadius: 10,
+        <Link href="/kontakt" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{
+          background: C.primary, color: C.bg, padding: '13px 26px', borderRadius: 10,
           fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block',
         }}>
           Napsat nám →

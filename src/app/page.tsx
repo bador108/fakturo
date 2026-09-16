@@ -64,11 +64,11 @@ function Nav({ userId }: { userId: string | null }) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {userId ? (
-            <Link href="/dashboard" style={{ background: C.fg, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Dashboard →</Link>
+            <Link href="/dashboard" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Dashboard →</Link>
           ) : (
             <>
               <Link href="/sign-in" style={{ color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }}>Přihlásit se</Link>
-              <Link href="/sign-up" style={{ background: C.fg, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)' }}>Začít zdarma →</Link>
+              <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)' }}>Začít zdarma →</Link>
             </>
           )}
         </div>
@@ -94,7 +94,7 @@ function Hero({ userId }: { userId: string | null }) {
           Vystavíš fakturu za půl minutu. Systém sám hlídá platby a posílá upomínky. Pro OSVČ a freelancery, kteří nechtějí trávit čas v účetním systému.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
-          <Link href={userId ? '/dashboard' : '/sign-up'} style={{ background: C.fg, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.08)' }}>
+          <Link href={userId ? '/dashboard' : '/sign-up'} className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40` }}>
             {userId ? 'Přejít do dashboardu →' : 'Začít zdarma — 14 dní'}
           </Link>
           <Link href="/generator" style={{ background: C.bg, color: C.primaryDark, border: `1px solid ${C.primary}44`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -307,7 +307,7 @@ function CTA({ userId }: { userId: string | null }) {
         <div style={{ position: 'relative' }}>
           <h2 style={{ ...disp, fontSize: 'clamp(2rem,4.5vw,3.5rem)', margin: 0, marginBottom: 16, lineHeight: 1.05, letterSpacing: -2, color: C.bg }}>Vystav první fakturu ještě dnes</h2>
           <p style={{ fontSize: 17, opacity: 0.7, marginBottom: 32, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.55 }}>14 dní zdarma, bez kreditní karty. Žádný závazek. Žádné překvapení.</p>
-          <Link href={userId ? '/dashboard' : '/sign-up'} style={{ background: C.bg, color: C.fg, padding: '14px 26px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>Začít zdarma →</Link>
+          <Link href={userId ? '/dashboard' : '/sign-up'} className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.bg, color: C.fg, padding: '14px 26px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>Začít zdarma →</Link>
         </div>
       </div>
     </section>

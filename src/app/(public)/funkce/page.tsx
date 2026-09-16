@@ -110,10 +110,10 @@ export default function FunkcePage() {
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 40px', maxWidth: 560 }}>
           Fakturo je postavené tak, abys vystavil fakturu za 30 sekund — ne za 30 minut.
         </p>
-        <Link href="/sign-up" style={{
-          background: C.fg, color: C.bg, padding: '14px 28px', borderRadius: 10,
+        <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{
+          background: C.primary, color: C.bg, padding: '14px 28px', borderRadius: 10,
           fontSize: 15, fontWeight: 600, textDecoration: 'none',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.08)',
+          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40`,
           display: 'inline-block',
         }}>
           Vyzkoušet zdarma →
@@ -159,8 +159,8 @@ export default function FunkcePage() {
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
             Žádná platební karta, registrace za minutu.
           </p>
-          <Link href="/sign-up" style={{
-            background: C.fg, color: C.bg, padding: '13px 26px', borderRadius: 10,
+          <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{
+            background: C.primary, color: C.bg, padding: '13px 26px', borderRadius: 10,
             fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block',
           }}>
             Vyzkoušet zdarma →

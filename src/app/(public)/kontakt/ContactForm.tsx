@@ -138,8 +138,9 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={loading}
+        className="transition-transform duration-150 ease-out hover:-translate-y-0.5"
         style={{
-          background: C.fg, color: C.bg, padding: '13px 24px', borderRadius: 10,
+          background: C.primary, color: C.bg, padding: '13px 24px', borderRadius: 10,
           fontSize: 15, fontWeight: 600, border: 'none', cursor: loading ? 'default' : 'pointer',
           opacity: loading ? 0.6 : 1,
         }}
