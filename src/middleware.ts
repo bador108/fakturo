@@ -13,6 +13,7 @@ const isPublic = createRouteMatcher([
   '/kontakt(.*)',
   '/gdpr(.*)',
   '/obchodni-podminky(.*)',
+  '/api/contact(.*)',
   '/api/clerk(.*)',
   '/api/stripe/webhook(.*)',
   '/api/ares(.*)',
