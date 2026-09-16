@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
+import { escapeHtml as esc } from '@/lib/utils'
 
 const RATE_LIMIT_MAX = 5
 const RATE_LIMIT_WINDOW_MIN = 60
@@ -17,6 +18,12 @@ export async function POST(req: Request) {
   const { jmeno, email, predmet, zprava } = await req.json().catch(() => ({}))
   if (!jmeno || !email || !predmet || !zprava) {
     return NextResponse.json({ error: 'Vyplňte prosím všechna pole.' }, { status: 400 })
+  }
+  if ([jmeno, email, predmet, zprava].some(v => typeof v !== 'string') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: 'Neplatné údaje.' }, { status: 400 })
+  }
+  if (jmeno.length > 200 || zprava.length > 5000) {
+    return NextResponse.json({ error: 'Text je příliš dlouhý.' }, { status: 400 })
   }
 
   if (!process.env.RESEND_API_KEY) {
@@ -42,9 +49,9 @@ export async function POST(req: Request) {
       subject: `[Kontakt] ${predmetLabel[predmet] ?? predmet}`,
       html: `
         <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
-          <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">${predmetLabel[predmet] ?? predmet}</h2>
-          <p style="color: #94a3b8; font-size: 12px; margin-bottom: 20px;">Od: ${jmeno} (${email})</p>
-          <div style="background: #f8fafc; border-radius: 8px; padding: 16px; font-size: 14px; white-space: pre-wrap;">${zprava}</div>
+          <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">${esc(predmetLabel[predmet] ?? predmet)}</h2>
+          <p style="color: #94a3b8; font-size: 12px; margin-bottom: 20px;">Od: ${esc(jmeno)} (${esc(email)})</p>
+          <div style="background: #f8fafc; border-radius: 8px; padding: 16px; font-size: 14px; white-space: pre-wrap;">${esc(zprava)}</div>
         </div>
       `,
     })

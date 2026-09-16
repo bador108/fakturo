@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { getEffectivePlan } from '@/lib/stripe'
 import { isPro } from '@/lib/plan'
-import { generateInvoiceNumber, calcTotals } from '@/lib/utils'
+import { generateInvoiceNumber, calcTotals, escapeHtml as esc } from '@/lib/utils'
 import { renderInvoiceHtml } from '@/lib/invoiceHtml'
 import { renderPdfFromHtml } from '@/lib/pdfBrowser'
 import { Resend } from 'resend'
@@ -141,8 +141,8 @@ export async function GET(req: Request) {
             to: template.client_email,
             subject: `Faktura č. ${invoiceNumber} od ${template.sender_name}`,
             html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#1e293b">
-              <h2 style="font-size:20px;font-weight:700;margin-bottom:8px">Faktura č. ${invoiceNumber}</h2>
-              <p style="color:#64748b;font-size:14px">Dobrý den, zasíláme vám pravidelnou fakturu od <strong>${template.sender_name}</strong>. Faktura je přiložena jako PDF.</p>
+              <h2 style="font-size:20px;font-weight:700;margin-bottom:8px">Faktura č. ${esc(invoiceNumber)}</h2>
+              <p style="color:#64748b;font-size:14px">Dobrý den, zasíláme vám pravidelnou fakturu od <strong>${esc(template.sender_name)}</strong>. Faktura je přiložena jako PDF.</p>
             </div>`,
             attachments: [{ filename: `faktura-${invoiceNumber}.pdf`, content: Buffer.from(pdfBuffer) }],
           })

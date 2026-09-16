@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server'
+import { checkRateLimit, getClientIp } from '@/lib/rateLimit'
+
+const RATE_LIMIT_MAX = 30
+const RATE_LIMIT_WINDOW_MIN = 60
 
 export async function GET(req: Request) {
+  const ip = getClientIp(req)
+  const allowed = await checkRateLimit('ares_lookup_requests', ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MIN)
+  if (!allowed) {
+    return NextResponse.json({ error: 'Příliš mnoho požadavků, zkuste to prosím za chvíli.' }, { status: 429 })
+  }
+
   const { searchParams } = new URL(req.url)
   const ico = searchParams.get('ico')?.replace(/\s/g, '')
 

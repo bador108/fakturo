@@ -6,6 +6,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Escapuje uživatelský text před vložením do HTML (emaily, PDF šablony) — brání HTML injection. */
+export function escapeHtml(v: unknown): string {
+  return String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 /**
  * Generuje výchozí číslo faktury (např. 20260001) nebo inkrementuje poslední číslo
  */

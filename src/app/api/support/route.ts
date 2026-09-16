@@ -1,13 +1,19 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { escapeHtml as esc } from '@/lib/utils'
 
 export async function POST(req: Request) {
   const { userId } = await auth()
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { subject, message, type } = await req.json()
-  if (!subject || !message) return NextResponse.json({ error: 'Chybí předmět nebo zpráva' }, { status: 400 })
+  if (!subject || !message || typeof subject !== 'string' || typeof message !== 'string') {
+    return NextResponse.json({ error: 'Chybí předmět nebo zpráva' }, { status: 400 })
+  }
+  if (subject.length > 200 || message.length > 5000) {
+    return NextResponse.json({ error: 'Text je příliš dlouhý.' }, { status: 400 })
+  }
 
   const user = await currentUser()
   const userEmail = user?.emailAddresses[0]?.emailAddress
@@ -32,10 +38,10 @@ export async function POST(req: Request) {
       subject: `[${typeLabel}] ${subject}`,
       html: `
         <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
-          <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">${typeLabel}</h2>
-          <p style="color: #64748b; font-size: 13px; margin-bottom: 4px;">Předmět: <strong>${subject}</strong></p>
-          ${userEmail ? `<p style="color: #94a3b8; font-size: 12px; margin-bottom: 20px;">Od: ${userEmail}</p>` : ''}
-          <div style="background: #f8fafc; border-radius: 8px; padding: 16px; font-size: 14px; white-space: pre-wrap;">${message}</div>
+          <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">${esc(typeLabel)}</h2>
+          <p style="color: #64748b; font-size: 13px; margin-bottom: 4px;">Předmět: <strong>${esc(subject)}</strong></p>
+          ${userEmail ? `<p style="color: #94a3b8; font-size: 12px; margin-bottom: 20px;">Od: ${esc(userEmail)}</p>` : ''}
+          <div style="background: #f8fafc; border-radius: 8px; padding: 16px; font-size: 14px; white-space: pre-wrap;">${esc(message)}</div>
         </div>
       `,
     })
