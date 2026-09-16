@@ -55,7 +55,7 @@ export default function PravidelneFacturacePage() {
           ✓ Součást Start a Pro plánu
         </div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 860 }}>
-          Vystav fakturu jednou. Posílej ji každý měsíc automaticky.
+          Vystav fakturu jednou<br />Posílej ji každý měsíc automaticky
         </h1>
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 40px', maxWidth: 560 }}>
           Ideální pro retainery, předplatné a opakované zakázky. Jednou nastavíš, pak se staráš o práci — ne o papírování.
@@ -97,7 +97,7 @@ export default function PravidelneFacturacePage() {
       <section style={{ ...cont, padding: '96px 32px' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Jak to funguje</div>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Tři kroky, pak klid</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Tři kroky a pak klid</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 28 }}>
           {steps.map(step => (

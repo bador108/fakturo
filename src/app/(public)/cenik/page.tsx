@@ -32,7 +32,7 @@ export default function CenikPage() {
       <section style={{ ...cont, padding: '96px 32px 72px', textAlign: 'center' }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Ceník</div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 20px', maxWidth: 760 }}>
-          Jednoduché ceny. Žádná překvapení.
+          Jednoduché ceny<br />Žádná překvapení
         </h1>
         <p style={{ fontSize: 18, color: C.muted, margin: '0 auto', maxWidth: 480, lineHeight: 1.6 }}>
           Plať měsíčně, zruš kdykoliv. Bez závazků. Začni zdarma.

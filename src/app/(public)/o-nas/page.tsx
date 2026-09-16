@@ -49,7 +49,7 @@ export default function ONasPage() {
         <div style={{ maxWidth: 760 }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>O nás</div>
           <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 0 28px' }}>
-            Fakturace, jak má vypadat v roce 2026.
+            Fakturace jak má vypadat v roce 2026
           </h1>
           <p style={{ fontSize: 19, lineHeight: 1.65, color: C.muted, margin: '0 0 20px', maxWidth: 620 }}>
             Fakturo vzniklo ze frustrace. Existující fakturační nástroje jsou buď příliš složité, příliš drahé, nebo příliš ošklivé. My věříme, že to jde lépe.
@@ -64,7 +64,7 @@ export default function ONasPage() {
       <section style={{ ...cont, padding: '96px 32px' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Naše hodnoty</div>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Čtyři principy, kterými se řídíme</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Čtyři principy kterými se řídíme</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
           {principles.map(p => (

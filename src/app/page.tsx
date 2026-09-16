@@ -88,7 +88,7 @@ function Hero({ userId }: { userId: string | null }) {
       }} />
       <div style={{ ...cont, textAlign: 'center', position: 'relative' }}>
         <h1 style={{ ...disp, fontSize: 'clamp(2.5rem, 5.5vw, 4.75rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 900 }}>
-          Faktura za <span style={{ color: C.primary }}>30 vteřin.</span><br />Ne za 30 minut.
+          Faktura za <span style={{ color: C.primary }}>30 vteřin</span><br />Ne za 30 minut
         </h1>
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 36px', maxWidth: 580 }}>
           Vystavíš fakturu za půl minutu. Systém sám hlídá platby a posílá upomínky. Pro OSVČ a freelancery, kteří nechtějí trávit čas v účetním systému.
@@ -200,12 +200,12 @@ function Features() {
     <section id="features" style={{ ...cont, padding: '32px 32px 64px' }}>
       <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 24px' }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Funkce</div>
-        <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2 }}>Méně klikání, víc tvojí práce.</h2>
+        <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2 }}>Méně klikání víc tvojí práce</h2>
         <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Vše, co OSVČ potřebuje k profesionální fakturaci. Nic, co nepotřebuje.</p>
       </div>
-      <FeatureRow tag="Rychlost" title="Vystav fakturu za 30 vteřin." text="Šablony, automatické vyplnění z IČO, autocomplete klientů a sazeb. Pamatuje si tvoje pracovní zvyky a nabízí to, co skutečně používáš." reverse><InvoiceMock /></FeatureRow>
-      <FeatureRow tag="Banka" title="Platby se párují automaticky." text="Propojíš účet a Fakturo samo pozná, která platba patří ke které faktuře. Když přijde platba, faktura se sama označí jako zaplacená."><BankMock /></FeatureRow>
-      <FeatureRow tag="Automatizace" title="Pravidelné fakturace bez práce." text="Měsíční retainer s klientem? Nastav opakování — Fakturo vystaví a pošle fakturu samo. Včetně EU faktur s VIES." reverse><AutoMock /></FeatureRow>
+      <FeatureRow tag="Rychlost" title="Vystav fakturu za 30 vteřin" text="Šablony, automatické vyplnění z IČO, autocomplete klientů a sazeb. Pamatuje si tvoje pracovní zvyky a nabízí to, co skutečně používáš." reverse><InvoiceMock /></FeatureRow>
+      <FeatureRow tag="Banka" title="Platby se párují automaticky" text="Propojíš účet a Fakturo samo pozná, která platba patří ke které faktuře. Když přijde platba, faktura se sama označí jako zaplacená."><BankMock /></FeatureRow>
+      <FeatureRow tag="Automatizace" title="Pravidelné fakturace bez práce" text="Měsíční retainer s klientem? Nastav opakování — Fakturo vystaví a pošle fakturu samo. Včetně EU faktur s VIES." reverse><AutoMock /></FeatureRow>
     </section>
   )
 }
@@ -251,7 +251,7 @@ function FAQ() {
     <section id="faq" style={{ ...cont, padding: '32px 32px 80px', maxWidth: 880 }}>
       <div style={{ textAlign: 'center', marginBottom: 48 }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>FAQ</div>
-        <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Časté otázky.</h2>
+        <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Časté otázky</h2>
       </div>
       {items.map(([q,a],i) => (
         <details key={i} style={{ borderTop: `1px solid ${C.border}`, borderBottom: i===items.length-1 ? `1px solid ${C.border}` : 'none', padding: '20px 0' }}>
@@ -272,7 +272,7 @@ function FeatureShowcaseSection() {
       <div style={{ ...cont, position: 'relative' }}>
         <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 56px' }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Appka zevnitř</div>
-          <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Žádné mockupy. Skutečná appka.</h2>
+          <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Žádné mockupy — skutečná appka</h2>
           <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturo zevnitř — přímo ze živého provozu.</p>
         </div>
         <FeatureShowcase />
@@ -305,7 +305,7 @@ function CTA({ userId }: { userId: string | null }) {
       <div style={{ maxWidth: 1180, margin: '0 auto', background: C.bgDark, color: C.bg, borderRadius: 24, padding: '72px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)', width: 800, height: 600, background: `radial-gradient(ellipse, ${C.primary}33, transparent 70%)`, filter: 'blur(40px)' }} />
         <div style={{ position: 'relative' }}>
-          <h2 style={{ ...disp, fontSize: 'clamp(2rem,4.5vw,3.5rem)', margin: 0, marginBottom: 16, lineHeight: 1.05, letterSpacing: -2, color: C.bg }}>Vystav první fakturu ještě dnes.</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(2rem,4.5vw,3.5rem)', margin: 0, marginBottom: 16, lineHeight: 1.05, letterSpacing: -2, color: C.bg }}>Vystav první fakturu ještě dnes</h2>
           <p style={{ fontSize: 17, opacity: 0.7, marginBottom: 32, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.55 }}>14 dní zdarma, bez kreditní karty. Žádný závazek. Žádné překvapení.</p>
           <Link href={userId ? '/dashboard' : '/sign-up'} style={{ background: C.bg, color: C.fg, padding: '14px 26px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>Začít zdarma →</Link>
         </div>

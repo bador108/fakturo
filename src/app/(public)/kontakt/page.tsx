@@ -24,7 +24,7 @@ export default function KontaktPage() {
         <div style={{ maxWidth: 640 }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Kontakt</div>
           <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 0 24px' }}>
-            Ozvi se nám.
+            Ozvi se nám
           </h1>
           <p style={{ fontSize: 18, lineHeight: 1.65, color: C.muted, margin: 0 }}>
             Máš otázku, zpětnou vazbu nebo narazil jsi na problém? Ozveme se co nejdřív.

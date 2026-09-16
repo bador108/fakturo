@@ -105,7 +105,7 @@ export default function FunkcePage() {
       <section style={{ ...cont, padding: '96px 32px 80px', textAlign: 'center' }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Funkce</div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 860 }}>
-          Vše, co potřebuješ pro fakturaci. Nic navíc.
+          Vše co potřebuješ pro fakturaci<br />Nic navíc
         </h1>
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 40px', maxWidth: 560 }}>
           Fakturo je postavené tak, abys vystavil fakturu za 30 sekund — ne za 30 minut.
@@ -154,7 +154,7 @@ export default function FunkcePage() {
           borderRadius: 20, padding: '64px 48px', textAlign: 'center',
         }}>
           <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px', letterSpacing: -1.5 }}>
-            Začni zdarma.
+            Začni zdarma
           </h2>
           <p style={{ fontSize: 16, color: C.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
             Žádná platební karta, registrace za minutu.
