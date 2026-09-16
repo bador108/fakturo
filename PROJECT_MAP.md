@@ -20,7 +20,9 @@ Generováno z reálného stavu repa + živé Supabase schéma (ne z paměti/doha
 ## Route mapa
 
 ### Veřejné (`src/app/(public)/`) — marketing/info stránky
-`funkce`, `cenik`, `o-nas`, `kontakt`, `blog`, `reference`, `napoveda/[category]/[article]`, `gdpr`, `obchodni-podminky`, `stav-sluzby`, `pravidelne-fakturace`, `api-developers`
+`funkce`, `cenik`, `o-nas`, `kontakt`, `gdpr`, `obchodni-podminky`, `pravidelne-fakturace`
+
+(`blog`, `reference`, `napoveda/[category]/[article]`, `stav-sluzby`, `api-developers` byly v týhle mapě zmíněný, ale ve skutečnosti neexistujou — smazáno, ať mapa neuvádí do omylu.)
 
 `bezpecnost` odstraněna (nebyla legálně vyžadovaná, jen marketing trust page).
 

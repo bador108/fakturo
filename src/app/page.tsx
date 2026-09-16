@@ -13,6 +13,12 @@ import { Reveal } from '@/components/Reveal'
 export const metadata: Metadata = {
   title: 'Fakturo – faktura za 30 vteřin | appka pro OSVČ',
   description: 'Vystav fakturu za 30 vteřin, ne za 30 minut. Fakturo hlídá platby a posílá upomínky za tebe. 5 faktur měsíčně zdarma, bez karty.',
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: 'Fakturo – faktura za 30 vteřin',
+    description: 'Vystav fakturu za 30 vteřin, ne za 30 minut. Fakturo hlídá platby a posílá upomínky za tebe. 5 faktur měsíčně zdarma, bez karty.',
+    url: '/',
+  },
 }
 
 const C = {
@@ -220,19 +226,21 @@ function FeatureGrid() {
   )
 }
 
+const faqItems: [string, string][] = [
+  ['Můžu zrušit kdykoliv?','Ano. Žádná výpovědní doba. Klikneš v nastavení a hotovo. Data si stáhneš v PDF i CSV.'],
+  ['Fakturo je nové — proč bych mu měl věřit?','Fakturo je nové — a je to tak vidět. Nemá desítky let starý kód ani rozhraní z roku 2012. Stavíme ho přímo pro aktuální českou legislativu. Riziko si nemusíš brát na víru: začneš zdarma, bez karty, a data si kdykoliv odneseš. Když ti to nesedne, nic tě nedrží.'],
+  ['Funguje to s českou legislativou?','Plátce i neplátce DPH, OSS, reverse charge. Vše, co OSVČ v ČR potřebuje.'],
+  ['Umí Fakturo počítat DPH?','Jasně. U každé položky vybereš sazbu (0 %, 12 % nebo 21 %), Fakturo si samo spočítá základ i DPH a rozpad na faktuře. Sazbu ti dokonce umí i navrhnout podle toho, co fakturuješ.'],
+  ['Jak funguje platba přes QR kód?','Každá faktura má vygenerovaný QR kód se všemi platebními údaji (formát SPAYD). Klient ho naskenuje bankovní appkou v mobilu a částka i variabilní symbol se vyplní samy — nic nepřepisuje.'],
+  ['Co když už používám něco jiného?','Pošli nám export (Fakturoid, iDoklad, Money) a data převedeme zdarma.'],
+  ['Co když mám účetní?','Stáhne si měsíční podklady jedním kliknutím — XML pro Pohodu i jiné programy.'],
+  ['Funguje to v EU?','Cizí měny, VIES validace, OSS pro digitální služby, reverse charge.'],
+  ['Jsou moje data v bezpečí?','Šifrování v klidu i přenosu, GDPR, 2FA, denní zálohy. Servery v EU.'],
+  ['Co se stane s mými daty, když appku přestanu používat?','Nic — jsou pořád tvoje. Export všech faktur do PDF nebo CSV je součástí i plánu zdarma, takže tě appka nikdy nedrží jako rukojmí.'],
+]
+
 function FAQ() {
-  const items: [string,string][] = [
-    ['Můžu zrušit kdykoliv?','Ano. Žádná výpovědní doba. Klikneš v nastavení a hotovo. Data si stáhneš v PDF i CSV.'],
-    ['Fakturo je nové — proč bych mu měl věřit?','Fakturo je nové — a je to tak vidět. Nemá desítky let starý kód ani rozhraní z roku 2012. Stavíme ho přímo pro aktuální českou legislativu. Riziko si nemusíš brát na víru: začneš zdarma, bez karty, a data si kdykoliv odneseš. Když ti to nesedne, nic tě nedrží.'],
-    ['Funguje to s českou legislativou?','Plátce i neplátce DPH, OSS, reverse charge. Vše, co OSVČ v ČR potřebuje.'],
-    ['Umí Fakturo počítat DPH?','Jasně. U každé položky vybereš sazbu (0 %, 12 % nebo 21 %), Fakturo si samo spočítá základ i DPH a rozpad na faktuře. Sazbu ti dokonce umí i navrhnout podle toho, co fakturuješ.'],
-    ['Jak funguje platba přes QR kód?','Každá faktura má vygenerovaný QR kód se všemi platebními údaji (formát SPAYD). Klient ho naskenuje bankovní appkou v mobilu a částka i variabilní symbol se vyplní samy — nic nepřepisuje.'],
-    ['Co když už používám něco jiného?','Pošli nám export (Fakturoid, iDoklad, Money) a data převedeme zdarma.'],
-    ['Co když mám účetní?','Stáhne si měsíční podklady jedním kliknutím — XML pro Pohodu i jiné programy.'],
-    ['Funguje to v EU?','Cizí měny, VIES validace, OSS pro digitální služby, reverse charge.'],
-    ['Jsou moje data v bezpečí?','Šifrování v klidu i přenosu, GDPR, 2FA, denní zálohy. Servery v EU.'],
-    ['Co se stane s mými daty, když appku přestanu používat?','Nic — jsou pořád tvoje. Export všech faktur do PDF nebo CSV je součástí i plánu zdarma, takže tě appka nikdy nedrží jako rukojmí.'],
-  ]
+  const items = faqItems
   return (
     <section id="faq" style={{ ...cont, padding: '32px 32px 80px', maxWidth: 880 }}>
       <div style={{ textAlign: 'center', marginBottom: 48 }}>
@@ -333,13 +341,40 @@ function Footer() {
   )
 }
 
+const softwareJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Fakturo',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  url: 'https://fakturo.online',
+  description: 'Online fakturace pro OSVČ a freelancery v Česku. Faktura za 30 vteřin, automatické párování plateb, QR platby, opakující se faktury.',
+  offers: [
+    { '@type': 'Offer', name: 'Zdarma', price: '0', priceCurrency: 'CZK' },
+    { '@type': 'Offer', name: 'Start', price: '99', priceCurrency: 'CZK' },
+    { '@type': 'Offer', name: 'Pro', price: '249', priceCurrency: 'CZK' },
+  ],
+}
+
 export default async function HomePage({ searchParams }: { searchParams: Promise<{ home?: string }> }) {
   const { userId } = await auth()
   const { home } = await searchParams
   if (userId && !home) redirect('/dashboard')
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map(([q, a]) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  }
+
   return (
     <div style={pageStyle}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <Nav userId={userId} />
       <Hero userId={userId} />
       <Reveal>

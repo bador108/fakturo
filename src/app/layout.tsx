@@ -8,8 +8,18 @@ const inter = Inter({ subsets: ['latin', 'latin-ext'] })
 const dmSans = DM_Sans({ subsets: ['latin', 'latin-ext'], variable: '--font-dm-sans', display: 'swap' })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://fakturo.online'),
   title: 'Fakturo – Online fakturace',
   description: 'Profesionální fakturace pro freelancery a malé firmy.',
+  openGraph: {
+    siteName: 'Fakturo',
+    locale: 'cs_CZ',
+    type: 'website',
+    images: [{ url: '/screenshots/dashboard.png', width: 1200, height: 836, alt: 'Fakturo — přehled dashboardu' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 }
 
 export const viewport: Viewport = {
