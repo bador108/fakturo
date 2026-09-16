@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
 import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
 import { PricingSection } from '@/components/PricingSection'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PhoneMockup } from '@/components/PhoneMockup'
@@ -413,10 +412,8 @@ const softwareJsonLd = {
   ],
 }
 
-export default async function HomePage({ searchParams }: { searchParams: Promise<{ home?: string }> }) {
+export default async function HomePage() {
   const { userId } = await auth()
-  const { home } = await searchParams
-  if (userId && !home) redirect('/dashboard')
 
   const faqJsonLd = {
     '@context': 'https://schema.org',
