@@ -116,16 +116,16 @@ const DEFAULT_LAYOUT: ResponsiveLayouts = {
 }
 
 const DEFAULT_COLORS: Record<string, string> = {
-  'stat-revenue': '#4F46E5',
+  'stat-revenue': '#16a34a',
   'stat-expenses': '#f43f5e',
   'stat-vat': '#d97706',
   'stat-pending': '#ef4444',
   'stat-clients': '#0ea5e9',
   'stat-avg-invoice': '#8b5cf6',
   'stat-margin': '#10b981',
-  'chart-revenue': '#6366f1',
-  'chart-weekly': '#4F46E5',
-  'widget-goal': '#4F46E5',
+  'chart-revenue': '#16a34a',
+  'chart-weekly': '#16a34a',
+  'widget-goal': '#16a34a',
 }
 
 const QUOTES = [
@@ -227,8 +227,8 @@ export function FinanceDashboardGrid(props: Props) {
       {/* Softer, animated drop placeholder instead of a stark grid box */}
       <style>{`
         .react-grid-item.react-grid-placeholder {
-          background: rgba(79, 70, 229, 0.12) !important;
-          border: 1.5px dashed rgba(79, 70, 229, 0.4);
+          background: rgba(22, 163, 74, 0.12) !important;
+          border: 1.5px dashed rgba(22, 163, 74, 0.4);
           border-radius: 16px;
           transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
           opacity: 1;
