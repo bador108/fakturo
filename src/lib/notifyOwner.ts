@@ -1,15 +1,19 @@
 import { Resend } from 'resend'
-import { OWNER_EMAIL } from '@/lib/stripe'
 import { escapeHtml as esc } from '@/lib/utils'
 
-/** Best-effort emailová notifikace vlastníkovi o nové zprávě v inbox_messages. Nikdy nevyhodí chybu. */
+// Resend účet běží v testovacím módu (doména fakturo.online zatím není v Resendu
+// ověřená) — v tomhle módu Resend povolí posílat jen na email, kterým je Resend
+// účet zaregistrovaný. Tenhle musí přesně sedět, jinak celý request spadne na 403.
+const SUPPORT_NOTIFY_EMAIL = 'fakturosupport@gmail.com'
+
+/** Best-effort emailová notifikace o nové zprávě v inbox_messages. Nikdy nevyhodí chybu. */
 export async function notifyOwner(subject: string, fromLabel: string, message: string) {
   if (!process.env.RESEND_API_KEY) return
   try {
     const resend = new Resend(process.env.RESEND_API_KEY)
     await resend.emails.send({
       from: 'Fakturo <info@fakturo.online>',
-      to: OWNER_EMAIL,
+      to: SUPPORT_NOTIFY_EMAIL,
       subject: `[Fakturo] ${subject}`,
       html: `
         <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
