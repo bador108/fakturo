@@ -55,7 +55,7 @@ export default function GdprPage() {
       <div style={{ ...cont, padding: '0 32px 96px' }}>
 
         <Section title="1. Správce osobních údajů">
-          <p>Správcem osobních údajů je [DOPLNIT: jméno/název, IČO, sídlo provozovatele], provozovatel služby Fakturo (<strong>fakturo.online</strong>), Česká republika.</p>
+          <p>Správcem osobních údajů je Jiří Zahrádka, IČO 29695759, fyzická osoba podnikající dle živnostenského zákona, provozovatel služby Fakturo (<strong>fakturo.online</strong>), Česká republika.</p>
           <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none' }}>support@fakturo.online</a></p>
         </Section>
 

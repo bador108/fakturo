@@ -55,7 +55,7 @@ export default function ObchodniPodminkyPage() {
       <div style={{ ...cont, padding: '0 32px 96px' }}>
 
         <Section title="1. Poskytovatel a úvodní ustanovení">
-          <p>Provozovatelem služby Fakturo (<strong>fakturo.online</strong>) je [DOPLNIT: jméno/název, IČO, sídlo, zápis v živnostenském/obchodním rejstříku] (dále jen „Poskytovatel“).</p>
+          <p>Provozovatelem služby Fakturo (<strong>fakturo.online</strong>) je Jiří Zahrádka, IČO 29695759, fyzická osoba podnikající dle živnostenského zákona (dále jen „Poskytovatel“). Sídlo je dohledatelné ve veřejném živnostenském rejstříku.</p>
           <p style={{ marginTop: 12 }}>Tyto obchodní podmínky upravují vzájemná práva a povinnosti Poskytovatele a osoby, která užívá službu Fakturo (dále jen „Uživatel“). Registrací účtu nebo užíváním služby Uživatel vyjadřuje souhlas s těmito podmínkami.</p>
           <p style={{ marginTop: 12 }}>Kontaktní email: <a href="mailto:support@fakturo.online" style={{ color: C.primary, textDecoration: 'none' }}>support@fakturo.online</a></p>
         </Section>

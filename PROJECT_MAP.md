@@ -24,7 +24,7 @@ Generováno z reálného stavu repa + živé Supabase schéma (ne z paměti/doha
 
 `bezpecnost` odstraněna (nebyla legálně vyžadovaná, jen marketing trust page).
 
-**Pozor:** `gdpr/page.tsx` i `obchodni-podminky/page.tsx` mají `[DOPLNIT: ...]` placeholder místo identity provozovatele (čeká se na rozhodnutí, jestli tam má být Bador nebo kamarádovo OSVČ — viz ownership transfer). **Nesmí jít takhle do produkce.**
+Provozovatel v `gdpr/page.tsx` i `obchodni-podminky/page.tsx`: Jiří Zahrádka, IČO 29695759 (kamarádovo OSVČ, viz ownership transfer plan) — Bador už tam není zmíněn.
 
 ### Landing
 - `src/app/page.tsx` — hlavní landing page (root `/`)
