@@ -8,7 +8,7 @@ export const OWNER_EMAIL = 'vaclav.urbanec2@gmail.com'
 // ručně přidělené účty). Funguje i pro email, co se ještě nikdy nezaregistroval —
 // jakmile se přihlásí, ensureUser() mu založí řádek v `users`, ale getEffectivePlan()
 // stejně vrátí 'pro', protože kontrola jede přes email, ne přes uloženou hodnotu plan.
-const PRO_OVERRIDE_EMAILS = [OWNER_EMAIL, 'jirizahradka95@gmail.com']
+const PRO_OVERRIDE_EMAILS = [OWNER_EMAIL, 'jirizahradka95@gmail.com', 'vaclav.urbanec3@gmail.com']
 
 export function isProOverride(email?: string | null): boolean {
   return !!email && PRO_OVERRIDE_EMAILS.includes(email)

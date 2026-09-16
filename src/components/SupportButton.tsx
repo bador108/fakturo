@@ -189,7 +189,7 @@ export function SupportButton() {
         className="h-12 w-12 bg-brand hover:bg-brand-dark text-white rounded-full shadow-lg shadow-brand-soft flex items-center justify-center transition"
         title="Podpora"
       >
-        {open ? <X className="h-5 w-5" /> : <Image src="/icon.png" alt="Podpora" width={24} height={24} className="rounded" />}
+        {open ? <X className="h-5 w-5" /> : <Image src="/icon.png" alt="Podpora" width={24} height={24} className="brightness-0 invert" />}
       </button>
     </div>
   )
