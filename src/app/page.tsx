@@ -79,10 +79,20 @@ function Nav({ userId }: { userId: string | null }) {
 
 function Hero({ userId }: { userId: string | null }) {
   return (
-    <section style={{ padding: '88px 0 64px' }}>
-      <div style={{ ...cont, textAlign: 'center' }}>
+    <section style={{ padding: '88px 0 64px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{
+        position: 'absolute', top: -180, left: '50%', transform: 'translateX(-50%)',
+        width: 900, height: 560, pointerEvents: 'none',
+        background: `radial-gradient(closest-side, ${C.primary}1f, transparent 72%)`,
+        filter: 'blur(10px)',
+      }} />
+      <div style={{ ...cont, textAlign: 'center', position: 'relative' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px', borderRadius: 999, background: C.primarySoft, fontSize: 13, color: C.primaryDark, fontWeight: 600, marginBottom: 28 }}>
+          <span style={{ width: 6, height: 6, borderRadius: 999, background: C.primary, display: 'block' }} />
+          Fakturace pro OSVČ a freelancery v Česku
+        </div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.5rem, 5.5vw, 4.75rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 900 }}>
-          Faktura za 30 vteřin.<br />Ne za 30 minut.
+          Faktura za <span style={{ color: C.primary }}>30 vteřin.</span><br />Ne za 30 minut.
         </h1>
         <p style={{ fontSize: 19, lineHeight: 1.55, color: C.muted, margin: '0 auto 36px', maxWidth: 580 }}>
           Vystavíš fakturu za půl minutu. Systém sám hlídá platby a posílá upomínky. Pro OSVČ a freelancery, kteří nechtějí trávit čas v účetním systému.
@@ -91,8 +101,8 @@ function Hero({ userId }: { userId: string | null }) {
           <Link href={userId ? '/dashboard' : '/sign-up'} style={{ background: C.fg, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.08)' }}>
             {userId ? 'Přejít do dashboardu →' : 'Začít zdarma — 14 dní'}
           </Link>
-          <Link href="/generator" style={{ background: C.bg, color: C.fg, border: `1px solid ${C.borderStrong}`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke={C.fg} strokeWidth="1.3" /><path d="M5.5 4.5L9.5 7L5.5 9.5V4.5Z" fill={C.fg} /></svg>
+          <Link href="/generator" style={{ background: C.bg, color: C.primaryDark, border: `1px solid ${C.primary}44`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke={C.primary} strokeWidth="1.3" /><path d="M5.5 4.5L9.5 7L5.5 9.5V4.5Z" fill={C.primary} /></svg>
             Podívat se, jak to funguje
           </Link>
         </div>
