@@ -32,9 +32,19 @@ const C = {
 const disp = { letterSpacing: -2, fontWeight: 600 }
 const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
 const pageStyle: React.CSSProperties = {
-  background: C.bg, color: C.fg,
+  background: '#fafaf8', color: C.fg,
   fontFamily: "var(--font-dm-sans), -apple-system, system-ui, sans-serif",
   width: '100%', minHeight: '100%', WebkitFontSmoothing: 'antialiased',
+  position: 'relative',
+}
+const meshBg: React.CSSProperties = {
+  position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
+  background: [
+    `radial-gradient(820px 620px at 8% 0%, ${C.primary}14, transparent 60%)`,
+    `radial-gradient(760px 580px at 96% 8%, ${C.primary}10, transparent 58%)`,
+    `radial-gradient(700px 560px at 50% 100%, ${C.primary}0d, transparent 55%)`,
+    `radial-gradient(640px 520px at 2% 60%, ${C.fg}08, transparent 55%)`,
+  ].join(', '),
 }
 
 
@@ -427,8 +437,10 @@ export default async function HomePage() {
 
   return (
     <div style={pageStyle}>
+      <div style={meshBg} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
       <Nav userId={userId} />
       <Hero userId={userId} />
       <Reveal>
@@ -474,6 +486,7 @@ export default async function HomePage() {
       <Reveal><CTA userId={userId} /></Reveal>
       <Footer />
       <BotcraftWidget botId="59438a4b-6478-4993-b935-081e4a7d5aea" />
+      </div>
     </div>
   )
 }
