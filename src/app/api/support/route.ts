@@ -34,7 +34,6 @@ export async function POST(req: Request) {
     const { error } = await resend.emails.send({
       from: 'Fakturo <info@fakturo.online>',
       to: 'support@fakturo.online',
-      replyTo: userEmail ?? 'support@fakturo.online',
       subject: `[${typeLabel}] ${subject}`,
       html: `
         <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
