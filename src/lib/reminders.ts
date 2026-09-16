@@ -2,6 +2,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { getEffectivePlan } from '@/lib/stripe'
 import { isPro } from '@/lib/plan'
 import { escapeHtml as esc } from '@/lib/utils'
+import { renderBrandedEmail } from '@/lib/emailTemplate'
 import { Resend } from 'resend'
 
 /** Projde odeslané faktury blízko/po splatnosti a pošle upomínky klientům (Pro funkce). */
@@ -13,7 +14,7 @@ export async function runReminders(): Promise<{ sent: number }> {
 
   const { data: invoices } = await db
     .from('invoices')
-    .select('id, invoice_number, client_name, client_email, total, currency, due_date, user_id')
+    .select('id, invoice_number, client_name, client_email, total, currency, due_date, user_id, sender_name, sender_logo_url')
     .eq('status', 'sent')
     .lte('due_date', new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10))
 
@@ -60,24 +61,25 @@ export async function runReminders(): Promise<{ sent: number }> {
       to: inv.client_email,
       replyTo: user.email,
       subject,
-      html: `
-        <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#1e293b">
-          <h2 style="font-size:18px;font-weight:700;margin-bottom:8px">${esc(subject)}</h2>
-          <p style="color:#64748b;font-size:14px;margin-bottom:24px">
+      html: renderBrandedEmail({
+        senderName: inv.sender_name,
+        senderLogoUrl: inv.sender_logo_url,
+        bodyHtml: `
+          <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#0c0c0e">${esc(subject)}</h2>
+          <p style="color:#64748b;font-size:14px;margin:0 0 24px;line-height:1.55">
             Dobrý den,<br/>
             ${isOverdue
-              ? `upozorňujeme vás, že faktura č. <strong>${esc(inv.invoice_number)}</strong> od <strong>${inv.client_name ? 'nás' : ''}</strong> je již ${Math.abs(diffDays)} dní po datu splatnosti.`
-              : `připomínáme vám, že faktura č. <strong>${esc(inv.invoice_number)}</strong> bude splatná za ${diffDays} dní.`
+              ? `upozorňujeme vás, že faktura č. <strong>${esc(inv.invoice_number)}</strong> od <strong>${esc(inv.sender_name)}</strong> je již ${Math.abs(diffDays)} dní po datu splatnosti.`
+              : `připomínáme vám, že faktura č. <strong>${esc(inv.invoice_number)}</strong> od <strong>${esc(inv.sender_name)}</strong> bude splatná za ${diffDays} dní.`
             }
           </p>
-          <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:0">
             <tr><td style="color:#64748b;padding:4px 0">Číslo faktury</td><td style="text-align:right;font-weight:600">${esc(inv.invoice_number)}</td></tr>
             <tr><td style="color:#64748b;padding:4px 0">Datum splatnosti</td><td style="text-align:right;font-weight:600">${esc(inv.due_date)}</td></tr>
             <tr><td style="color:#64748b;padding:4px 0">K úhradě</td><td style="text-align:right;font-weight:700;font-size:16px;color:#dc2626">${new Intl.NumberFormat('cs-CZ',{style:'currency',currency:inv.currency}).format(inv.total)}</td></tr>
           </table>
-          <p style="color:#94a3b8;font-size:12px">Vystaveno přes <a href="https://fakturo.online" style="color:#4f46e5">Fakturo</a>.</p>
-        </div>
-      `,
+        `,
+      }),
     })
 
     if (!mailErr) {

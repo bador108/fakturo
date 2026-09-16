@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { renderInvoiceHtml } from '@/lib/invoiceHtml'
 import { renderPdfFromHtml } from '@/lib/pdfBrowser'
+import { renderBrandedEmail } from '@/lib/emailTemplate'
 import { escapeHtml as esc } from '@/lib/utils'
 import { Resend } from 'resend'
 import QRCode from 'qrcode'
@@ -64,28 +65,30 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       to: email,
       replyTo: invoice.sender_email || undefined,
       subject: `Faktura č. ${invoice.invoice_number} od ${invoice.sender_name}`,
-      html: `
-        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; color: #1e293b;">
-          <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Faktura č. ${esc(invoice.invoice_number)}</h2>
-          <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">
+      html: renderBrandedEmail({
+        senderName: invoice.sender_name,
+        senderLogoUrl: invoice.sender_logo_url,
+        bodyHtml: `
+          <h2 style="font-size:20px;font-weight:700;margin:0 0 8px;color:#0c0c0e">Faktura č. ${esc(invoice.invoice_number)}</h2>
+          <p style="color:#64748b;font-size:14px;margin:0 0 24px;line-height:1.55">
             Dobrý den,<br/>
             zasíláme vám fakturu od <strong>${esc(invoice.sender_name)}</strong>.
           </p>
-          <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px">
             <tr><td style="color:#64748b;padding:4px 0">Číslo faktury</td><td style="text-align:right;font-weight:600">${esc(invoice.invoice_number)}</td></tr>
             <tr><td style="color:#64748b;padding:4px 0">Datum splatnosti</td><td style="text-align:right;font-weight:600">${esc(invoice.due_date)}</td></tr>
-            <tr><td style="color:#64748b;padding:4px 0">K úhradě</td><td style="text-align:right;font-weight:700;font-size:16px;color:#4f46e5">${new Intl.NumberFormat('cs-CZ',{style:'currency',currency:invoice.currency}).format(invoice.total)}</td></tr>
+            <tr><td style="color:#64748b;padding:4px 0">K úhradě</td><td style="text-align:right;font-weight:700;font-size:16px;color:#16a34a">${new Intl.NumberFormat('cs-CZ',{style:'currency',currency:invoice.currency}).format(invoice.total)}</td></tr>
           </table>
           ${paymentUrl ? `
           <div style="text-align:center;margin:24px 0">
-            <a href="${paymentUrl}" style="display:inline-block;background:#4f46e5;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">
+            <a href="${paymentUrl}" style="display:inline-block;background:#16a34a;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">
               Zaplatit online kartou
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:8px">Bezpečná platba kartou přes Stripe</p>
           </div>` : ''}
-          <p style="color:#94a3b8;font-size:12px;">Faktura je přiložena jako PDF. Vystaveno přes <a href="https://fakturo.online" style="color:#4f46e5">Fakturo</a>.</p>
-        </div>
-      `,
+          <p style="color:#94a3b8;font-size:12px;margin:0">Faktura je přiložena jako PDF.</p>
+        `,
+      }),
       attachments: [
         {
           filename: `faktura-${invoice.invoice_number}.pdf`,
