@@ -115,7 +115,7 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-5xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Klienti</h1>
@@ -144,73 +144,69 @@ export function ClientsManager({ initialClients }: { initialClients: Client[] })
       )}
 
       {/* List */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center py-20">
-            <div className="h-16 w-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
-              <Users className="h-8 w-8 text-slate-300" />
-            </div>
-            <p className="text-sm font-medium text-slate-500">
-              {search ? 'Žádný klient nenalezen' : 'Zatím žádní klienti'}
-            </p>
-            {!search && (
-              <button onClick={openAdd} className="mt-4 text-sm text-brand hover:underline">
-                + Přidat prvního klienta
-              </button>
-            )}
+      {filtered.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center py-20">
+          <div className="h-16 w-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
+            <Users className="h-8 w-8 text-slate-300" />
           </div>
-        ) : (
-          <div className="divide-y divide-slate-50">
-            {filtered.map(c => (
-              <div key={c.id} className="flex items-center gap-4 px-5 py-4 hover:bg-slate-50/50 transition group">
+          <p className="text-sm font-medium text-slate-500">
+            {search ? 'Žádný klient nenalezen' : 'Zatím žádní klienti'}
+          </p>
+          {!search && (
+            <button onClick={openAdd} className="mt-4 text-sm text-brand hover:underline">
+              + Přidat prvního klienta
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map(c => (
+            <div key={c.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 hover:shadow-md transition group">
+              <div className="flex items-start justify-between mb-3">
                 <div className="h-10 w-10 bg-brand-soft rounded-xl flex items-center justify-center shrink-0 text-brand font-bold text-sm">
                   {c.name.slice(0, 1).toUpperCase()}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-slate-800 text-sm truncate">{c.name}</p>
-                  <div className="flex items-center gap-3 mt-0.5">
-                    {c.ico && (
-                      <span className="text-xs text-slate-400 flex items-center gap-1">
-                        <Building2 className="h-3 w-3" />IČO {c.ico}
-                      </span>
-                    )}
-                    {c.email && (
-                      <span className="text-xs text-slate-400 flex items-center gap-1">
-                        <Mail className="h-3 w-3" />{c.email}
-                      </span>
-                    )}
-                    {c.city && (
-                      <span className="text-xs text-slate-400">{c.city}</span>
-                    )}
-                  </div>
-                </div>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
-                  <Link
-                    href={`/clients/${encodeURIComponent(c.name)}`}
-                    className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition text-xs font-medium px-2.5"
-                  >
-                    Faktury
-                  </Link>
                   <button
                     onClick={() => openEdit(c)}
                     className="p-1.5 text-slate-400 hover:text-brand hover:bg-brand-soft rounded-lg transition"
                     title="Upravit"
                   >
-                    <Pencil className="h-4 w-4" />
+                    <Pencil className="h-3.5 w-3.5" />
                   </button>
                   <button
                     onClick={() => setDeleteId(c.id)}
                     className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
                     title="Smazat"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+              <p className="font-medium text-slate-800 text-sm truncate">{c.name}</p>
+              <div className="mt-1.5 space-y-1">
+                {c.ico && (
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    <Building2 className="h-3 w-3 shrink-0" />IČO {c.ico}
+                  </p>
+                )}
+                {c.email && (
+                  <p className="text-xs text-slate-400 flex items-center gap-1 truncate">
+                    <Mail className="h-3 w-3 shrink-0" />{c.email}
+                  </p>
+                )}
+                {c.city && <p className="text-xs text-slate-400">{c.city}</p>}
+              </div>
+              <Link
+                href={`/clients/${encodeURIComponent(c.name)}`}
+                className="mt-3 inline-block text-xs font-medium text-brand hover:underline"
+              >
+                Faktury →
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Add/Edit modal */}
       {modal && (

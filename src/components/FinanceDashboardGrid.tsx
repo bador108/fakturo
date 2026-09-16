@@ -406,7 +406,9 @@ function WeeklyBarChart({ data, color = '#4F46E5' }: { data: { label: string; re
         const x = i * (barW + gap)
         return (
           <g key={i}>
-            <rect x={x} y={H - h} width={barW} height={h} rx={4} fill={color} opacity={0.85} />
+            <rect x={x} y={H - h} width={barW} height={h} rx={4} fill={color} opacity={0.85}>
+              <title>{`${d.label}: ${d.revenue.toLocaleString('cs-CZ')} Kč`}</title>
+            </rect>
             <text x={x + barW / 2} y={H + 16} textAnchor="middle" style={{ fontSize: 9, fill: '#94a3b8' }}>{d.label}</text>
           </g>
         )

@@ -46,8 +46,12 @@ export function RevenueExpensesChart({ months, color = '#6366f1' }: { months: Mo
             const eH = Math.max(Math.round((m.expenses / maxVal) * H), m.expenses > 0 ? 3 : 0)
             return (
               <g key={m.label}>
-                <rect x={x} y={H - rH} width={barW} height={rH} rx={3} fill={color} opacity={0.9} />
-                <rect x={x + barW + gap} y={H - eH} width={barW} height={eH} rx={3} fill="#fb7185" opacity={0.85} />
+                <rect x={x} y={H - rH} width={barW} height={rH} rx={3} fill={color} opacity={0.9}>
+                  <title>{`Příjmy ${m.label}: ${m.revenue.toLocaleString('cs-CZ')} Kč`}</title>
+                </rect>
+                <rect x={x + barW + gap} y={H - eH} width={barW} height={eH} rx={3} fill="#fb7185" opacity={0.85}>
+                  <title>{`Výdaje ${m.label}: ${m.expenses.toLocaleString('cs-CZ')} Kč`}</title>
+                </rect>
                 <text x={x + barW + gap / 2} y={H + 18} textAnchor="middle"
                   style={{ fontSize: 10, fill: '#94a3b8', fontFamily: 'inherit' }}>
                   {m.label}
@@ -87,7 +91,9 @@ export function CategoryDonut({ slices }: { slices: CategorySlice[] }) {
     <div className="flex items-center gap-5">
       <svg width={144} height={144} className="shrink-0">
         {paths.map((p, i) => (
-          <path key={i} d={p.d} fill={p.color} opacity={0.9} />
+          <path key={i} d={p.d} fill={p.color} opacity={0.9}>
+            <title>{`${p.label}: ${p.amount.toLocaleString('cs-CZ')} Kč (${Math.round(p.pct * 100)} %)`}</title>
+          </path>
         ))}
         {/* Center hole */}
         <circle cx={cx} cy={cy} r={32} fill="white" />
@@ -135,7 +141,9 @@ export function ProfitSparkline({ months, color = '#6366f1' }: { months: MonthBa
         <polyline points={points} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
         {profits.map((p, i) => (
           <circle key={i} cx={i * step} cy={H - ((p - min) / (max - min)) * H} r={3}
-            fill={p >= 0 ? color : '#fb7185'} />
+            fill={p >= 0 ? color : '#fb7185'}>
+            <title>{`${months[i].label}: ${p >= 0 ? '+' : ''}${p.toLocaleString('cs-CZ')} Kč`}</title>
+          </circle>
         ))}
       </svg>
     </div>
