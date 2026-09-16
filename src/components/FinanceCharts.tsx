@@ -44,8 +44,8 @@ export function RevenueExpensesChart({ months, color = '#6366f1' }: { months: Mo
           Výdaje
         </span>
       </div>
-      <div className="overflow-x-auto">
-        <svg width={W} height={H + 30 + TOP_PAD} className="min-w-full">
+      <div>
+        <svg viewBox={`0 0 ${W} ${H + 30 + TOP_PAD}`} preserveAspectRatio="xMidYMid meet" className="w-full h-auto">
           {/* Grid lines */}
           {[0.25, 0.5, 0.75, 1].map(f => (
             <line key={f} x1={0} x2={W} y1={TOP_PAD + H - H * f} y2={TOP_PAD + H - H * f}

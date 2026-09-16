@@ -69,20 +69,9 @@ export default async function DashboardPage() {
   const overdueCount = invoices.filter(i => i.status === 'sent' && i.due_date < today).length
 
   const header = (
-    <div className="flex flex-wrap items-start justify-between gap-3">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Přehled</h1>
-        <p className="text-sm text-slate-400 mt-0.5">{planLabel}</p>
-      </div>
-      <div className="flex items-center gap-2">
-        <Link
-          href="/invoices/new"
-          className="inline-flex items-center gap-2 bg-brand text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm shadow-brand-soft"
-        >
-          <Plus className="h-4 w-4" />
-          Nová faktura
-        </Link>
-      </div>
+    <div>
+      <h1 className="text-2xl font-semibold text-slate-900">Přehled</h1>
+      <p className="text-sm text-slate-400 mt-0.5">{planLabel}</p>
     </div>
   )
 
