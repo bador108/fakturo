@@ -77,35 +77,6 @@ export default function ONasPage() {
         </div>
       </section>
 
-      {/* Team */}
-      <section style={{ background: C.bgSoft, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, padding: '80px 0' }}>
-        <div style={{ ...cont }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Tým</div>
-            <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', margin: 0, letterSpacing: -1.5 }}>Kdo za tím stojí</h2>
-          </div>
-          <div style={{ maxWidth: 480, margin: '0 auto' }}>
-            <div style={{ padding: 32, borderRadius: 16, background: C.bg, border: `1px solid ${C.border}`, display: 'flex', gap: 24, alignItems: 'flex-start' }}>
-              <div style={{
-                width: 64, height: 64, borderRadius: 999, flexShrink: 0,
-                background: `linear-gradient(135deg, ${C.primary}, #2a47e0)`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#ffffff', fontSize: 24, fontWeight: 700,
-              }}>
-                V
-              </div>
-              <div>
-                <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 4 }}>Václav Urbanec</div>
-                <div style={{ fontSize: 14, color: C.primary, fontWeight: 500, marginBottom: 12 }}>Zakladatel & vývojář</div>
-                <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.65 }}>
-                  Student informatiky a full-stack vývojář. Fakturo stavím proto, že jsem sám potřeboval jednoduché řešení pro fakturaci jako freelancer. Věřím, že software má být rychlý, přehledný a dělat přesně to, co má.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Contact */}
       <section style={{ ...cont, padding: '96px 32px', textAlign: 'center' }}>
         <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px', letterSpacing: -1.5 }}>Chceš se ozvat?</h2>

@@ -69,11 +69,6 @@ function Hero({ userId }: { userId: string | null }) {
   return (
     <section style={{ padding: '88px 0 64px' }}>
       <div style={{ ...cont, textAlign: 'center' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '6px 14px 6px 6px', borderRadius: 999, background: C.bgSoft, border: `1px solid ${C.border}`, fontSize: 13, color: C.fg2, marginBottom: 28, fontWeight: 500 }}>
-          <span style={{ background: C.primary, color: C.bg, padding: '2px 10px', borderRadius: 999, fontSize: 11, fontWeight: 600 }}>Nově</span>
-          Bankovní synchronizace s Fio, ČSOB a KB
-          <span style={{ color: C.muted2 }}>→</span>
-        </div>
         <h1 style={{ ...disp, fontSize: 'clamp(2.5rem, 5.5vw, 4.75rem)', lineHeight: 1.02, letterSpacing: -3, margin: '0 auto 24px', maxWidth: 900 }}>
           Fakturace pro lidi,<br />kteří dělají skutečnou práci.
         </h1>
@@ -281,7 +276,7 @@ function Footer() {
   const cols = [
     { title: 'Produkt', items: [['Funkce','/funkce'],['Ceník','/cenik'],['Pravidelné fakturace','/pravidelne-fakturace']] as [string,string][] },
     { title: 'Společnost', items: [['O nás','/o-nas'],['Kontakt','/kontakt']] as [string,string][] },
-    { title: 'Pomoc', items: [['Bezpečnost','/bezpecnost'],['GDPR','/gdpr']] as [string,string][] },
+    { title: 'Pomoc', items: [['GDPR','/gdpr'],['Obchodní podmínky','/obchodni-podminky']] as [string,string][] },
   ]
   return (
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: '64px 32px 32px', maxWidth: 1280, margin: '0 auto' }}>
@@ -303,7 +298,7 @@ function Footer() {
         <span>© {new Date().getFullYear()} Fakturo · Fakturace pro freelancery</span>
         <div style={{ display: 'flex', gap: 24 }}>
           <Link href="/gdpr" style={{ color: 'inherit', textDecoration: 'none' }}>GDPR</Link>
-          <Link href="/bezpecnost" style={{ color: 'inherit', textDecoration: 'none' }}>Bezpečnost</Link>
+          <Link href="/obchodni-podminky" style={{ color: 'inherit', textDecoration: 'none' }}>Obchodní podmínky</Link>
         </div>
       </div>
     </footer>
@@ -321,7 +316,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       <Hero userId={userId} />
       <Reveal>
         <section style={{ ...cont, padding: '80px 32px', textAlign: 'center' }}>
-          <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Demo</div>
+          <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 }}>Jak to funguje</div>
           <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', margin: '0 auto 16px', maxWidth: 600 }}>
             Faktura za 30 sekund
           </h2>

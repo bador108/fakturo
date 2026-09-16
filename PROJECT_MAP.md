@@ -20,11 +20,13 @@ Generováno z reálného stavu repa + živé Supabase schéma (ne z paměti/doha
 ## Route mapa
 
 ### Veřejné (`src/app/(public)/`) — marketing/info stránky
-`funkce`, `cenik`, `o-nas`, `kontakt`, `blog`, `reference`, `napoveda/[category]/[article]`, `gdpr`, `bezpecnost`, `stav-sluzby`, `pravidelne-fakturace`, `api-developers`
+`funkce`, `cenik`, `o-nas`, `kontakt`, `blog`, `reference`, `napoveda/[category]/[article]`, `gdpr`, `obchodni-podminky`, `stav-sluzby`, `pravidelne-fakturace`, `api-developers`
 
-**Chybí:** `/obchodni-podminky` (VOP) — appka má živé Stripe platby, právně by měla mít.
+`bezpecnost` odstraněna (nebyla legálně vyžadovaná, jen marketing trust page).
 
-### Landing + demo
+**Pozor:** `gdpr/page.tsx` i `obchodni-podminky/page.tsx` mají `[DOPLNIT: ...]` placeholder místo identity provozovatele (čeká se na rozhodnutí, jestli tam má být Bador nebo kamarádovo OSVČ — viz ownership transfer). **Nesmí jít takhle do produkce.**
+
+### Landing
 - `src/app/page.tsx` — hlavní landing page (root `/`)
 - `src/app/generator/page.tsx` — **veřejný generátor faktury bez registrace**, používá `/api/pdf/generate` (no-auth endpoint)
 
@@ -57,7 +59,7 @@ Generováno z reálného stavu repa + živé Supabase schéma (ne z paměti/doha
 | `dashboard-layout` | GET/PUT `users.dashboard_layout` (drag/resize widgety) | ✓ |
 | `notifications` | notifikace | ✓ |
 | `settings/reminders` | dny upomínek | ✓ |
-| `support` | kontaktní formulář → Resend → `fakturosupport@gmail.com` | ✓ |
+| `support`, `contact` | kontaktní formulář → Resend → `support@fakturo.online` (MX = ImprovMX forwarding) | ✓ / ✗ |
 | `stripe/create-checkout`, `stripe/portal`, `stripe/webhook` | subscription platby | ✓ / webhook |
 | `cron/reminders` | Vercel cron (`vercel.json`), denní upomínky na splatnost | cron |
 | `clerk` | — | — |

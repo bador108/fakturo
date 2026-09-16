@@ -84,7 +84,6 @@ export default function SignInPage() {
         router.push('/dashboard')
       } else if (signIn.status === 'needs_second_factor') {
         const factors = signIn.supportedSecondFactors ?? []
-        console.log('2FA required, supported factors:', factors)
         if (factors.some(f => f.strategy === 'email_code')) {
           const { error: sendErr } = await signIn.mfa.sendEmailCode()
           if (sendErr) {

@@ -27,8 +27,8 @@ const cols = [
   {
     title: 'Pomoc',
     items: [
-      { label: 'Bezpečnost', href: '/bezpecnost' },
       { label: 'GDPR', href: '/gdpr' },
+      { label: 'Obchodní podmínky', href: '/obchodni-podminky' },
     ],
   },
 ]
@@ -70,7 +70,7 @@ export function PublicFooter() {
         <span>© 2026 Fakturo. Všechna práva vyhrazena.</span>
         <div style={{ display: 'flex', gap: 24 }}>
           <Link href="/gdpr" style={{ color: 'inherit', textDecoration: 'none' }}>GDPR</Link>
-          <Link href="/bezpecnost" style={{ color: 'inherit', textDecoration: 'none' }}>Bezpečnost</Link>
+          <Link href="/obchodni-podminky" style={{ color: 'inherit', textDecoration: 'none' }}>Obchodní podmínky</Link>
         </div>
       </div>
     </footer>
