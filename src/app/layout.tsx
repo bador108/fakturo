@@ -11,6 +11,16 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://fakturo.online'),
   title: 'Fakturo – Online fakturace',
   description: 'Profesionální fakturace pro freelancery a malé firmy.',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'Fakturo',
+    statusBarStyle: 'default',
+  },
+  icons: {
+    icon: '/icon.png',
+    apple: '/icons/apple-touch-icon.png',
+  },
   openGraph: {
     siteName: 'Fakturo',
     locale: 'cs_CZ',
@@ -27,6 +37,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   interactiveWidget: 'resizes-content',
+  themeColor: '#16a34a',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -34,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: '#4f46e5',
+          colorPrimary: '#16a34a',
           colorText: '#0f172a',
           colorTextSecondary: '#64748b',
           colorBackground: '#ffffff',
