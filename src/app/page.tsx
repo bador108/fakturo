@@ -96,7 +96,7 @@ function Hero({ userId }: { userId: string | null }) {
 
 function FeatureRow({ tag, title, text, reverse, children }: { tag:string; title:string; text:string; reverse?:boolean; children:React.ReactNode }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '5fr 6fr', gap: 64, alignItems: 'center', padding: '64px 0', borderBottom: `1px solid ${C.border}` }}>
+    <div className="grid grid-cols-1 md:grid-cols-[5fr_6fr] gap-8 md:gap-16" style={{ alignItems: 'center', padding: '64px 0', borderBottom: `1px solid ${C.border}` }}>
       <div style={{ order: reverse ? 2 : 1 }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>{tag}</div>
         <h3 style={{ ...disp, fontSize: 40, margin: 0, marginBottom: 16, lineHeight: 1.1, letterSpacing: -1.5 }}>{title}</h3>
@@ -195,7 +195,7 @@ function Features() {
 function FeatureGrid() {
   return (
     <section style={{ ...cont, padding: '64px 32px 80px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {([
           { title:'Slušné upomínky', text:'Mile, ale jasně. Tři varianty zdvořilosti, ty si vybereš.' },
           { title:'Víceměnové faktury', text:'CZK · EUR · USD s live kurzy ČNB. DPH 0, 12, 21 %.' },
@@ -280,7 +280,7 @@ function Footer() {
   ]
   return (
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: '64px 32px 32px', maxWidth: 1280, margin: '0 auto' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-8 md:gap-12" style={{ marginBottom: 48 }}>
         <div>
           <div style={{ marginBottom: 16 }}><Image src="/logo.png" alt="Fakturo" width={144} height={29} /></div>
           <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.6, maxWidth: 280 }}>Fakturace pro OSVČ a freelancery.</div>

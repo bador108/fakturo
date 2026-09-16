@@ -36,7 +36,7 @@ const cols = [
 export function PublicFooter() {
   return (
     <footer style={{ borderTop: `1px solid ${C.border}`, padding: '64px 32px 32px', maxWidth: 1280, margin: '0 auto' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-8 md:gap-12" style={{ marginBottom: 48 }}>
         <div>
           <div style={{ marginBottom: 16 }}>
             <Image src="/logo.png" alt="Fakturo" width={144} height={29} />

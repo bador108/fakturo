@@ -33,7 +33,7 @@ export default function KontaktPage() {
       </section>
 
       <section style={{ ...cont, padding: '0 32px 96px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 64, alignItems: 'start' }}>
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-10 md:gap-16" style={{ alignItems: 'start' }}>
           {/* Contact info */}
           <div>
             <div style={{ marginBottom: 40 }}>
