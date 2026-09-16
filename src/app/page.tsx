@@ -207,13 +207,16 @@ function Highlights() {
   return (
     <section style={{ ...cont, padding: '0 32px 64px' }}>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {items.map(it => (
-          <div key={it.n} style={{ background: C.fg, borderRadius: 16, padding: 28 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: C.primary, marginBottom: 14, letterSpacing: 1 }}>{it.n}</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: C.bg, margin: '0 0 8px', letterSpacing: -0.3 }}>{it.title}</h3>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: 0, lineHeight: 1.6 }}>{it.text}</p>
-          </div>
-        ))}
+        {items.map((it, i) => {
+          const dark = i > 0
+          return (
+            <div key={it.n} style={{ background: dark ? C.fg : C.primarySoft, borderRadius: 16, padding: 28 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: dark ? C.primary : C.primaryDark, marginBottom: 14, letterSpacing: 1 }}>{it.n}</div>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: dark ? C.bg : C.fg, margin: '0 0 8px', letterSpacing: -0.3 }}>{it.title}</h3>
+              <p style={{ fontSize: 14, color: dark ? 'rgba(255,255,255,0.6)' : C.fg2, margin: 0, lineHeight: 1.6 }}>{it.text}</p>
+            </div>
+          )
+        })}
       </div>
     </section>
   )
@@ -300,6 +303,36 @@ function FeatureShowcaseSection() {
           <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturo zevnitř — přímo ze živého provozu.</p>
         </div>
         <FeatureShowcase />
+      </div>
+    </section>
+  )
+}
+
+function UseCases() {
+  return (
+    <section style={{ ...cont, padding: '88px 32px' }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16" style={{ alignItems: 'center' }}>
+        <div>
+          <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Fakturo v praxi</div>
+          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px', letterSpacing: -1.5, maxWidth: 420 }}>
+            Pro koho to je
+          </h2>
+          <p style={{ fontSize: 16, color: C.muted, lineHeight: 1.65, maxWidth: 440 }}>
+            Fakturo používají OSVČ, freelanceři i malé firmy — každý potřebuje trochu něco jiného. Ty s papírováním strávíš minimum, protože appka dělá zbytek za tebe.
+          </p>
+        </div>
+        <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 20, padding: 36, boxShadow: '0 2px 8px rgba(0,0,0,0.04), 0 16px 40px rgba(0,0,0,0.06)' }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: C.primarySoft, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h14M3 14h9" stroke={C.primaryDark} strokeWidth="1.8" strokeLinecap="round" /></svg>
+          </div>
+          <h3 style={{ fontSize: 19, fontWeight: 700, margin: '0 0 10px', letterSpacing: -0.3 }}>Pro účetní</h3>
+          <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.65, margin: '0 0 20px' }}>
+            Měsíční podklady jedním kliknutím — export do Pohody i obyčejné PDF/CSV. Tvoje účetní si je naimportuje bez ručního přepisování.
+          </p>
+          <Link href="/funkce" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: C.primaryDark, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+            Zjistit víc <span>→</span>
+          </Link>
+        </div>
       </div>
     </section>
   )
@@ -434,6 +467,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       <Reveal><Features /></Reveal>
       <Reveal><FeatureGrid /></Reveal>
       <Reveal><FeatureShowcaseSection /></Reveal>
+      <Reveal><UseCases /></Reveal>
       <Reveal><TrustBlock /></Reveal>
       <Reveal>
         <section id="pricing" style={{ ...cont, padding: '80px 32px' }}>
