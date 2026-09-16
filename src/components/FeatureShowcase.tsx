@@ -102,7 +102,7 @@ function Lightbox({ src, title, onClose }: { src: string; title: string; onClose
             src={src}
             alt={title}
             fill
-            className="object-cover object-top grayscale contrast-105"
+            className="object-cover object-top"
             sizes="100vw"
             priority
           />
@@ -163,7 +163,7 @@ export function FeatureShowcase() {
               src={current.img}
               alt={current.title}
               fill
-              className="object-cover object-top grayscale contrast-105 transition-transform duration-300 group-hover:scale-[1.01]"
+              className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.01]"
               sizes="(max-width: 1024px) 100vw, 800px"
             />
             {/* Zoom hint overlay */}
