@@ -117,7 +117,6 @@ function InvoiceMock() {
     <div style={{ background: C.bg, borderRadius: 14, border: `1px solid ${C.border}`, boxShadow: '0 12px 32px rgba(15,15,30,0.06)', padding: 24 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
         <div><div style={{ fontSize: 11, color: C.muted, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 600 }}>Faktura</div><div style={{ fontSize: 22, fontWeight: 700 }}>2026/042</div></div>
-        <span style={{ padding: '4px 10px', borderRadius: 999, background: C.greenSoft, color: C.green, fontSize: 11, fontWeight: 600 }}>Vystaveno za 32 s</span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16, paddingBottom: 16, borderBottom: `1px solid ${C.border}` }}>
         <div><div style={{ fontSize: 11, color: C.muted, marginBottom: 4 }}>Dodavatel</div><div style={{ fontSize: 13, fontWeight: 600 }}>Jana Nováková</div><div style={{ fontSize: 12, color: C.muted }}>IČO 12345678</div></div>
