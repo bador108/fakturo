@@ -20,8 +20,11 @@ export function renderBrandedEmail({ senderName, senderLogoUrl, bodyHtml }: Bran
       <div style="padding:28px 24px;color:#1e293b">
         ${bodyHtml}
       </div>
-      <div style="padding:16px 24px 28px;color:#94a3b8;font-size:11px;border-top:1px solid #f1f5f9">
-        Odesláno přes <a href="https://fakturo.online" style="color:#16a34a;text-decoration:none">Fakturo</a> — fakturace pro OSVČ a freelancery.
+      <div style="padding:16px 24px 28px;border-top:1px solid #f1f5f9">
+        <a href="https://fakturo.online" style="text-decoration:none">
+          <img src="https://fakturo.online/logo.png" alt="Fakturo" style="height:16px;width:auto;display:block;margin-bottom:6px" />
+        </a>
+        <span style="color:#94a3b8;font-size:11px">Fakturace pro OSVČ a freelancery.</span>
       </div>
     </div>
   `
