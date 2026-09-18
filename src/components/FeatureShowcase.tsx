@@ -104,6 +104,7 @@ function Lightbox({ src, title, onClose }: { src: string; title: string; onClose
             fill
             className="object-cover object-top"
             sizes="100vw"
+            quality={95}
             priority
           />
         </div>
@@ -164,7 +165,8 @@ export function FeatureShowcase() {
               alt={current.title}
               fill
               className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.01]"
-              sizes="(max-width: 1024px) 100vw, 800px"
+              sizes="(max-width: 1024px) 100vw, 900px"
+              quality={95}
             />
             {/* Zoom hint overlay */}
             <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors duration-200 flex items-end justify-end p-4">
