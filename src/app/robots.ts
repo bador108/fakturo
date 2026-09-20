@@ -10,6 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         '/invoices',
         '/clients',
         '/expenses',
+        '/dane',
         '/finance',
         '/recurring',
         '/settings',

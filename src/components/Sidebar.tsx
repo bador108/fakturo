@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useClerk } from '@clerk/nextjs'
-import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, Receipt, Menu, X, LogOut, Mail } from 'lucide-react'
+import { LayoutDashboard, FileText, Plus, Settings, Users, RefreshCw, Receipt, Menu, X, LogOut, Mail, Calculator } from 'lucide-react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { NotificationBell } from '@/components/NotificationBell'
@@ -15,6 +15,7 @@ const links = [
   { href: '/invoices/new', label: 'Nová faktura', icon: Plus },
   { href: '/clients', label: 'Klienti', icon: Users },
   { href: '/expenses', label: 'Výdaje', icon: Receipt },
+  { href: '/dane', label: 'Odhad daní', icon: Calculator },
   { href: '/recurring', label: 'Opakující se', icon: RefreshCw },
   { href: '/settings', label: 'Nastavení', icon: Settings },
 ]

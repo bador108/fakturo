@@ -28,6 +28,7 @@ const isProtected = createRouteMatcher([
   '/invoices(.*)',
   '/clients(.*)',
   '/expenses(.*)',
+  '/dane(.*)',
   '/finance(.*)',
   '/recurring(.*)',
   '/settings(.*)',
