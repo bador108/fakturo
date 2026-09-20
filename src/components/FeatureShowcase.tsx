@@ -11,7 +11,7 @@ const features = [
     icon: LayoutDashboard,
     title: 'Přehled na první pohled',
     desc: 'Cashflow za posledních 12 měsíců, rychlý přehled příjmů a posledních faktur — vše hned po přihlášení.',
-    img: '/screenshots/dashboard.png',
+    img: '/screenshots/dashboard.png', w: 1900, h: 911,
     color: 'indigo',
   },
   {
@@ -19,7 +19,7 @@ const features = [
     icon: FileText,
     title: 'Správa faktur',
     desc: 'Všechny faktury na jednom místě. Filtrujte podle stavu: zaplaceno, odesláno, po splatnosti nebo nabídky.',
-    img: '/screenshots/invoices.png',
+    img: '/screenshots/invoices.png', w: 1281, h: 906,
     color: 'violet',
   },
   {
@@ -27,7 +27,7 @@ const features = [
     icon: BarChart2,
     title: 'Finanční přehledy',
     desc: 'Grafy příjmů vs. výdajů, přehled DPH po měsících a výdaje rozdělené podle kategorií. Export do Pohody jedním klikem.',
-    img: '/screenshots/finance.png',
+    img: '/screenshots/finance.png', w: 1545, h: 693,
     color: 'sky',
   },
   {
@@ -35,7 +35,7 @@ const features = [
     icon: Users,
     title: 'Klienti',
     desc: 'Evidence klientů s historií faktur a celkovými obraty. Při tvorbě faktury doplní údaje automaticky z ARESu.',
-    img: '/screenshots/clients.png',
+    img: '/screenshots/clients.png', w: 1162, h: 716,
     color: 'emerald',
   },
   {
@@ -43,7 +43,7 @@ const features = [
     icon: Receipt,
     title: 'Evidence výdajů',
     desc: 'Zadejte výdaje podle kategorie — software, hardware, cestovné, marketing. Mějte přehled o tom, co vás stojí podnikání.',
-    img: '/screenshots/expenses.png',
+    img: '/screenshots/expenses.png', w: 992, h: 760,
     color: 'amber',
   },
   {
@@ -51,7 +51,7 @@ const features = [
     icon: RefreshCw,
     title: 'Opakující se faktury',
     desc: 'Nastavte šablony pro měsíční, čtvrtletní nebo roční fakturace. Systém vás upozorní, kdy je čas odeslat.',
-    img: '/screenshots/recurring.png',
+    img: '/screenshots/recurring.png', w: 1016, h: 757,
     color: 'rose',
   },
   {
@@ -59,7 +59,7 @@ const features = [
     icon: Settings,
     title: 'Nastavení & profily',
     desc: 'Spravujte profily dodavatele pro různé firmy, šablony položek pro rychlé vyplnění a automatické upomínky klientům.',
-    img: '/screenshots/settings.png',
+    img: '/screenshots/settings.png', w: 1200, h: 836,
     color: 'slate',
   },
 ]
@@ -67,7 +67,7 @@ const features = [
 // Design je černobílý — jeden neutrální styl pro všechny taby, žádné barvy per-feature.
 const NEUTRAL = { rowBg: 'bg-slate-100', ring: 'ring-slate-300', iconBg: 'bg-slate-900', iconText: 'text-white', dot: 'bg-slate-900' }
 
-function Lightbox({ src, title, onClose }: { src: string; title: string; onClose: () => void }) {
+function Lightbox({ src, w, h, title, onClose }: { src: string; w: number; h: number; title: string; onClose: () => void }) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', handler)
@@ -97,17 +97,16 @@ function Lightbox({ src, title, onClose }: { src: string; title: string; onClose
         >
           <X className="h-4 w-4" />
         </button>
-        <div className="relative w-full" style={{ aspectRatio: '1200/836' }}>
-          <Image
-            src={src}
-            alt={title}
-            fill
-            className="object-cover object-top"
-            sizes="100vw"
-            quality={95}
-            priority
-          />
-        </div>
+        <Image
+          src={src}
+          alt={title}
+          width={w}
+          height={h}
+          className="block w-full h-auto bg-white"
+          sizes="(max-width: 1152px) 100vw, 1152px"
+          quality={95}
+          priority
+        />
       </div>
     </div>
   )
@@ -158,14 +157,15 @@ export function FeatureShowcase() {
           onClick={() => setLightbox(current.img)}
           className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-2xl transition-all group w-full text-left cursor-zoom-in"
         >
-          <div className="relative w-full" style={{ aspectRatio: '1200/836' }}>
+          <div className="relative w-full">
             <Image
               key={current.img}
               src={current.img}
               alt={current.title}
-              fill
-              className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.01]"
-              sizes="(max-width: 1024px) 100vw, 900px"
+              width={current.w}
+              height={current.h}
+              className="block w-full h-auto bg-white transition-transform duration-300 group-hover:scale-[1.01]"
+              sizes="(max-width: 1024px) 100vw, 830px"
               quality={95}
             />
             {/* Zoom hint overlay */}
@@ -183,6 +183,8 @@ export function FeatureShowcase() {
       {lightbox && (
         <Lightbox
           src={lightbox}
+          w={current.w}
+          h={current.h}
           title={current.title}
           onClose={() => setLightbox(null)}
         />
