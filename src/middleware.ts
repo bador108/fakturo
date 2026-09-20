@@ -20,6 +20,20 @@ const isPublic = createRouteMatcher([
   '/api/pdf/generate(.*)',
 ])
 
+const isProtected = createRouteMatcher([
+  '/dashboard(.*)',
+  '/invoices(.*)',
+  '/clients(.*)',
+  '/expenses(.*)',
+  '/finance(.*)',
+  '/recurring(.*)',
+  '/settings(.*)',
+  '/zpravy(.*)',
+  '/checkout(.*)',
+  '/api(.*)',
+  '/trpc(.*)',
+])
+
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth()
 
@@ -28,7 +42,8 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
-  if (!isPublic(req)) {
+  // Neznámé adresy se nechrání — ať se ukáže skutečná 404 stránka, ne přesměrování na přihlášení.
+  if (!isPublic(req) && isProtected(req)) {
     await auth.protect()
   }
 })
