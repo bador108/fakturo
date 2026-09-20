@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Receipt, Plus, Trash2, X, Sparkles, Camera, Paperclip } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { parseReceiptText } from '@/lib/receiptText'
 import { ProUpsell } from '@/components/ProUpsell'
 import type { Expense, ExpenseCategory, Currency } from '@/types'
 
@@ -53,6 +54,8 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null)
+  const [ocr, setOcr] = useState<{ state: 'idle' | 'reading' | 'done' | 'failed'; progress: number }>({ state: 'idle', progress: 0 })
+  const ocrRun = useRef(0)
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState(emptyForm)
@@ -76,10 +79,60 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
     return () => URL.revokeObjectURL(url)
   }, [receiptFile])
 
+  function clearReceipt() {
+    ocrRun.current++
+    setReceiptFile(null)
+    setOcr({ state: 'idle', progress: 0 })
+  }
+
   function closeForm() {
     setShowForm(false)
     setParseNote(null)
-    setReceiptFile(null)
+    clearReceipt()
+  }
+
+  // Čtení běží přímo v prohlížeči (Tesseract) — fotka účtenky se kvůli tomu nikam neposílá.
+  // Vyplní jen pole, která uživatel ještě sám nezměnil.
+  async function readReceipt(file: File) {
+    const run = ++ocrRun.current
+    setOcr({ state: 'reading', progress: 0 })
+    try {
+      const small = await shrinkImage(file)
+      const { createWorker } = await import('tesseract.js')
+      const worker = await createWorker('ces+eng', 1, {
+        logger: m => {
+          if (m.status === 'recognizing text' && ocrRun.current === run) setOcr({ state: 'reading', progress: m.progress })
+        },
+      })
+      let text = ''
+      try {
+        text = (await worker.recognize(small)).data.text
+      } finally {
+        await worker.terminate()
+      }
+      if (ocrRun.current !== run) return
+
+      const p = parseReceiptText(text)
+      setForm(f => ({
+        ...f,
+        vendor: f.vendor || p.vendor || '',
+        amount: f.amount || (p.amount !== null ? String(p.amount) : ''),
+        date: f.date === today && p.date ? p.date : f.date,
+        currency: f.currency === 'CZK' ? p.currency : f.currency,
+        category: f.category === 'ostatni' ? (p.category as ExpenseCategory) : f.category,
+      }))
+      setOcr({ state: p.amount === null && !p.vendor ? 'failed' : 'done', progress: 1 })
+    } catch {
+      if (ocrRun.current === run) setOcr({ state: 'failed', progress: 0 })
+    }
+  }
+
+  function onReceiptPicked(file: File | null) {
+    setReceiptFile(file)
+    if (!file) { clearReceipt(); return }
+    const readable = file.type.startsWith('image/') && file.type !== 'image/heic' && file.type !== 'image/heif'
+    if (readable) void readReceipt(file)
+    else setOcr({ state: 'idle', progress: 0 })
   }
 
   async function addExpense() {
@@ -317,7 +370,7 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
                     </div>
                   )}
                   <p className="flex-1 min-w-0 text-sm text-slate-600 truncate">{receiptFile.name}</p>
-                  <button type="button" onClick={() => setReceiptFile(null)} className="text-slate-400 hover:text-red-400 shrink-0" aria-label="Odebrat účtenku">
+                  <button type="button" onClick={clearReceipt} className="text-slate-400 hover:text-red-400 shrink-0" aria-label="Odebrat účtenku">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -329,9 +382,20 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
                     type="file"
                     accept="image/*,application/pdf"
                     className="hidden"
-                    onChange={e => setReceiptFile(e.target.files?.[0] ?? null)}
+                    onChange={e => onReceiptPicked(e.target.files?.[0] ?? null)}
                   />
                 </label>
+              )}
+              {ocr.state === 'reading' && (
+                <p className="text-xs text-slate-500 mt-1.5">
+                  Čtu účtenku… {ocr.progress > 0 ? `${Math.round(ocr.progress * 100)} %` : 'připravuji'}
+                </p>
+              )}
+              {ocr.state === 'done' && (
+                <p className="text-xs text-emerald-600 mt-1.5">Údaje jsme předvyplnili z fotky, zkontroluj je prosím.</p>
+              )}
+              {ocr.state === 'failed' && (
+                <p className="text-xs text-amber-600 mt-1.5">Z fotky se nepodařilo nic přečíst, vyplň údaje ručně.</p>
               )}
             </div>
 

@@ -1,6 +1,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import type { Currency } from '@/types';
+import { guessCategory } from '@/lib/expenseCategory';
 
 const MONTHS_CZ: Record<string, number> = {
   leden: 1, ledna: 1, únor: 2, února: 2, unor: 2, unora: 2,
@@ -10,14 +11,6 @@ const MONTHS_CZ: Record<string, number> = {
   září: 9, zari: 9, říjen: 10, října: 10, rijen: 10, rijna: 10,
   listopad: 11, listopadu: 11, prosinec: 12, prosince: 12,
 };
-
-const CATEGORY_KEYWORDS: { category: string; keywords: RegExp }[] = [
-  { category: 'software', keywords: /\b(adobe|figma|notion|github|vercel|openai|anthropic|claude|chatgpt|licence|předplatné|predplatne|subscription|saas|hosting|domain|doména)\b/i },
-  { category: 'kancelar', keywords: /\b(papír|papir|tiskárna|tiskarna|kancelářské|kancelarske|toner|šanon|sanon)\b/i },
-  { category: 'cestovne', keywords: /\b(letenka|jízdenka|jizdenka|vlak|autobus|benzín|benzin|nafta|taxi|uber|bolt|parkování|parkovani|dálniční|dalnicni)\b/i },
-  { category: 'hardware', keywords: /\b(notebook|laptop|monitor|klávesnice|klavesnice|myš|mys|počítač|pocitac|telefon|mobil|tiskárna|tiskarna)\b/i },
-  { category: 'marketing', keywords: /\b(reklama|marketing|ads|facebook|instagram|google ads|inzerce|billboard)\b/i },
-];
 
 // Číslo buď oddělené mezerami/tečkami po tisících (1 234 567), nebo souvislý řetězec číslic
 // (25000) — ta druhá varianta musí jít až jako fallback, jinak si "25000" ukousne jen "250".
@@ -81,14 +74,6 @@ function parseDate(text: string): string | null {
   }
 
   return null;
-}
-
-function guessCategory(text: string): string {
-  const lower = text.toLowerCase();
-  for (const { category, keywords } of CATEGORY_KEYWORDS) {
-    if (keywords.test(lower)) return category;
-  }
-  return 'ostatni';
 }
 
 function guessVendor(text: string, amountRaw: string | null): string {

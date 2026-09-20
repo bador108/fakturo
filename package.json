@@ -28,7 +28,8 @@
     "resend": "^6.10.0",
     "stripe": "^22.0.1",
     "svix": "^1.90.0",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@clerk/backend": "^3.2.8",
