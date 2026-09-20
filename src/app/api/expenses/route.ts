@@ -30,6 +30,12 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json() as Omit<Expense, 'id' | 'user_id' | 'created_at'>
+
+  // Cesta k účtence musí být ve složce přihlášeného uživatele, jinak by šla podstrčit cizí soubor.
+  if (body.receipt_url && !body.receipt_url.startsWith(`${userId}/`)) {
+    return NextResponse.json({ error: 'Neplatná účtenka' }, { status: 400 })
+  }
+
   const db = createServiceClient()
 
   const { data, error } = await db

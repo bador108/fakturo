@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Receipt, Plus, Trash2, X, Sparkles } from 'lucide-react'
+import { Receipt, Plus, Trash2, X, Sparkles, Camera, Paperclip } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { ProUpsell } from '@/components/ProUpsell'
 import type { Expense, ExpenseCategory, Currency } from '@/types'
@@ -31,8 +31,28 @@ const emptyForm = {
   category: 'ostatni' as ExpenseCategory, vat_claimable: false,
 }
 
+// Fotky z mobilu mají klidně 5–12 MB — před nahráním je zmenšíme, ať je to rychlé i na datech.
+async function shrinkImage(file: File): Promise<File> {
+  if (!file.type.startsWith('image/') || file.type === 'image/heic' || file.type === 'image/heif') return file
+  try {
+    const bitmap = await createImageBitmap(file)
+    const scale = Math.min(1, 1800 / Math.max(bitmap.width, bitmap.height))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(bitmap.width * scale)
+    canvas.height = Math.round(bitmap.height * scale)
+    canvas.getContext('2d')?.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+    const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85))
+    if (!blob || blob.size >= file.size) return file
+    return new File([blob], 'uctenka.jpg', { type: 'image/jpeg' })
+  } catch {
+    return file
+  }
+}
+
 export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
   const [expenses, setExpenses] = useState<Expense[]>([])
+  const [receiptFile, setReceiptFile] = useState<File | null>(null)
+  const [receiptPreview, setReceiptPreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState(emptyForm)
@@ -49,18 +69,48 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
       .catch(() => setLoading(false))
   }, [isPaidPlan])
 
+  useEffect(() => {
+    if (!receiptFile || !receiptFile.type.startsWith('image/')) { setReceiptPreview(null); return }
+    const url = URL.createObjectURL(receiptFile)
+    setReceiptPreview(url)
+    return () => URL.revokeObjectURL(url)
+  }, [receiptFile])
+
+  function closeForm() {
+    setShowForm(false)
+    setParseNote(null)
+    setReceiptFile(null)
+  }
+
   async function addExpense() {
     if (!form.vendor || !form.amount) return
     setSaving(true)
     try {
+      let receiptPath: string | null = null
+      if (receiptFile) {
+        const fd = new FormData()
+        fd.append('file', await shrinkImage(receiptFile))
+        const up = await fetch('/api/expenses/receipt', { method: 'POST', body: fd })
+        const upData = await up.json().catch(() => ({}))
+        if (!up.ok) {
+          setParseNote(upData.error ?? 'Nahrání účtenky se nezdařilo.')
+          return
+        }
+        receiptPath = upData.path as string
+      }
+
       const res = await fetch('/api/expenses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, amount: Number(form.amount), receipt_url: null }),
+        body: JSON.stringify({ ...form, amount: Number(form.amount), receipt_url: receiptPath }),
       })
       const data = await res.json()
+      if (!res.ok) {
+        setParseNote(data.error ?? 'Výdaj se nepodařilo uložit.')
+        return
+      }
       setExpenses(prev => [data, ...prev])
-      setShowForm(false)
+      closeForm()
       setForm(emptyForm)
     } finally {
       setSaving(false)
@@ -190,10 +240,10 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
       {/* Add form modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 space-y-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 space-y-4 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-slate-800">Přidat výdaj</h3>
-              <button onClick={() => { setShowForm(false); setParseNote(null) }} className="text-slate-400 hover:text-slate-700">
+              <button onClick={closeForm} className="text-slate-400 hover:text-slate-700">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -254,8 +304,39 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
               Uplatnitelné DPH
             </label>
 
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Účtenka (volitelné)</label>
+              {receiptFile ? (
+                <div className="flex items-center gap-3 rounded-lg border border-slate-200 p-2">
+                  {receiptPreview ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={receiptPreview} alt="Náhled účtenky" className="h-14 w-14 rounded-md object-cover" />
+                  ) : (
+                    <div className="h-14 w-14 rounded-md bg-slate-50 flex items-center justify-center">
+                      <Paperclip className="h-5 w-5 text-slate-400" />
+                    </div>
+                  )}
+                  <p className="flex-1 min-w-0 text-sm text-slate-600 truncate">{receiptFile.name}</p>
+                  <button type="button" onClick={() => setReceiptFile(null)} className="text-slate-400 hover:text-red-400 shrink-0" aria-label="Odebrat účtenku">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 px-3 py-3 text-sm text-slate-600 cursor-pointer hover:bg-slate-50 transition">
+                  <Camera className="h-4 w-4" />
+                  Vyfotit nebo nahrát účtenku
+                  <input
+                    type="file"
+                    accept="image/*,application/pdf"
+                    className="hidden"
+                    onChange={e => setReceiptFile(e.target.files?.[0] ?? null)}
+                  />
+                </label>
+              )}
+            </div>
+
             <div className="flex gap-2 justify-end pt-2">
-              <button onClick={() => setShowForm(false)} className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg transition">Zrušit</button>
+              <button onClick={closeForm} className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg transition">Zrušit</button>
               <button onClick={addExpense} disabled={!form.vendor || !form.amount || saving}
                 className="px-4 py-2 text-sm bg-brand text-white rounded-lg hover:bg-brand-dark transition disabled:opacity-50 font-medium">
                 {saving ? 'Ukládám…' : 'Uložit'}
@@ -295,6 +376,18 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
                 </span>
                 {e.vat_claimable && (
                   <span className="hidden sm:inline text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">DPH</span>
+                )}
+                {e.receipt_url && (
+                  <a
+                    href={`/api/expenses/${e.id}/receipt`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Zobrazit účtenku"
+                    aria-label="Zobrazit účtenku"
+                    className="text-slate-400 hover:text-brand transition shrink-0"
+                  >
+                    <Paperclip className="h-4 w-4" />
+                  </a>
                 )}
                 <span className="font-semibold text-slate-800 text-sm shrink-0 text-right tabular-nums">
                   {formatCurrency(e.amount, e.currency)}

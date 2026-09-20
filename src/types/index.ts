@@ -263,6 +263,7 @@ export interface Expense {
   date: string;
   vendor?: string;
   notes?: string;
+  receipt_url?: string | null;
   created_at?: string;
   updated_at?: string;
 }
