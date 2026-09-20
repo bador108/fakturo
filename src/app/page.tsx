@@ -68,7 +68,7 @@ function Nav({ userId }: { userId: string | null }) {
             <Image src="/logo.png" alt="Fakturo" width={130} height={26} className="w-[110px] md:w-[144px] h-auto" />
           </Link>
           <div className="hidden md:flex" style={{ gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
-            {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ'],['/kontakt','Kontakt']] as [string,string][]).map(([href, label]) => (
+            {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ'],['/blog','Blog'],['/kontakt','Kontakt']] as [string,string][]).map(([href, label]) => (
               <a key={href} href={href} style={{ color: 'inherit', textDecoration: 'none', padding: '8px 12px', borderRadius: 6 }}>{label}</a>
             ))}
           </div>
@@ -378,7 +378,7 @@ function CTA({ userId }: { userId: string | null }) {
 function Footer() {
   const cols = [
     { title: 'Produkt', items: [['Funkce','/funkce'],['Ceník','/cenik'],['Pravidelné fakturace','/pravidelne-fakturace']] as [string,string][] },
-    { title: 'Společnost', items: [['O nás','/o-nas'],['Kontakt','/kontakt']] as [string,string][] },
+    { title: 'Společnost', items: [['O nás','/o-nas'],['Blog','/blog'],['Kontakt','/kontakt']] as [string,string][] },
     { title: 'Pomoc', items: [['GDPR','/gdpr'],['Obchodní podmínky','/obchodni-podminky']] as [string,string][] },
   ]
   return (

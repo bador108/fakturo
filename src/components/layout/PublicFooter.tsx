@@ -21,6 +21,7 @@ const cols = [
     title: 'Společnost',
     items: [
       { label: 'O nás', href: '/o-nas' },
+      { label: 'Blog', href: '/blog' },
       { label: 'Kontakt', href: '/kontakt' },
     ],
   },
