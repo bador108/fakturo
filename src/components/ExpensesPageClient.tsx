@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Receipt, Plus, Trash2, X, Sparkles, Camera, Paperclip } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
-import { parseReceiptText } from '@/lib/receiptText'
+import { readReceiptFile } from '@/lib/receiptOcr'
 import { ProUpsell } from '@/components/ProUpsell'
 import type { Expense, ExpenseCategory, Currency } from '@/types'
 
@@ -97,22 +97,11 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
     const run = ++ocrRun.current
     setOcr({ state: 'reading', progress: 0 })
     try {
-      const small = await shrinkImage(file)
-      const { createWorker } = await import('tesseract.js')
-      const worker = await createWorker('ces+eng', 1, {
-        logger: m => {
-          if (m.status === 'recognizing text' && ocrRun.current === run) setOcr({ state: 'reading', progress: m.progress })
-        },
+      const p = await readReceiptFile(file, progress => {
+        if (ocrRun.current === run) setOcr({ state: 'reading', progress })
       })
-      let text = ''
-      try {
-        text = (await worker.recognize(small)).data.text
-      } finally {
-        await worker.terminate()
-      }
       if (ocrRun.current !== run) return
 
-      const p = parseReceiptText(text)
       setForm(f => ({
         ...f,
         vendor: f.vendor || p.vendor || '',

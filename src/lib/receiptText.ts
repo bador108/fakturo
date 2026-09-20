@@ -14,7 +14,10 @@ const DECIMAL_AMOUNT = /(\d{1,3}(?:[  .]\d{3})+|\d+)\s?[,.]\s?(\d{2})(?!\d)/g
 const TOTAL_STRONG = /(celkem|k\s*úhradě|k\s*uhrade|k\s*platbě|k\s*platbe|total|suma\s*k)/i
 const TOTAL_WEAK = /(součet|soucet|suma|zaplaceno|hotově|hotove|platba|karta)/i
 const NOT_A_TOTAL = /(dph|daň|dan\b|základ|zaklad|vráceno|vraceno|vrácení|sleva|dýško|dysko)/i
-const LINE_TO_SKIP_AS_VENDOR = /(daňový doklad|danovy doklad|účtenka|uctenka|pokladní|pokladni|faktura|ičo|ič\b|dič|dic\b|tel\.?|www\.|http|@|datum|čas\b)/i
+const LINE_TO_SKIP_AS_VENDOR = /(účtenk|uctenk|paragon|doklad|provozovn|pokladn|pobočk|pobock|datum|číslo|cislo|forma|úhrad|uhrad|hotovost|platb|mezisou|celkem|dph|sazba|děkuj|dekuj|ičo|dič|\bdic\b|\btel\b|www\.|http|@)/i
+const COMPANY_SUFFIX = /(s\.\s?r\.\s?o|a\.\s?s\.|spol\.|v\.\s?o\.\s?s|k\.\s?s\.)/i
+// Na účtenkách bývá v závorce i "(2,00 EUR)" — kdo vidí Kč/Kc/CZK, ten je v korunách.
+const CZK_MARK = /(?:^|[^A-Za-zÀ-ɏ])(?:kč|kc|czk)(?![A-Za-zÀ-ɏ])/i
 
 function toNumber(intPart: string, decimals: string): number | null {
   const int = intPart.replace(/[  .]/g, '')
@@ -70,20 +73,29 @@ function tidyVendor(raw: string): string {
 }
 
 function findVendor(lines: string[]): string | null {
-  for (const line of lines.slice(0, 8)) {
-    if (LINE_TO_SKIP_AS_VENDOR.test(line)) continue
+  const candidates: string[] = []
+  for (const line of lines.slice(0, 10)) {
+    if (LINE_TO_SKIP_AS_VENDOR.test(line) || line.includes(':')) continue
     if ((line.match(/[A-Za-zÀ-ɏ]/g) ?? []).length < 3) continue
-    if (/\d{4,}/.test(line)) continue
+    if ((line.match(/\d/g) ?? []).length / line.length > 0.25) continue
+    // Malé písmeno těsně před velkým uvnitř slova ("adyrHotovast") je skoro vždy šum z OCR.
+    if (/[a-zà-ÿ][A-ZÀ-ÞČŠŽŘĎŤŇĚŮ]/.test(line)) continue
+    // Název obchodu začíná velkým písmenem (nebo číslicí) a neobsahuje cenu ani DPH — řádek
+    // "iks 21% Voda 23,00 Kč" je položka a "zašové porrao" šum z ručně dokreslené šipky.
+    const trimmed = line.replace(/^[^A-Za-zÀ-ɏ0-9]+/, '')
+    if (!/^[A-ZÀ-ÞČŠŽŘĎŤŇĚŮ0-9]/.test(trimmed)) continue
+    if (/\d[ ,.]\d{2}(?!\d)|%/.test(trimmed) || CZK_MARK.test(trimmed)) continue
     const vendor = tidyVendor(line)
-    if (vendor.length >= 3) return vendor
+    if (vendor.length >= 3) candidates.push(vendor)
   }
-  return null
+  // Řádek s "s.r.o." / "a.s." je skoro jistě firma, jinak bereme první rozumný řádek shora.
+  return candidates.find(v => COMPANY_SUFFIX.test(v)) ?? candidates[0] ?? null
 }
 
 export function parseReceiptText(text: string): ParsedReceipt {
   const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
   const lower = text.toLowerCase()
-  const currency = /€|\beur\b/.test(lower) ? 'EUR' : /\$|\busd\b/.test(lower) ? 'USD' : 'CZK'
+  const currency = CZK_MARK.test(text) ? 'CZK' : /€|\beur\b/.test(lower) ? 'EUR' : /\$|\busd\b/.test(lower) ? 'USD' : 'CZK'
 
   return {
     vendor: findVendor(lines),
