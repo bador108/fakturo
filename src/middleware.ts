@@ -12,6 +12,8 @@ const isPublic = createRouteMatcher([
   '/o-nas(.*)',
   '/kontakt(.*)',
   '/blog(.*)',
+  '/f/(.*)',
+  '/api/pdf/public/(.*)',
   '/gdpr(.*)',
   '/obchodni-podminky(.*)',
   '/api/contact(.*)',

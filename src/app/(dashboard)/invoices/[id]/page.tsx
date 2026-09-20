@@ -68,6 +68,7 @@ export default async function InvoicePage({ params }: { params: { id: string } }
   return (
     <InvoiceForm
       invoiceId={invoice.id}
+      publicToken={invoice.public_token}
       nextInvoiceNumber={invoice.invoice_number}
       defaultValues={defaultValues}
       plan={plan}

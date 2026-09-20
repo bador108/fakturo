@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import QRCode from 'qrcode'
-import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X, Copy, FileText, User, Download } from 'lucide-react'
+import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X, Copy, FileText, User, Download, Link2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
@@ -16,6 +16,7 @@ import type { InvoiceFormData, InvoiceItemDraft, Currency, VatRate, InvoiceType,
 interface InvoiceFormProps {
   defaultValues?: Partial<InvoiceFormData>
   invoiceId?: string
+  publicToken?: string
   nextInvoiceNumber: string
   plan?: string
 }
@@ -28,7 +29,21 @@ const DEFAULT_ITEM: InvoiceItemDraft = {
   vat_rate: 21,
 }
 
-export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber, plan = 'free' }: InvoiceFormProps) {
+export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoiceNumber, plan = 'free' }: InvoiceFormProps) {
+  const [linkCopied, setLinkCopied] = useState(false)
+
+  async function copyPublicLink() {
+    if (!publicToken) return
+    const url = `${window.location.origin}/f/${publicToken}`
+    try {
+      await navigator.clipboard.writeText(url)
+      setLinkCopied(true)
+      setTimeout(() => setLinkCopied(false), 2000)
+    } catch {
+      window.prompt('Zkopíruj odkaz na fakturu:', url)
+    }
+  }
+
   const isProPlan = plan === 'pro'
   const isPaidPlan = plan === 'start' || plan === 'pro'
   const router = useRouter()
@@ -376,6 +391,12 @@ export function InvoiceForm({ defaultValues, invoiceId, nextInvoiceNumber, plan 
                 <Download className="h-4 w-4" />
                 JSON
               </Button>
+              {publicToken && (
+                <Button variant="secondary" size="sm" onClick={copyPublicLink}>
+                  <Link2 className="h-4 w-4" />
+                  {linkCopied ? 'Odkaz zkopírován' : 'Odkaz pro klienta'}
+                </Button>
+              )}
               <Button variant="secondary" size="sm" onClick={() => { setSendEmail(form.client_email || ''); setSendModal(true); setSendResult(null) }}>
                 <Mail className="h-4 w-4" />
                 Email

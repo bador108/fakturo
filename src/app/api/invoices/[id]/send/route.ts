@@ -79,6 +79,13 @@ export async function POST(req: Request, { params }: { params: { id: string } })
             <tr><td style="color:#64748b;padding:4px 0">Datum splatnosti</td><td style="text-align:right;font-weight:600">${esc(invoice.due_date)}</td></tr>
             <tr><td style="color:#64748b;padding:4px 0">K úhradě</td><td style="text-align:right;font-weight:700;font-size:16px;color:#16a34a">${new Intl.NumberFormat('cs-CZ',{style:'currency',currency:invoice.currency}).format(invoice.total)}</td></tr>
           </table>
+          ${invoice.public_token ? `
+          <div style="text-align:center;margin:24px 0">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.online'}/f/${invoice.public_token}" style="display:inline-block;background:#16a34a;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">
+              Zobrazit fakturu a zaplatit
+            </a>
+            <p style="color:#94a3b8;font-size:11px;margin-top:8px">QR platba a údaje k převodu</p>
+          </div>` : ''}
           ${paymentUrl ? `
           <div style="text-align:center;margin:24px 0">
             <a href="${paymentUrl}" style="display:inline-block;background:#16a34a;color:#fff;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:8px">

@@ -65,6 +65,7 @@ export interface Invoice {
   invoice_type: InvoiceType;
   variable_symbol?: string;
   constant_symbol?: string;
+  public_token?: string;
   status: InvoiceStatus;
   issue_date: string;
   duzp?: string;
