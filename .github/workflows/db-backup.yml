@@ -1,14 +1,15 @@
 # Noční záloha databáze (Supabase free plán nemá vlastní zálohy).
 #
 # Potřebuje dva secrets v repu (Settings → Secrets and variables → Actions):
-#   SUPABASE_DB_URL    Session pooler connection string z Supabase (Connect → Session pooler, port 5432).
-#                      Přímé připojení (db.<ref>.supabase.co) je jen IPv6 a z GitHub runneru nejde.
-#   BACKUP_PASSPHRASE  Dlouhé náhodné heslo (32+ znaků). Dump se jím šifruje ještě před nahráním,
-#                      protože repo je veřejné a artefakty by jinak obsahovaly data uživatelů.
+#   SUPABASE_DB_PASSWORD  Heslo k databázi přesně tak, jak je (bez URL kódování, žádný connection string).
+#                         Host, port a uživatel jsou níž ve workflow: Session pooler, port 5432. Přímé
+#                         připojení (db.<ref>.supabase.co) je jen IPv6 a z GitHub runneru nejde.
+#   BACKUP_PASSPHRASE     Dlouhé náhodné heslo (32+ znaků). Dump se jím šifruje ještě před nahráním,
+#                         protože repo je veřejné a artefakty by jinak obsahovaly data uživatelů.
 #
 # Obnova:
 #   gpg --output fakturo.dump --decrypt fakturo-YYYY-MM-DD.dump.gpg
-#   pg_restore --no-owner --dbname "<connection string>" fakturo.dump
+#   pg_restore --no-owner --host <pooler-host> --port 5432 --username <user> --dbname postgres fakturo.dump
 #
 # Zálohuje se schéma public (faktury, klienti, výdaje, nastavení). Soubory ze Supabase Storage
 # (loga, fotky účtenek) v dumpu nejsou.
@@ -37,18 +38,23 @@ jobs:
 
       - name: Vytvořit šifrovaný dump
         env:
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PGHOST: aws-1-eu-west-2.pooler.supabase.com
+          PGPORT: '5432'
+          PGUSER: postgres.xiiaunjuhcdtzygauooc
+          PGDATABASE: postgres
+          PGSSLMODE: require
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
         run: |
           set -euo pipefail
-          if [ -z "$SUPABASE_DB_URL" ] || [ -z "$BACKUP_PASSPHRASE" ]; then
-            echo "Chybí secret SUPABASE_DB_URL nebo BACKUP_PASSPHRASE" >&2
+          if [ -z "$PGPASSWORD" ] || [ -z "$BACKUP_PASSPHRASE" ]; then
+            echo "Chybí secret SUPABASE_DB_PASSWORD nebo BACKUP_PASSPHRASE" >&2
             exit 1
           fi
           umask 077
           printf %s "$BACKUP_PASSPHRASE" > "$RUNNER_TEMP/passphrase"
           stamp=$(date -u +%Y-%m-%d)
-          /usr/lib/postgresql/17/bin/pg_dump "$SUPABASE_DB_URL" \
+          /usr/lib/postgresql/17/bin/pg_dump \
             --schema=public --no-owner --no-privileges --format=custom \
             | gpg --batch --yes --pinentry-mode loopback \
                   --passphrase-file "$RUNNER_TEMP/passphrase" \
