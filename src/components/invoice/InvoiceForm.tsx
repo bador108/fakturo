@@ -54,7 +54,6 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
   const [generatingPdf, setGeneratingPdf] = useState(false)
   const [sendModal, setSendModal] = useState(false)
   const [sendEmail, setSendEmail] = useState('')
-  const [includePaymentLink, setIncludePaymentLink] = useState(false)
   const [sending, setSending] = useState(false)
   const [sendResult, setSendResult] = useState<'ok' | 'err' | null>(null)
   const [sendErrorMsg, setSendErrorMsg] = useState<string | null>(null)
@@ -213,7 +212,7 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
       const res = await fetch(`/api/invoices/${invoiceId}/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: sendEmail, includePaymentLink }),
+        body: JSON.stringify({ email: sendEmail }),
       })
       if (res.ok) {
         setSendResult('ok')
@@ -776,15 +775,6 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
                   />
                 </div>
-                <label className="flex items-center gap-2.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={includePaymentLink}
-                    onChange={e => setIncludePaymentLink(e.target.checked)}
-                    className="rounded border-slate-300 text-brand focus:ring-brand"
-                  />
-                  <span className="text-sm text-slate-600">Přidat tlačítko pro online platbu kartou</span>
-                </label>
                 {sendResult === 'err' && (
                   <p className="text-xs text-red-500">
                     {sendErrorMsg?.includes('only send testing emails')

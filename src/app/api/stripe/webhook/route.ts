@@ -21,11 +21,6 @@ export async function POST(req: Request) {
   switch (event.type) {
     case 'checkout.session.completed': {
       const meta = obj.metadata as Record<string, string>
-      // Invoice payment
-      if (meta?.invoiceId) {
-        await db.from('invoices').update({ status: 'paid' }).eq('id', meta.invoiceId)
-        break
-      }
       // Subscription upgrade
       const subscriptionId = obj.subscription as string
       if (meta?.userId && subscriptionId) {
