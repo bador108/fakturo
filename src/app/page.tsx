@@ -2,8 +2,8 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { auth } from '@clerk/nextjs/server'
 import { PricingSection } from '@/components/PricingSection'
+import { NavActions, AuthLink } from '@/components/home/HomeAuthLinks'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PhoneMockup } from '@/components/PhoneMockup'
 import { FeatureShowcase } from '@/components/FeatureShowcase'
@@ -20,12 +20,16 @@ export const metadata: Metadata = {
   },
 }
 
+// Stránka je statická a jednou za den se přegeneruje (kvůli roku v patičce).
+export const revalidate = 86400
+
 const C = {
   bg: '#ffffff', bgSoft: '#fafafa', bgDark: '#0c0c0e',
   fg: '#0c0c0e', fg2: '#1f1f23',
   muted: '#6b7280', muted2: '#9ca3af',
   border: '#ececef', borderStrong: '#d4d4d8',
-  primary: '#16a34a', primaryDark: '#15803d', primarySoft: '#dcfce7',
+  // Text a tlačítka v brand zelené musí mít na bílé kontrast aspoň 4,5:1 (#16a34a měl jen 3,3:1).
+  primary: '#15803d', primaryDark: '#166534', primarySoft: '#dcfce7',
   green: '#16a34a', greenSoft: '#dcfce7',
   gold: '#EAB308', goldDark: '#A16207', goldSoft: '#FEF9C3',
 }
@@ -59,7 +63,12 @@ function CheckIcon({ small }: { small?: boolean }) {
   )
 }
 
-function Nav({ userId }: { userId: string | null }) {
+const navPrimaryStyle: React.CSSProperties = { background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)', whiteSpace: 'nowrap' }
+const navLinkStyle: React.CSSProperties = { color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }
+const heroPrimaryStyle: React.CSSProperties = { background: C.primary, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40` }
+const ctaPrimaryStyle: React.CSSProperties = { background: C.bg, color: C.fg, padding: '14px 26px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }
+
+function Nav() {
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}>
       <nav className="px-4 md:px-8" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', maxWidth: 1280, margin: '0 auto' }}>
@@ -74,21 +83,14 @@ function Nav({ userId }: { userId: string | null }) {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {userId ? (
-            <Link href="/dashboard" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>Dashboard →</Link>
-          ) : (
-            <>
-              <Link href="/sign-in" className="hidden md:inline-block" style={{ color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }}>Přihlásit se</Link>
-              <Link href="/sign-up" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)', whiteSpace: 'nowrap' }}>Začít →</Link>
-            </>
-          )}
+          <NavActions primaryStyle={navPrimaryStyle} linkStyle={navLinkStyle} />
         </div>
       </nav>
     </header>
   )
 }
 
-function Hero({ userId }: { userId: string | null }) {
+function Hero() {
   return (
     <section style={{ padding: '88px 0 64px', position: 'relative', overflow: 'hidden' }}>
       <div style={{
@@ -105,9 +107,7 @@ function Hero({ userId }: { userId: string | null }) {
           Vystavíš fakturu za půl minutu. Systém sám hlídá platby a posílá upomínky. Pro OSVČ a freelancery, kteří nechtějí trávit čas v účetním systému.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
-          <Link href={userId ? '/dashboard' : '/sign-up'} className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.primary, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40` }}>
-            {userId ? 'Přejít do dashboardu →' : 'Začít zdarma →'}
-          </Link>
+          <AuthLink style={heroPrimaryStyle} signedOutLabel="Začít zdarma →" signedInLabel="Přejít do dashboardu →" />
           <Link href="/generator" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.bg, color: C.fg, border: `1.5px solid ${C.borderStrong}`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             Podívat se, jak to funguje →
           </Link>
@@ -360,7 +360,7 @@ function TrustBlock() {
   )
 }
 
-function CTA({ userId }: { userId: string | null }) {
+function CTA() {
   return (
     <section style={{ padding: '0 32px 80px' }}>
       <div style={{ maxWidth: 1180, margin: '0 auto', background: C.bgDark, color: C.bg, borderRadius: 24, padding: '72px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -368,7 +368,7 @@ function CTA({ userId }: { userId: string | null }) {
         <div style={{ position: 'relative' }}>
           <h2 style={{ ...disp, fontSize: 'clamp(2rem,4.5vw,3.5rem)', margin: 0, marginBottom: 16, lineHeight: 1.05, letterSpacing: -2, color: C.bg }}>Vystav první fakturu ještě dnes</h2>
           <p style={{ fontSize: 17, opacity: 0.7, marginBottom: 32, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.55 }}>5 faktur měsíčně zdarma, bez kreditní karty. Žádný závazek. Žádné překvapení.</p>
-          <Link href={userId ? '/dashboard' : '/sign-up'} className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.bg, color: C.fg, padding: '14px 26px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>Začít zdarma →</Link>
+          <AuthLink style={ctaPrimaryStyle} signedOutLabel="Začít zdarma →" signedInLabel="Přejít do dashboardu →" />
         </div>
       </div>
     </section>
@@ -423,28 +423,44 @@ const softwareJsonLd = {
   ],
 }
 
-export default async function HomePage() {
-  const { userId } = await auth()
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map(([q, a]) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqItems.map(([q, a]) => ({
-      '@type': 'Question',
-      name: q,
-      acceptedAnswer: { '@type': 'Answer', text: a },
-    })),
-  }
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Fakturo',
+  url: 'https://fakturo.online',
+  logo: 'https://fakturo.online/icon.png',
+}
 
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Fakturo',
+  url: 'https://fakturo.online',
+  inLanguage: 'cs-CZ',
+}
+
+export default function HomePage() {
   return (
     <div style={pageStyle}>
       <div style={meshBg} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <div style={{ position: 'relative', zIndex: 1 }}>
-      <Nav userId={userId} />
+      <Nav />
       <main>
-      <Hero userId={userId} />
+      <Hero />
       <Reveal>
         <section style={{ ...cont, padding: '80px 32px' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16" style={{ alignItems: 'end', marginBottom: 56 }}>
@@ -485,7 +501,7 @@ export default async function HomePage() {
         </section>
       </Reveal>
       <Reveal><FAQ /></Reveal>
-      <Reveal><CTA userId={userId} /></Reveal>
+      <Reveal><CTA /></Reveal>
       </main>
       <Footer />
       <BotcraftWidget botId="59438a4b-6478-4993-b935-081e4a7d5aea" />

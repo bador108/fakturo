@@ -8,7 +8,7 @@ const C = {
   fg: '#0c0c0e', fg2: '#1f1f23',
   muted: '#6b7280',
   border: '#ececef', borderStrong: '#d4d4d8',
-  primary: '#16a34a',
+  primary: '#15803d',
 }
 
 const inputStyle: React.CSSProperties = {

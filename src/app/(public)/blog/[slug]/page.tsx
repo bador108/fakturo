@@ -32,7 +32,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 }
 
 const C = {
-  bg: '#ffffff', fg: '#0c0c0e', fg2: '#1f1f23', muted: '#6b7280', border: '#ececef', primary: '#16a34a',
+  bg: '#ffffff', fg: '#0c0c0e', fg2: '#1f1f23', muted: '#6b7280', border: '#ececef', primary: '#15803d',
 }
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
