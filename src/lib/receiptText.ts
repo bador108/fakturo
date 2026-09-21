@@ -14,7 +14,7 @@ const DECIMAL_AMOUNT = /(\d{1,3}(?:[  .]\d{3})+|\d+)\s?[,.]\s?(\d{2})(?!\d)/g
 const TOTAL_STRONG = /(celkem|k\s*úhradě|k\s*uhrade|k\s*platbě|k\s*platbe|total|suma\s*k)/i
 const TOTAL_WEAK = /(součet|soucet|suma|zaplaceno|hotově|hotove|platba|karta)/i
 const NOT_A_TOTAL = /(dph|daň|dan\b|základ|zaklad|vráceno|vraceno|vrácení|sleva|dýško|dysko)/i
-const LINE_TO_SKIP_AS_VENDOR = /(účtenk|uctenk|paragon|doklad|provozovn|pokladn|pobočk|pobock|datum|číslo|cislo|forma|úhrad|uhrad|hotovost|platb|mezisou|celkem|dph|sazba|děkuj|dekuj|ičo|dič|\bdic\b|\btel\b|www\.|http|@)/i
+const LINE_TO_SKIP_AS_VENDOR = /(\bfaktura\b|\binvoice\b|\breceipt\b|účtenk|uctenk|paragon|doklad|provozovn|pokladn|pobočk|pobock|datum|číslo|cislo|forma|úhrad|uhrad|hotovost|platb|mezisou|celkem|dph|sazba|děkuj|dekuj|ičo|dič|\bdic\b|\btel\b|www\.|http|@)/i
 const COMPANY_SUFFIX = /(s\.\s?r\.\s?o|a\.\s?s\.|spol\.|v\.\s?o\.\s?s|k\.\s?s\.)/i
 // Na účtenkách bývá v závorce i "(2,00 EUR)" — kdo vidí Kč/Kc/CZK, ten je v korunách.
 const CZK_MARK = /(?:^|[^A-Za-zÀ-ɏ])(?:kč|kc|czk)(?![A-Za-zÀ-ɏ])/i

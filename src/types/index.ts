@@ -265,6 +265,8 @@ export interface Expense {
   vendor?: string;
   notes?: string;
   receipt_url?: string | null;
+  source?: 'manual' | 'email';
+  needs_review?: boolean;
   created_at?: string;
   updated_at?: string;
 }

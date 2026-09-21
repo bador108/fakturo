@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Receipt, Plus, Trash2, X, Sparkles, Camera, Paperclip } from 'lucide-react'
+import { Receipt, Plus, Trash2, X, Sparkles, Camera, Paperclip, Pencil, Mail } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { readReceiptFile } from '@/lib/receiptOcr'
+import { CopyButton } from '@/components/CopyButton'
 import { ProUpsell } from '@/components/ProUpsell'
 import type { Expense, ExpenseCategory, Currency } from '@/types'
 
@@ -63,6 +64,8 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
   const [quickText, setQuickText] = useState('')
   const [parsing, setParsing] = useState(false)
   const [parseNote, setParseNote] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [inboxAddress, setInboxAddress] = useState<string | null>(null)
 
   useEffect(() => {
     if (!isPaidPlan) { setLoading(false); return }
@@ -79,6 +82,40 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
     return () => URL.revokeObjectURL(url)
   }, [receiptFile])
 
+  useEffect(() => {
+    if (!isPaidPlan) return
+    fetch('/api/expenses/inbox')
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d?.address) setInboxAddress(d.address) })
+      .catch(() => {})
+  }, [isPaidPlan])
+
+  async function regenerateInbox() {
+    if (!window.confirm('Stará adresa přestane fungovat. Vygenerovat novou?')) return
+    const res = await fetch('/api/expenses/inbox', { method: 'POST' })
+    const d = await res.json().catch(() => null)
+    if (res.ok && d?.address) setInboxAddress(d.address)
+  }
+
+  function openEdit(e: Expense) {
+    setEditingId(e.id)
+    setForm({
+      date: e.date, vendor: e.vendor ?? '', description: e.description ?? '', amount: String(e.amount),
+      currency: e.currency as Currency, category: e.category, vat_claimable: Boolean(e.vat_claimable),
+    })
+    setParseNote(null)
+    setShowForm(true)
+  }
+
+  async function confirmExpense(id: string) {
+    const res = await fetch(`/api/expenses/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ needs_review: false }),
+    })
+    if (res.ok) setExpenses(prev => prev.map(e => (e.id === id ? { ...e, needs_review: false } : e)))
+  }
+
   function clearReceipt() {
     ocrRun.current++
     setReceiptFile(null)
@@ -89,6 +126,10 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
     setShowForm(false)
     setParseNote(null)
     clearReceipt()
+    if (editingId) {
+      setEditingId(null)
+      setForm(emptyForm)
+    }
   }
 
   // Čtení běží přímo v prohlížeči (Tesseract) — fotka účtenky se kvůli tomu nikam neposílá.
@@ -124,10 +165,26 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
     else setOcr({ state: 'idle', progress: 0 })
   }
 
-  async function addExpense() {
+  async function saveExpense() {
     if (!form.vendor || !form.amount) return
     setSaving(true)
     try {
+      if (editingId) {
+        const res = await fetch(`/api/expenses/${editingId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...form, amount: Number(form.amount), needs_review: false }),
+        })
+        const updated = await res.json()
+        if (!res.ok) {
+          setParseNote(updated.error ?? 'Výdaj se nepodařilo uložit.')
+          return
+        }
+        setExpenses(prev => prev.map(e => (e.id === editingId ? updated : e)))
+        closeForm()
+        return
+      }
+
       let receiptPath: string | null = null
       if (receiptFile) {
         const fd = new FormData()
@@ -236,6 +293,24 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
         </button>
       </div>
 
+      {/* E-mailem */}
+      {inboxAddress && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-2">
+          <div className="flex items-center gap-2">
+            <Mail className="h-4 w-4 text-brand" />
+            <p className="text-sm font-medium text-slate-700">Výdaje e-mailem</p>
+          </div>
+          <p className="text-xs text-slate-400">
+            Přepošli sem účtenku nebo fakturu od dodavatele. PDF přečteme a výdaj se objeví v seznamu k potvrzení. Adresu můžeš uvést i jako fakturační e-mail u služeb, které platíš.
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <code className="rounded-lg bg-slate-50 border border-slate-100 px-3 py-1.5 text-sm text-slate-800 break-all">{inboxAddress}</code>
+            <CopyButton value={inboxAddress} label="Kopírovat" />
+            <button onClick={regenerateInbox} className="text-xs text-slate-400 hover:text-slate-700 transition">Vygenerovat novou</button>
+          </div>
+        </div>
+      )}
+
       {/* Quick entry */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-2">
         <div className="flex items-center gap-2">
@@ -284,7 +359,7 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 space-y-4 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-slate-800">Přidat výdaj</h3>
+              <h3 className="font-semibold text-slate-800">{editingId ? 'Upravit výdaj' : 'Přidat výdaj'}</h3>
               <button onClick={closeForm} className="text-slate-400 hover:text-slate-700">
                 <X className="h-4 w-4" />
               </button>
@@ -346,6 +421,7 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
               Uplatnitelné DPH
             </label>
 
+            {!editingId && (
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Účtenka (volitelné)</label>
               {receiptFile ? (
@@ -387,10 +463,11 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
                 <p className="text-xs text-amber-600 mt-1.5">Z fotky se nepodařilo nic přečíst, vyplň údaje ručně.</p>
               )}
             </div>
+            )}
 
             <div className="flex gap-2 justify-end pt-2">
               <button onClick={closeForm} className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg transition">Zrušit</button>
-              <button onClick={addExpense} disabled={!form.vendor || !form.amount || saving}
+              <button onClick={saveExpense} disabled={!form.vendor || !form.amount || saving}
                 className="px-4 py-2 text-sm bg-brand text-white rounded-lg hover:bg-brand-dark transition disabled:opacity-50 font-medium">
                 {saving ? 'Ukládám…' : 'Uložit'}
               </button>
@@ -430,6 +507,15 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
                 {e.vat_claimable && (
                   <span className="hidden sm:inline text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">DPH</span>
                 )}
+                {e.needs_review && (
+                  <button
+                    onClick={() => confirmExpense(e.id)}
+                    title="Z e-mailu — zkontroluj údaje a potvrď"
+                    className="hidden sm:inline text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-medium hover:bg-amber-100 transition shrink-0"
+                  >
+                    Z e-mailu · potvrdit
+                  </button>
+                )}
                 {e.receipt_url && (
                   <a
                     href={`/api/expenses/${e.id}/receipt`}
@@ -445,6 +531,9 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
                 <span className="font-semibold text-slate-800 text-sm shrink-0 text-right tabular-nums">
                   {formatCurrency(e.amount, e.currency)}
                 </span>
+                <button onClick={() => openEdit(e)} aria-label="Upravit výdaj" className="text-slate-300 hover:text-brand transition opacity-0 group-hover:opacity-100 shrink-0">
+                  <Pencil className="h-4 w-4" />
+                </button>
                 <button onClick={() => deleteExpense(e.id)} className="text-slate-300 hover:text-red-400 transition opacity-0 group-hover:opacity-100 shrink-0">
                   <Trash2 className="h-4 w-4" />
                 </button>
