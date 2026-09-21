@@ -50,7 +50,7 @@ const features = [
     id: 'recurring',
     icon: RefreshCw,
     title: 'Opakující se faktury',
-    desc: 'Nastavte šablony pro měsíční, čtvrtletní nebo roční fakturace. Systém vás upozorní, kdy je čas odeslat.',
+    desc: 'Nastavte šablony pro měsíční, čtvrtletní nebo roční fakturace. Fakturo je podle plánu samo vystaví a odešle klientovi.',
     img: '/screenshots/recurring.png', w: 1016, h: 757,
     color: 'rose',
   },
@@ -80,6 +80,9 @@ function Lightbox({ src, w, h, title, onClose }: { src: string; w: number; h: nu
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
       onClick={onClose}
     >
@@ -93,6 +96,7 @@ function Lightbox({ src, w, h, title, onClose }: { src: string; w: number; h: nu
       >
         <button
           onClick={onClose}
+          aria-label="Zavřít náhled"
           className="absolute top-3 right-3 z-10 h-9 w-9 rounded-full bg-slate-900/70 hover:bg-slate-900/90 backdrop-blur-sm text-white flex items-center justify-center transition"
         >
           <X className="h-4 w-4" />
@@ -142,7 +146,7 @@ export function FeatureShowcase() {
                 <div className="min-w-0">
                   <p className={cn('text-sm font-semibold leading-tight', isActive ? 'text-slate-900' : 'text-slate-600')}>{f.title}</p>
                   {isActive && (
-                    <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">{f.desc}</p>
+                    <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{f.desc}</p>
                   )}
                 </div>
                 {isActive && <span className={cn('h-2 w-2 rounded-full shrink-0 ml-auto', NEUTRAL.dot)} />}

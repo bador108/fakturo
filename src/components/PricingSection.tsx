@@ -116,7 +116,8 @@ const plans: Plan[] = [
   },
 ]
 
-export function PricingSection() {
+// anchorId: na hlavní stránce už má id="pricing" obalující sekce, takže se tady nesmí opakovat.
+export function PricingSection({ anchorId = 'pricing' }: { anchorId?: string | null } = {}) {
   const [annual, setAnnual] = useState(false)
   const [loading, setLoading] = useState<string | null>(null)
   function handleUpgrade(plan: 'start' | 'pro') {
@@ -127,7 +128,7 @@ export function PricingSection() {
   }
 
   return (
-    <section className="bg-white border-y border-slate-100 py-20" id="pricing">
+    <section className="bg-white border-y border-slate-100 py-20" id={anchorId ?? undefined}>
       <div className="max-w-6xl mx-auto px-6">
 
         {/* Toggle */}

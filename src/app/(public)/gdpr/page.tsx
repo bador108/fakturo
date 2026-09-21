@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/gdpr' },
   title: 'Ochrana osobních údajů (GDPR) – Fakturo',
   description: 'Zásady ochrany osobních údajů Fakturo. Jak zpracováváme a chráníme tvoje data v souladu s GDPR.',
 }

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Zap, Users, Building2, BarChart2, Smartphone, Plug } from 'lucide-react'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/funkce' },
   title: 'Funkce – Fakturo',
   description: 'Vše, co potřebuješ pro profesionální fakturaci. Faktury za 30 sekund, automatické párování plateb, opakované fakturace a export pro účetní.',
 }
@@ -62,7 +63,7 @@ const features = [
       'Automatické předvyplnění z IČO přes ARES',
       'Historie faktur per klient',
       'Označení preferované měny a splatnosti',
-      'Import a export klientů v CSV',
+      'Export klientů v CSV',
     ],
   },
   {
@@ -73,7 +74,7 @@ const features = [
       'Automatické párování plateb s fakturami přes VS',
       'Upomínky — první, druhá, třetí. Tón si nastavíš.',
       'Přehledný dashboard — zaplaceno, čeká, po splatnosti',
-      'Export výpisů do PDF a CSV',
+      'Export faktur a výdajů v CSV, faktur také v PDF',
     ],
   },
   {
@@ -84,7 +85,7 @@ const features = [
       'Export do Pohoda XML formátu',
       'Přehled příjmů po měsících',
       'Podpora plátce i neplátce DPH',
-      'OSS, reverse charge, VIES validace',
+      'Reverse charge a cizí měny',
     ],
   },
   {

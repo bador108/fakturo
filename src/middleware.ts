@@ -15,6 +15,7 @@ const isPublic = createRouteMatcher([
   '/f/(.*)',
   '/api/pdf/public/(.*)',
   '/api/inbound/(.*)',
+  '/api/cron/(.*)',
   '/gdpr(.*)',
   '/obchodni-podminky(.*)',
   '/api/contact(.*)',

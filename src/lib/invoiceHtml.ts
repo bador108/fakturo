@@ -41,6 +41,12 @@ const invoiceTypeLabel: Record<string, string> = {
   nabidka: 'Cenová nabídka',
 }
 
+// Neplátce DPH nevystavuje daňový doklad, takže se to v nadpisu nesmí objevit.
+const nonPayerTypeLabel: Record<string, string> = {
+  faktura: 'Faktura',
+  opravny: 'Opravný doklad',
+}
+
 const paymentMethodLabel: Record<string, string> = {
   bank_transfer: 'Bankovní převod',
   cash: 'Hotovost',
@@ -117,7 +123,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
       <div class="summary-item"><span class="summary-label">Způsob platby</span><span class="summary-value">${esc(paymentMethodLabel[invoice.payment_method ?? 'bank_transfer'])}</span></div>
     </div>
     <div class="summary-col summary-totals">
-      <div class="summary-total-row"><span>Základ DPH</span><span>${esc(formatCurrency(invoice.subtotal, currency))}</span></div>
+      ${invoice.vat_payer ? `<div class="summary-total-row"><span>Základ DPH</span><span>${esc(formatCurrency(invoice.subtotal, currency))}</span></div>` : ''}
       ${vatRows}
       <div class="summary-grand"><span class="summary-grand-label">K úhradě</span><span class="summary-grand-value">${esc(formatCurrency(invoice.total, currency))}</span></div>
     </div>
@@ -228,7 +234,7 @@ export function renderInvoiceHtml({ invoice, items, qrCode }: RenderOptions): st
       ${logoBlock}
       <div>
         <p class="sender-name">${esc(invoice.sender_name)}</p>
-        <div class="invoice-label">${esc(invoiceTypeLabel[invoice.invoice_type] ?? 'Faktura')}</div>
+        <div class="invoice-label">${esc((!invoice.vat_payer && nonPayerTypeLabel[invoice.invoice_type]) || invoiceTypeLabel[invoice.invoice_type] || 'Faktura')}</div>
         <div class="invoice-number">č. ${esc(invoice.invoice_number)}</div>
       </div>
     </div>

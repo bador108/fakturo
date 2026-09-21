@@ -23,8 +23,10 @@ function advanceDate(dateStr: string, recurrence: RecurringInvoice['recurrence']
 // Generuje skutečné faktury z aktivních šablon, jejichž next_date už nastal — a to jen
 // uživatelům s Pro plánem (funkce je gatovaná stejně jako její vytvoření v /api/recurring).
 export async function GET(req: Request) {
-  const auth = req.headers.get('authorization')
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  // Bez nastaveného CRON_SECRET by se porovnávalo s "Bearer undefined" a šlo by ho poslat zvenčí.
+  const secret = process.env.CRON_SECRET
+  if (!secret) return NextResponse.json({ error: 'CRON_SECRET není nastavený' }, { status: 503 })
+  if (req.headers.get('authorization') !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

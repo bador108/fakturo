@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ContactForm } from './ContactForm'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/kontakt' },
   title: 'Kontakt – Fakturo',
   description: 'Napiš nám. Rádi odpovíme na dotazy, zpětnou vazbu nebo technické problémy.',
 }

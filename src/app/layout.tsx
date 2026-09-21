@@ -25,7 +25,6 @@ export const metadata: Metadata = {
     siteName: 'Fakturo',
     locale: 'cs_CZ',
     type: 'website',
-    images: [{ url: '/screenshots/dashboard.png', width: 1200, height: 836, alt: 'Fakturo — přehled dashboardu' }],
   },
   twitter: {
     card: 'summary_large_image',

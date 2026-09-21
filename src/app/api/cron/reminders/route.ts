@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server'
 import { runReminders } from '@/lib/reminders'
 
 export async function GET(req: Request) {
-  // Verify cron secret to prevent unauthorized calls
-  const auth = req.headers.get('authorization')
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  // Bez nastaveného CRON_SECRET by se porovnávalo s "Bearer undefined" a šlo by ho poslat zvenčí.
+  const secret = process.env.CRON_SECRET
+  if (!secret) return NextResponse.json({ error: 'CRON_SECRET není nastavený' }, { status: 503 })
+  if (req.headers.get('authorization') !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

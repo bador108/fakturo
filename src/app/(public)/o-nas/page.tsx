@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Zap, Scissors, Globe2, Lock } from 'lucide-react'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/o-nas' },
   title: 'O nás – Fakturo',
   description: 'Fakturo je moderní fakturační nástroj pro českou realitu. Stavíme fakturaci pro lidi, kteří dělají skutečnou práci.',
 }

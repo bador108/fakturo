@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/obchodni-podminky' },
   title: 'Obchodní podmínky – Fakturo',
   description: 'Obchodní podmínky služby Fakturo — pravidla užívání, platby, zrušení a odpovědnost.',
 }

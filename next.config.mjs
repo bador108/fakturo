@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
+  images: {
+    // Screenshoty se mění zřídka; výchozí TTL 60 s by je zbytečně znovu optimalizovalo.
+    minimumCacheTTL: 60 * 60 * 24,
+  },
   experimental: {
     // @sparticuz/chromium má binárku (bin/) vedle JS kódu — když ho Next.js webpackem
     // přebalí, cesta k binárce se rozbije. Musí zůstat jako normální require z node_modules.

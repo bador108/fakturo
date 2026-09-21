@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Code2, Palette, PenLine, Camera } from 'lucide-react'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/pravidelne-fakturace' },
   title: 'Pravidelné fakturace – Fakturo',
   description: 'Vystav fakturu jednou. Posílej ji každý měsíc automaticky. Ideální pro retainery, předplatné a opakované zakázky.',
 }
@@ -42,7 +43,7 @@ const capabilities = [
   'Párování plateb s bankovním výpisem',
   'Upomínky při nezaplacení',
   'Podpora CZK, EUR a USD',
-  'EU fakturace s VIES validací',
+  'Faktury do EU s reverse charge',
   'Pause nebo zrušení kdykoliv jedním kliknutím',
 ]
 

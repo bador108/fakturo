@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { PricingSection } from '@/components/PricingSection'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/cenik' },
   title: 'Ceník – Fakturo',
   description: 'Jednoduché ceny bez překvapení. Free plán zdarma (5 faktur/měsíc), Start 99 Kč/měsíc, Pro 249 Kč/měsíc.',
 }

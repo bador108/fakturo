@@ -1,6 +1,6 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { SelectHTMLAttributes, forwardRef } from 'react'
+import { SelectHTMLAttributes, forwardRef, useId } from 'react'
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
@@ -9,7 +9,8 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, label, error, id, children, ...props }, ref) => {
-    const selectId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
+    const autoId = useId()
+    const selectId = id ?? autoId
     return (
       <div className="flex flex-col gap-1">
         {label && (

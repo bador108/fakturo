@@ -8,6 +8,7 @@ import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
 import { SetPasswordCard } from '@/components/SetPasswordCard'
 import { ProUpsell } from '@/components/ProUpsell'
+import { PohodaExportButton } from '@/components/PohodaExportButton'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
 import { isPro } from '@/lib/plan'
 
@@ -85,6 +86,35 @@ export default async function SettingsPage() {
         <h2 className="font-semibold mb-1">Párování plateb ručně</h2>
         <p className="text-xs text-slate-400 mb-4">Nahrajte výpis z banky a faktury se automaticky označí jako zaplacené · Funguje se všemi bankami</p>
         <BankStatementUpload />
+      </div>
+
+      {/* Export dat */}
+      <div className="p-5 bg-white rounded-xl border border-zinc-200">
+        <h2 className="font-semibold mb-1">Export dat</h2>
+        <p className="text-xs text-slate-400 mb-4">Tvoje data jsou tvoje. CSV otevřeš v Excelu, faktury v PDF stáhneš u každé faktury zvlášť.</p>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {[
+            ['invoices', 'Faktury (CSV)', true],
+            ['clients', 'Klienti (CSV)', true],
+            ['expenses', 'Výdaje (CSV)', canBrand],
+          ].map(([type, label, allowed]) => allowed ? (
+            <a
+              key={type as string}
+              href={`/api/export/csv?type=${type}`}
+              className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-sm font-medium px-3.5 py-1.5 rounded-lg transition shadow-sm"
+            >
+              {label as string}
+            </a>
+          ) : null)}
+        </div>
+        {pro ? (
+          <div>
+            <p className="text-xs font-medium text-slate-600 mb-2">Podklady pro účetní</p>
+            <PohodaExportButton />
+          </div>
+        ) : (
+          <ProUpsell title="Export do Pohoda XML" description="Měsíční podklady pro účetní v XML pro Pohodu — součást Pro plánu." />
+        )}
       </div>
     </div>
   )

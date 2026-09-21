@@ -13,6 +13,7 @@ export function PohodaExportButton() {
   return (
     <div className="flex items-center gap-2">
       <select
+        aria-label="Rok exportu"
         value={year}
         onChange={e => setYear(Number(e.target.value))}
         className="text-sm border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-soft"

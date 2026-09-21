@@ -59,7 +59,7 @@ export function ContactForm() {
     return (
       <div style={{ textAlign: 'center', padding: '48px 0' }}>
         <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}><CheckCircle2 size={52} color="#16a34a" /></div>
-        <h2 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 12px' }}>Zpráva odeslána!</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 12px' }}>Zpráva odeslána</h2>
         <p style={{ fontSize: 16, color: C.muted, margin: 0, lineHeight: 1.6 }}>
           Ozveme se ti na <strong>{form.email}</strong> co nejdříve. Obvykle do 24 hodin.
         </p>
@@ -71,8 +71,11 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label style={labelStyle}>Jméno</label>
+          <label htmlFor="kontakt-jmeno" style={labelStyle}>Jméno</label>
           <input
+            id="kontakt-jmeno"
+            name="jmeno"
+            autoComplete="name"
             type="text"
             required
             placeholder="Tvoje jméno"
@@ -82,8 +85,11 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label style={labelStyle}>Email</label>
+          <label htmlFor="kontakt-email" style={labelStyle}>Email</label>
           <input
+            id="kontakt-email"
+            name="email"
+            autoComplete="email"
             type="email"
             required
             placeholder="tvuj@email.cz"
@@ -94,8 +100,10 @@ export function ContactForm() {
         </div>
       </div>
       <div>
-        <label style={labelStyle}>Předmět</label>
+        <label htmlFor="kontakt-predmet" style={labelStyle}>Předmět</label>
         <select
+          id="kontakt-predmet"
+          name="predmet"
           required
           style={{ ...inputStyle, appearance: 'none' as const, cursor: 'pointer' }}
           value={form.predmet}
@@ -110,8 +118,10 @@ export function ContactForm() {
         </select>
       </div>
       <div>
-        <label style={labelStyle}>Zpráva</label>
+        <label htmlFor="kontakt-zprava" style={labelStyle}>Zpráva</label>
         <textarea
+          id="kontakt-zprava"
+          name="zprava"
           required
           rows={5}
           placeholder="Napiš nám cokoliv…"
@@ -131,7 +141,7 @@ export function ContactForm() {
         />
         <label htmlFor="souhlas" style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, cursor: 'pointer' }}>
           Souhlasím se zpracováním osobních údajů dle{' '}
-          <a href="/gdpr" style={{ color: C.primary, textDecoration: 'none' }}>zásad GDPR</a>.
+          <a href="/gdpr" style={{ color: C.primary, textDecoration: 'underline', textUnderlineOffset: 2 }}>zásad GDPR</a>.
         </label>
       </div>
       {error && <p style={{ fontSize: 13, color: '#dc2626', margin: 0 }}>{error}</p>}

@@ -596,7 +596,7 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
               Plátce DPH
             </label>
             {form.vat_payer && (
-              <Select label="" className="w-36" value={currentVatRate} onChange={e => applyVatRateToAllItems(Number(e.target.value) as VatRate)}>
+              <Select label="" aria-label="Sazba DPH pro všechny položky" className="w-36" value={currentVatRate} onChange={e => applyVatRateToAllItems(Number(e.target.value) as VatRate)}>
                 <option value={0}>DPH 0 %</option>
                 <option value={12}>DPH 12 %</option>
                 <option value={21}>DPH 21 %</option>
@@ -618,6 +618,7 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
           <div key={i} className="space-y-2 md:space-y-0 md:grid md:grid-cols-[1fr_80px_90px_110px_80px_40px] md:gap-3 md:items-end border border-slate-100 rounded-lg p-3 md:border-0 md:rounded-none md:p-0">
             <Input
               placeholder="Popis položky"
+              aria-label="Popis položky"
               value={item.description}
               onChange={e => setItem(i, 'description', e.target.value)}
               onBlur={e => suggestVatRate(i, e.target.value)}
@@ -625,25 +626,26 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 md:contents">
               <div>
                 <p className="text-xs text-slate-400 mb-1 md:hidden">Množství</p>
-                <Input type="number" min={0} step="0.001" value={item.quantity} onChange={e => setItem(i, 'quantity', e.target.value)} />
+                <Input type="number" min={0} step="0.001" aria-label="Množství" value={item.quantity} onChange={e => setItem(i, 'quantity', e.target.value)} />
               </div>
               <div>
                 <p className="text-xs text-slate-400 mb-1 md:hidden">Jednotka</p>
-                <Input placeholder="ks" value={item.unit} onChange={e => setItem(i, 'unit', e.target.value)} />
+                <Input placeholder="ks" aria-label="Jednotka" value={item.unit} onChange={e => setItem(i, 'unit', e.target.value)} />
               </div>
-              <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} className="md:hidden self-end p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
+              <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} aria-label={`Odebrat položku ${i + 1}`} className="md:hidden self-end p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>
             <div className="md:contents">
               <p className="text-xs text-slate-400 mb-1 md:hidden">Cena / jednotku</p>
-              <Input type="number" min={0} step="0.01" className="text-right" value={item.unit_price} onChange={e => setItem(i, 'unit_price', e.target.value)} />
+              <Input type="number" min={0} step="0.01" aria-label="Cena za jednotku" className="text-right" value={item.unit_price} onChange={e => setItem(i, 'unit_price', e.target.value)} />
             </div>
             {form.vat_payer && (
               <div className="md:contents">
                 <p className="text-xs text-slate-400 mb-1 md:hidden">DPH</p>
                 <Select
                   label=""
+                  aria-label="Sazba DPH položky"
                   value={item.vat_rate}
                   onChange={e => { setItem(i, 'vat_rate', e.target.value); setVatHint(h => ({ ...h, [i]: '' })) }}
                 >
@@ -653,7 +655,7 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
                 </Select>
               </div>
             )}
-            <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} className="hidden md:flex p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
+            <button type="button" onClick={() => removeItem(i)} disabled={form.items.length === 1} aria-label={`Odebrat položku ${i + 1}`} className="hidden md:flex p-2 text-slate-300 hover:text-red-400 transition disabled:opacity-30">
               <Trash2 className="h-4 w-4" />
             </button>
             {vatHint[i] && (

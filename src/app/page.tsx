@@ -236,7 +236,7 @@ function Features() {
       </div>
       <FeatureRow tag="Rychlost" title="Vystav fakturu za 30 vteřin" text="Šablony, automatické vyplnění z IČO, autocomplete klientů a sazeb. Pamatuje si tvoje pracovní zvyky a nabízí to, co skutečně používáš." reverse><InvoiceMock /></FeatureRow>
       <FeatureRow tag="Banka" title="Platby se párují automaticky" text="Nahraješ výpis z banky a Fakturo samo pozná, která platba patří ke které faktuře. Faktura se pak sama označí jako zaplacená."><BankMock /></FeatureRow>
-      <FeatureRow tag="Automatizace" title="Pravidelné fakturace bez práce" text="Měsíční retainer s klientem? Nastav opakování — Fakturo vystaví a pošle fakturu samo. Včetně EU faktur s VIES." reverse><AutoMock /></FeatureRow>
+      <FeatureRow tag="Automatizace" title="Pravidelné fakturace bez práce" text="Měsíční retainer s klientem? Nastav opakování — Fakturo vystaví a pošle fakturu samo." reverse><AutoMock /></FeatureRow>
     </section>
   )
 }
@@ -248,10 +248,10 @@ function FeatureGrid() {
         {([
           { title:'Slušné upomínky', text:'Mile, ale jasně. Tři varianty zdvořilosti, ty si vybereš.' },
           { title:'Víceměnové faktury', text:'CZK · EUR · USD s live kurzy ČNB. DPH 0, 12, 21 %.' },
-          { title:'EU faktury', text:'VIES, OSS, reverse charge, cizí měny. S DPH i bez.' },
+          { title:'EU faktury', text:'Reverse charge a cizí měny (CZK, EUR, USD). S DPH i bez.' },
           { title:'Pro účetní', text:'Měsíční podklady jedním kliknutím. Pohoda XML, PDF.' },
           { title:'QR platby', text:'Ke každé faktuře automaticky QR kód. Klient naskenuje a zaplatí.' },
-          { title:'Bezpečnost', text:'Šifrování v klidu i přenosu, GDPR, 2FA, audit log.' },
+          { title:'Bezpečnost', text:'Šifrování v klidu i přenosu, GDPR a ověření přihlášení kódem z e-mailu.' },
         ] as {title:string,text:string}[]).map(f => (
           <div key={f.title} style={{ padding: 28, borderRadius: 14, border: `1px solid ${C.border}`, background: C.bg }}>
             <h3 style={{ fontSize: 17, fontWeight: 600, margin: 0, marginBottom: 8, letterSpacing: -0.3 }}>{f.title}</h3>
@@ -266,13 +266,13 @@ function FeatureGrid() {
 const faqItems: [string, string][] = [
   ['Můžu zrušit kdykoliv?','Ano. Žádná výpovědní doba. Klikneš v nastavení a hotovo. Data si stáhneš v PDF i CSV.'],
   ['Fakturo je nové — proč bych mu měl věřit?','Fakturo je nové — a je to tak vidět. Nemá desítky let starý kód ani rozhraní z roku 2012. Stavíme ho přímo pro aktuální českou legislativu. Riziko si nemusíš brát na víru: začneš zdarma, bez karty, a data si kdykoliv odneseš. Když ti to nesedne, nic tě nedrží.'],
-  ['Funguje to s českou legislativou?','Plátce i neplátce DPH, OSS, reverse charge. Vše, co OSVČ v ČR potřebuje.'],
+  ['Funguje to s českou legislativou?','Plátce i neplátce DPH a reverse charge. Vše, co OSVČ v ČR potřebuje.'],
   ['Umí Fakturo počítat DPH?','Jasně. U každé položky vybereš sazbu (0 %, 12 % nebo 21 %), Fakturo si samo spočítá základ i DPH a rozpad na faktuře. Sazbu ti dokonce umí i navrhnout podle toho, co fakturuješ.'],
   ['Jak funguje platba přes QR kód?','Každá faktura má vygenerovaný QR kód se všemi platebními údaji (formát SPAYD). Klient ho naskenuje bankovní appkou v mobilu a částka i variabilní symbol se vyplní samy — nic nepřepisuje.'],
   ['Co když už používám něco jiného?','Pošli nám export (Fakturoid, iDoklad, Money) a data převedeme zdarma.'],
   ['Co když mám účetní?','Stáhne si měsíční podklady jedním kliknutím — XML pro Pohodu i jiné programy.'],
-  ['Funguje to v EU?','Cizí měny, VIES validace, OSS pro digitální služby, reverse charge.'],
-  ['Jsou moje data v bezpečí?','Šifrování v klidu i přenosu, GDPR, 2FA, denní zálohy. Servery v EU.'],
+  ['Funguje to v EU?','Cizí měny (CZK, EUR, USD) a reverse charge pro faktury do zemí EU.'],
+  ['Jsou moje data v bezpečí?','Šifrování v klidu i přenosu, GDPR a ověření přihlášení kódem z e-mailu. Data jsou uložená v Evropě.'],
   ['Co se stane s mými daty, když appku přestanu používat?','Nic — jsou pořád tvoje. Export všech faktur do PDF nebo CSV je součástí i plánu zdarma, takže tě appka nikdy nedrží jako rukojmí.'],
 ]
 
@@ -443,6 +443,7 @@ export default async function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <div style={{ position: 'relative', zIndex: 1 }}>
       <Nav userId={userId} />
+      <main>
       <Hero userId={userId} />
       <Reveal>
         <section style={{ ...cont, padding: '80px 32px' }}>
@@ -480,11 +481,12 @@ export default async function HomePage() {
             <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2, marginBottom: 16 }}>Ceny bez háčku</h2>
             <p style={{ fontSize: 17, color: C.muted, margin: 0, lineHeight: 1.55 }}>Začni zdarma, plať jen když to appka fakt využiješ.</p>
           </div>
-          <PricingSection />
+          <PricingSection anchorId={null} />
         </section>
       </Reveal>
       <Reveal><FAQ /></Reveal>
       <Reveal><CTA userId={userId} /></Reveal>
+      </main>
       <Footer />
       <BotcraftWidget botId="59438a4b-6478-4993-b935-081e4a7d5aea" />
       </div>
