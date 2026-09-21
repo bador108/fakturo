@@ -25,7 +25,8 @@ interface ReceivedEvent {
 
 async function pdfToText(bytes: Uint8Array): Promise<string> {
   try {
-    const pdf = await getDocumentProxy(bytes)
+    // pdf.js si předaný buffer převezme (po přečtení je prázdný), proto dostane kopii — originál se pak nahrává do úložiště.
+    const pdf = await getDocumentProxy(new Uint8Array(bytes))
     const { text } = await extractText(pdf, { mergePages: true })
     return text
   } catch {

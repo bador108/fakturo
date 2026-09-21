@@ -117,11 +117,13 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
   function openEdit(e: Expense) {
     setEditingId(e.id)
     setForm({
-      date: e.date, vendor: e.vendor ?? '', description: e.description ?? '', amount: String(e.amount),
+      date: e.date, vendor: e.vendor ?? '', description: e.description ?? '', amount: Number(e.amount) > 0 ? String(e.amount) : '',
       currency: e.currency as Currency, category: e.category, vat_claimable: Boolean(e.vat_claimable),
     })
     setParseNote(null)
     setShowForm(true)
+    // Fotku z e-mailu server nečte (OCR běží jen v prohlížeči), tak ji přečteme až tady, když výdaj někdo otevře.
+    if (e.source === 'email' && e.needs_review && !(Number(e.amount) > 0) && e.receipt_url) void readStoredReceipt(e)
   }
 
   async function confirmExpense(id: string) {
@@ -166,6 +168,37 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
         amount: f.amount || (p.amount !== null ? String(p.amount) : ''),
         date: f.date === today && p.date ? p.date : f.date,
         currency: f.currency === 'CZK' ? p.currency : f.currency,
+        category: f.category === 'ostatni' ? (p.category as ExpenseCategory) : f.category,
+      }))
+      setOcr({ state: p.amount === null && !p.vendor ? 'failed' : 'done', progress: 1 })
+    } catch {
+      if (ocrRun.current === run) setOcr({ state: 'failed', progress: 0 })
+    }
+  }
+
+  // Stejné čtení pro fotku, která už je uložená (přišla e-mailem). Co uživatel mezitím sám změnil, se nepřepisuje;
+  // dodavatel z e-mailu je jen odesílatel zprávy, takže ho nahradí ten z účtenky.
+  async function readStoredReceipt(e: Expense) {
+    const run = ++ocrRun.current
+    setOcr({ state: 'reading', progress: 0 })
+    try {
+      const res = await fetch(`/api/expenses/${e.id}/receipt`)
+      const blob = res.ok ? await res.blob() : null
+      if (!blob || !blob.type.startsWith('image/') || /hei[cf]/.test(blob.type)) {
+        if (ocrRun.current === run) setOcr({ state: 'idle', progress: 0 })
+        return
+      }
+      const p = await readReceiptFile(new File([blob], 'uctenka', { type: blob.type }), progress => {
+        if (ocrRun.current === run) setOcr({ state: 'reading', progress })
+      })
+      if (ocrRun.current !== run) return
+
+      setForm(f => ({
+        ...f,
+        vendor: f.vendor === (e.vendor ?? '') ? (p.vendor ?? f.vendor) : f.vendor,
+        amount: f.amount || (p.amount !== null ? String(p.amount) : ''),
+        date: f.date === e.date && p.date ? p.date : f.date,
+        currency: f.currency === e.currency ? p.currency : f.currency,
         category: f.category === 'ostatni' ? (p.category as ExpenseCategory) : f.category,
       }))
       setOcr({ state: p.amount === null && !p.vendor ? 'failed' : 'done', progress: 1 })
@@ -468,18 +501,19 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
                   />
                 </label>
               )}
-              {ocr.state === 'reading' && (
-                <p className="text-xs text-slate-500 mt-1.5">
-                  Čtu účtenku… {ocr.progress > 0 ? `${Math.round(ocr.progress * 100)} %` : 'připravuji'}
-                </p>
-              )}
-              {ocr.state === 'done' && (
-                <p className="text-xs text-emerald-600 mt-1.5">Údaje jsme předvyplnili z fotky, zkontroluj je prosím.</p>
-              )}
-              {ocr.state === 'failed' && (
-                <p className="text-xs text-amber-600 mt-1.5">Z fotky se nepodařilo nic přečíst, vyplň údaje ručně.</p>
-              )}
             </div>
+            )}
+
+            {ocr.state === 'reading' && (
+              <p className="text-xs text-slate-500">
+                Čtu účtenku… {ocr.progress > 0 ? `${Math.round(ocr.progress * 100)} %` : 'připravuji'}
+              </p>
+            )}
+            {ocr.state === 'done' && (
+              <p className="text-xs text-emerald-600">Údaje jsme předvyplnili z fotky, zkontroluj je prosím.</p>
+            )}
+            {ocr.state === 'failed' && (
+              <p className="text-xs text-amber-600">Z fotky se nepodařilo nic přečíst, vyplň údaje ručně.</p>
             )}
 
             <div className="flex gap-2 justify-end pt-2">
