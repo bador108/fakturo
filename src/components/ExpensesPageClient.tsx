@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Receipt, Plus, Trash2, X, Sparkles, Camera, Paperclip, Pencil, Mail } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { readReceiptFile } from '@/lib/receiptOcr'
@@ -67,13 +67,30 @@ export function ExpensesPageClient({ isPaidPlan }: { isPaidPlan: boolean }) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [inboxAddress, setInboxAddress] = useState<string | null>(null)
 
+  const loadExpenses = useCallback(async (initial = false) => {
+    try {
+      const d = await fetch('/api/expenses').then(r => r.json())
+      if (Array.isArray(d)) setExpenses(d)
+    } catch {}
+    if (initial) setLoading(false)
+  }, [])
+
   useEffect(() => {
     if (!isPaidPlan) { setLoading(false); return }
-    fetch('/api/expenses')
-      .then(r => r.json())
-      .then(d => { setExpenses(d ?? []); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [isPaidPlan])
+    loadExpenses(true)
+  }, [isPaidPlan, loadExpenses])
+
+  // Výdaje z e-mailu přibývají na pozadí, proto se seznam obnoví při návratu na kartu a každých 20 s.
+  useEffect(() => {
+    if (!isPaidPlan) return
+    const refresh = () => { if (document.visibilityState === 'visible') loadExpenses() }
+    const timer = setInterval(refresh, 20000)
+    document.addEventListener('visibilitychange', refresh)
+    return () => {
+      clearInterval(timer)
+      document.removeEventListener('visibilitychange', refresh)
+    }
+  }, [isPaidPlan, loadExpenses])
 
   useEffect(() => {
     if (!receiptFile || !receiptFile.type.startsWith('image/')) { setReceiptPreview(null); return }
