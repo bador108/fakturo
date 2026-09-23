@@ -2,7 +2,7 @@ import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
 import { getEffectivePlan } from '@/lib/stripe';
-import { isPro, isPaid } from '@/lib/plan';
+import { isPaid } from '@/lib/plan';
 import { generateInvoiceNumber } from '@/lib/utils';
 import type { InvoiceItemDraft } from '@/types';
 
@@ -63,8 +63,8 @@ export async function PUT(
     if (invoiceData.invoice_type === 'nabidka' || (invoiceData.currency && invoiceData.currency !== 'CZK')) {
       const { data: user } = await db.from('users').select('plan, email').eq('id', userId).single();
       const effectivePlan = getEffectivePlan(user?.plan ?? 'free', user?.email);
-      if (invoiceData.invoice_type === 'nabidka' && !isPro(effectivePlan)) {
-        return NextResponse.json({ error: 'Cenové nabídky jsou součástí Pro plánu.', code: 'PRO_REQUIRED' }, { status: 403 });
+      if (invoiceData.invoice_type === 'nabidka' && !isPaid(effectivePlan)) {
+        return NextResponse.json({ error: 'Cenové nabídky jsou součástí Start a Pro plánu.', code: 'START_REQUIRED' }, { status: 403 });
       }
       if (invoiceData.currency && invoiceData.currency !== 'CZK' && !isPaid(effectivePlan)) {
         return NextResponse.json({ error: 'Fakturace v cizí měně je součástí Start a Pro plánu.', code: 'START_REQUIRED' }, { status: 403 });

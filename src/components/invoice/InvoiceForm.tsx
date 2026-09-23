@@ -424,7 +424,7 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
         <Select label="Typ dokladu" value={form.invoice_type} onChange={e => set('invoice_type', e.target.value as InvoiceType)}>
           <option value="faktura">Faktura</option>
           <option value="zalohova">Zálohová faktura</option>
-          <option value="nabidka" disabled={!isProPlan}>Cenová nabídka{!isProPlan ? ' (Pro)' : ''}</option>
+          <option value="nabidka" disabled={!isPaidPlan}>Cenová nabídka{!isPaidPlan ? ' (Start)' : ''}</option>
           <option value="opravny">Opravný daňový doklad</option>
         </Select>
         <Input label="Číslo faktury" value={form.invoice_number} onChange={e => set('invoice_number', e.target.value)} />

@@ -73,6 +73,7 @@ const plans: Plan[] = [
       { text: 'CZK / EUR / USD (live ČNB)', included: true },
       { text: 'Evidence výdajů', included: true },
       { text: 'Cashflow přehled', included: true },
+      { text: 'Cenové nabídky', included: true },
       { text: 'Opakující se faktury', included: false },
       { text: 'Automatické upomínky', included: false },
       { text: 'Finanční grafy', included: false },
