@@ -105,7 +105,7 @@ export function ContactForm() {
           id="kontakt-predmet"
           name="predmet"
           required
-          style={{ ...inputStyle, appearance: 'none' as const, cursor: 'pointer' }}
+          style={{ ...inputStyle, appearance: 'none' as const }}
           value={form.predmet}
           onChange={e => setForm(f => ({ ...f, predmet: e.target.value }))}
         >
@@ -139,7 +139,7 @@ export function ContactForm() {
           checked={form.souhlas}
           onChange={e => setForm(f => ({ ...f, souhlas: e.target.checked }))}
         />
-        <label htmlFor="souhlas" style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, cursor: 'pointer' }}>
+        <label htmlFor="souhlas" style={{ fontSize: 13, color: C.muted, lineHeight: 1.5 }}>
           Souhlasím se zpracováním osobních údajů dle{' '}
           <a href="/gdpr" style={{ color: C.primary, textDecoration: 'underline', textUnderlineOffset: 2 }}>zásad GDPR</a>.
         </label>

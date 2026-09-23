@@ -50,7 +50,7 @@ export default function CenikPage() {
         </div>
         {faqItems.map(([q, a], i) => (
           <details key={i} style={{ borderTop: `1px solid ${C.border}`, borderBottom: i === faqItems.length - 1 ? `1px solid ${C.border}` : 'none', padding: '20px 0' }}>
-            <summary style={{ fontSize: 17, fontWeight: 600, cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <summary style={{ fontSize: 17, fontWeight: 600, listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               {q}<span style={{ fontSize: 20, color: C.muted, fontWeight: 400 }}>+</span>
             </summary>
             <div style={{ fontSize: 15, color: C.muted, marginTop: 12, lineHeight: 1.6 }}>{a}</div>

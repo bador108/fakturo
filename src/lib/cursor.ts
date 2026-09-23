@@ -44,7 +44,9 @@ function scaledHotspot(base: number, size: number): number {
 }
 
 export function buildCursorCssVars(color: CursorColor, size: number): { arrow: string; hand: string } {
-  const arrowHotspot = scaledHotspot(2, size)
+  // Špička šipky je v path na (4,4) – hotspot musí sedět přesně tam, jinak
+  // se klikání "rozjede" od vizuální špičky (uživatel musí mířit vedle).
+  const arrowHotspot = scaledHotspot(4, size)
   const handHotspotX = scaledHotspot(8, size)
   const handHotspotY = scaledHotspot(2, size)
   return {

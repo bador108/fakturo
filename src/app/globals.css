@@ -11,7 +11,7 @@
   /* Výchozí kurzory (tmavé, 32px). Uživatel si barvu/velikost může v Nastavení
      přepnout — CursorPreferenceLoader pak tyhle proměnné přepíše inline stylem
      na <html> podle localStorage, viz src/lib/cursor.ts. */
-  --cursor-arrow: url('/cursor-arrow.svg') 3 3;
+  --cursor-arrow: url('/cursor-arrow.svg') 5 5;
   --cursor-hand: url('/cursor-hand.svg') 11 3;
 }
 
@@ -23,7 +23,17 @@
      SVG nenačetlo. Na textových polích se stejně uplatní prohlížečí "text"
      kurzor, ten je specifičtější než dědění z body. */
   body { cursor: var(--cursor-arrow), auto; }
-  a, button { cursor: var(--cursor-hand), pointer; }
+  a, button, select, summary, label[for], label:has(input) {
+    cursor: var(--cursor-hand), pointer;
+  }
+
+  /* Tailwindí .cursor-pointer je class selektor – stejná specificita jako
+     tenhle blok, ale @tailwind utilities se injektuje před @layer base, takže
+     bez !important by prohrál. Používá se na non-button klikatelných prvcích
+     (dropzone, label toggly, input[type=color]…), musí dostat vlastní kurzor. */
+  .cursor-pointer {
+    cursor: var(--cursor-hand), pointer !important;
+  }
 
   /* Clerk komponenty (UserButton, "Manage account" modál) si nastavují cursor
      inline stylem – přebije naše pravidlo výše. Cíl na jejich cl- třídy s
