@@ -13,6 +13,17 @@
   * { box-sizing: border-box; }
   body { min-height: 100dvh; }
 
+  /* Kdo si v OS vypnul animace, dostane je vypnuté i tady — hlavně kvůli
+     plovoucí nav liště (SiteNav), co má hodně transition tříd. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   /* Skrýt natívní šipky u number inputů — vypadají jako výchozí browser UI, ne jako produkt */
   input[type='number'] { -moz-appearance: textfield; }
   input[type='number']::-webkit-inner-spin-button,

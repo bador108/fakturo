@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { PublicNav } from '@/components/layout/PublicNav'
+import { SiteNav } from '@/components/layout/SiteNav'
 import { PublicFooter } from '@/components/layout/PublicFooter'
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ const quickLinks: [string, string][] = [
 export default function NotFound() {
   return (
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: 'var(--font-dm-sans), -apple-system, system-ui, sans-serif', WebkitFontSmoothing: 'antialiased' as const, color: C.fg }}>
-      <PublicNav />
+      <SiteNav />
       <main style={{ position: 'relative', overflow: 'hidden' }}>
         <div
           aria-hidden

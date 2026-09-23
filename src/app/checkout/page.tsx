@@ -45,7 +45,7 @@ export default async function CheckoutPage({
     payment_method_types: ['card'],
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=1`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/#pricing`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/#cenik`,
     metadata: { userId, plan },
     locale: 'cs',
   })

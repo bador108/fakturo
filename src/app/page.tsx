@@ -3,7 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
 import { PricingSection } from '@/components/PricingSection'
-import { NavActions, AuthLink } from '@/components/home/HomeAuthLinks'
+import { AuthLink } from '@/components/home/HomeAuthLinks'
+import { SiteNav } from '@/components/layout/SiteNav'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PhoneMockup } from '@/components/PhoneMockup'
 import { FeatureShowcase } from '@/components/FeatureShowcase'
@@ -63,32 +64,8 @@ function CheckIcon({ small }: { small?: boolean }) {
   )
 }
 
-const navPrimaryStyle: React.CSSProperties = { background: C.primary, color: C.bg, padding: '9px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)', whiteSpace: 'nowrap' }
-const navLinkStyle: React.CSSProperties = { color: C.fg2, fontWeight: 500, fontSize: 14, padding: '8px 14px', textDecoration: 'none' }
 const heroPrimaryStyle: React.CSSProperties = { background: C.primary, color: C.bg, padding: '14px 24px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: `inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px ${C.primary}40` }
 const ctaPrimaryStyle: React.CSSProperties = { background: C.bg, color: C.fg, padding: '14px 26px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }
-
-function Nav() {
-  return (
-    <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${C.border}` }}>
-      <nav className="px-4 md:px-8" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', maxWidth: 1280, margin: '0 auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
-          <Link href="/" className="shrink-0" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <Image src="/logo.png" alt="Fakturo" width={130} height={26} className="w-[110px] md:w-[144px] h-auto" />
-          </Link>
-          <div className="hidden md:flex" style={{ gap: 4, fontSize: 14, color: C.fg2, fontWeight: 500 }}>
-            {([['#features','Funkce'],['#pricing','Ceník'],['#faq','FAQ'],['/blog','Blog'],['/kontakt','Kontakt']] as [string,string][]).map(([href, label]) => (
-              <a key={href} href={href} style={{ color: 'inherit', textDecoration: 'none', padding: '8px 12px', borderRadius: 6 }}>{label}</a>
-            ))}
-          </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <NavActions primaryStyle={navPrimaryStyle} linkStyle={navLinkStyle} />
-        </div>
-      </nav>
-    </header>
-  )
-}
 
 function Hero() {
   return (
@@ -228,7 +205,7 @@ function Highlights() {
 
 function Features() {
   return (
-    <section id="features" style={{ ...cont, padding: '32px 32px 64px' }}>
+    <section id="funkce" style={{ ...cont, padding: '32px 32px 64px' }}>
       <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 24px' }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Funkce</div>
         <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2 }}>Méně klikání víc tvojí práce</h2>
@@ -323,7 +300,7 @@ function Comparison() {
     { label: 'Vystavení faktury', fakturo: '~30 vteřin, mobil i desktop', fakturoid: 'formulář, víc kroků', idoklad: 'formulář, víc kroků' },
   ]
   return (
-    <section style={{ ...cont, padding: '88px 32px' }}>
+    <section id="srovnani" style={{ ...cont, padding: '88px 32px' }}>
       <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 40px' }}>
         <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Srovnání</div>
         <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px', letterSpacing: -1.5 }}>Fakturo vs. Fakturoid vs. iDoklad</h2>
@@ -523,7 +500,7 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <div style={{ position: 'relative', zIndex: 1 }}>
-      <Nav />
+      <SiteNav />
       <main>
       <Hero />
       <Reveal>
@@ -557,7 +534,7 @@ export default function HomePage() {
       <Reveal><Comparison /></Reveal>
       <Reveal><TrustBlock /></Reveal>
       <Reveal>
-        <section id="pricing" style={{ ...cont, padding: '80px 32px' }}>
+        <section id="cenik" style={{ ...cont, padding: '80px 32px' }}>
           <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 56px' }}>
             <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Ceník</div>
             <h2 style={{ ...disp, fontSize: 52, margin: 0, lineHeight: 1.05, letterSpacing: -2, marginBottom: 16 }}>Ceny bez háčku</h2>
