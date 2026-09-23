@@ -29,7 +29,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="flex h-dvh md:overflow-hidden bg-paper">
-      <Sidebar isOwner={isProOverride(email)} />
+      <Sidebar isOwner={isProOverride(email)} planLabel={planLabel} />
       <main className="flex-1 pt-14 px-4 pb-6 md:pt-10 md:px-10 md:pb-10 overflow-auto">
         <div className="flex justify-end mb-4 md:mb-6">
           <TopbarAccount planLabel={planLabel} />
