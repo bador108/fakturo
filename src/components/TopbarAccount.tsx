@@ -10,7 +10,14 @@ export function TopbarAccount({ planLabel }: { planLabel: string }) {
     <div className="flex items-center gap-3">
       <NotificationBell />
       <div className="h-6 w-px bg-slate-200" />
-      <UserButton appearance={{ elements: { avatarBox: 'h-8 w-8' } }} />
+      <UserButton
+        appearance={{
+          elements: {
+            avatarBox: 'h-8 w-8',
+            userButtonTrigger: { cursor: "url('/cursor-hand.svg') 11 3, pointer" },
+          },
+        }}
+      />
       <div className="hidden sm:block leading-tight">
         <p className="text-sm font-semibold text-slate-800 truncate max-w-[140px]">
           {user?.firstName ?? user?.primaryEmailAddress?.emailAddress ?? 'Účet'}
