@@ -39,7 +39,7 @@ const plans: Plan[] = [
       { text: '5 faktur za měsíc', included: true },
       { text: 'PDF export', included: true },
       { text: 'Odeslání emailem', included: true },
-      { text: 'Správa klientů (3 klienti)', included: true },
+      { text: 'Správa klientů (5 klientů)', included: true },
       { text: 'Doplnění z ARESu', included: true },
       { text: 'CZK / EUR / USD', included: false },
       { text: 'Evidence výdajů', included: false },

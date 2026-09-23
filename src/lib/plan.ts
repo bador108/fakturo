@@ -20,4 +20,4 @@ export async function getUserPlan(userId: string): Promise<string> {
   return getEffectivePlan(data?.plan ?? 'free', data?.email)
 }
 
-export const FREE_CLIENT_LIMIT = 3
+export const FREE_CLIENT_LIMIT = 5

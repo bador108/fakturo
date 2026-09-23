@@ -107,7 +107,7 @@ function Hero() {
           Vystavíš fakturu za půl minutu. Systém sám hlídá platby a posílá upomínky. Pro OSVČ a freelancery, kteří nechtějí trávit čas v účetním systému.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
-          <AuthLink style={heroPrimaryStyle} signedOutLabel="Začít zdarma →" signedInLabel="Přejít do dashboardu →" />
+          <AuthLink style={heroPrimaryStyle} signedOutLabel="Zkus to teď, bez karty →" signedInLabel="Přejít do dashboardu →" />
           <Link href="/generator" className="transition-transform duration-150 ease-out hover:-translate-y-0.5" style={{ background: C.bg, color: C.fg, border: `1.5px solid ${C.borderStrong}`, padding: '13px 22px', borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             Podívat se, jak to funguje →
           </Link>
@@ -207,8 +207,8 @@ function AutoMock() {
 
 function Highlights() {
   const items: { n: string; title: string; text: string }[] = [
-    { n: '01', title: 'Rychlost', text: 'Fakturu vystavíš a odešleš za 30 vteřin — méně klikání, víc práce, která tě baví.' },
-    { n: '02', title: 'Platby samy', text: 'Propojíš účet a Fakturo pozná, která platba patří ke které faktuře. Bez ručního hlídání.' },
+    { n: '01', title: 'Z hodin na minuty', text: 'Fakturu vystavíš a odešleš za 30 vteřin. Co dřív zabralo večer nad tabulkou, zvládneš mezi dvěma schůzkami.' },
+    { n: '02', title: 'Platby samy', text: 'Nahraješ výpis z banky a Fakturo pozná, která platba patří ke které faktuře. Bez ručního hlídání.' },
     { n: '03', title: 'Bez ruční práce', text: 'Opakující se faktury a upomínky odejdou samy, přesně podle rozvrhu, kterej si nastavíš jednou.' },
   ]
   return (
@@ -265,7 +265,7 @@ function FeatureGrid() {
 
 const faqItems: [string, string][] = [
   ['Můžu zrušit kdykoliv?','Ano. Žádná výpovědní doba. Klikneš v nastavení a hotovo. Data si stáhneš v PDF i CSV.'],
-  ['Fakturo je nové — proč bych mu měl věřit?','Fakturo je nové — a je to tak vidět. Nemá desítky let starý kód ani rozhraní z roku 2012. Stavíme ho přímo pro aktuální českou legislativu. Riziko si nemusíš brát na víru: začneš zdarma, bez karty, a data si kdykoliv odneseš. Když ti to nesedne, nic tě nedrží.'],
+  ['Fakturo je nové — proč bych mu měl věřit?','Stavíme appku od nuly pro dnešní legislativu, ne pro rok 2012 — bez starého kódu, který za sebou táhne roky kompromisů. Riziko si nemusíš brát na víru: začneš zdarma, bez karty, a data si kdykoliv odneseš v PDF i CSV. Když ti to nesedne, nic tě nedrží.'],
   ['Funguje to s českou legislativou?','Plátce i neplátce DPH a reverse charge. Vše, co OSVČ v ČR potřebuje.'],
   ['Umí Fakturo počítat DPH?','Jasně. U každé položky vybereš sazbu (0 %, 12 % nebo 21 %), Fakturo si samo spočítá základ i DPH a rozpad na faktuře. Sazbu ti dokonce umí i navrhnout podle toho, co fakturuješ.'],
   ['Jak funguje platba přes QR kód?','Každá faktura má vygenerovaný QR kód se všemi platebními údaji (formát SPAYD). Klient ho naskenuje bankovní appkou v mobilu a částka i variabilní symbol se vyplní samy — nic nepřepisuje.'],
@@ -312,33 +312,93 @@ function FeatureShowcaseSection() {
   )
 }
 
-function UseCases() {
+function Comparison() {
+  type Row = { label: string; fakturo: string; fakturoid: string; idoklad: string; note?: string }
+  const rows: Row[] = [
+    { label: 'Cena od (měsíčně)', fakturo: '99 Kč', fakturoid: '199 Kč', idoklad: '~290 Kč' },
+    { label: 'Zdarma varianta', fakturo: '5 faktur/měs, 5 klientů', fakturoid: 'do 5 klientů', idoklad: 'omezené doklady' },
+    { label: 'Párování plateb', fakturo: 'nahraješ výpis, spáruje zpětně', fakturoid: 'jen e-mail od banky v reálném čase', idoklad: 'napojení na banku' },
+    { label: 'QR platba na faktuře', fakturo: 'ano', fakturoid: 'ano', idoklad: 'ano' },
+    { label: 'Export do Pohody', fakturo: 'v Pro plánu', fakturoid: 'ano', idoklad: 'ano' },
+    { label: 'Vystavení faktury', fakturo: '~30 vteřin, mobil i desktop', fakturoid: 'formulář, víc kroků', idoklad: 'formulář, víc kroků' },
+  ]
   return (
     <section style={{ ...cont, padding: '88px 32px' }}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16" style={{ alignItems: 'center' }}>
-        <div>
-          <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Fakturo v praxi</div>
-          <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px', letterSpacing: -1.5, maxWidth: 420 }}>
-            Pro koho to je
-          </h2>
-          <p style={{ fontSize: 16, color: C.muted, lineHeight: 1.65, maxWidth: 440 }}>
-            Fakturo používají OSVČ, freelanceři i malé firmy — každý potřebuje trochu něco jiného. Ty s papírováním strávíš minimum, protože appka dělá zbytek za tebe.
-          </p>
-        </div>
-        <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 20, padding: 36, boxShadow: '0 2px 8px rgba(0,0,0,0.04), 0 16px 40px rgba(0,0,0,0.06)' }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: C.primarySoft, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h14M3 14h9" stroke={C.primaryDark} strokeWidth="1.8" strokeLinecap="round" /></svg>
+      <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 40px' }}>
+        <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Srovnání</div>
+        <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px', letterSpacing: -1.5 }}>Fakturo vs. Fakturoid vs. iDoklad</h2>
+        <p style={{ fontSize: 16, color: C.muted, lineHeight: 1.65 }}>Popisujeme to upřímně — někde jsme napřed, někde ne. Ceny konkurence jsou orientační k září 2026, ověř si je na jejich webu.</p>
+      </div>
+      <div style={{ overflowX: 'auto', border: `1px solid ${C.border}`, borderRadius: 16 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, minWidth: 640 }}>
+          <thead>
+            <tr style={{ background: C.bgSoft }}>
+              <th style={{ textAlign: 'left', padding: '14px 20px', fontWeight: 600, color: C.muted, fontSize: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}></th>
+              <th style={{ textAlign: 'left', padding: '14px 20px', fontWeight: 700, color: C.primaryDark }}>Fakturo</th>
+              <th style={{ textAlign: 'left', padding: '14px 20px', fontWeight: 600, color: C.fg2 }}>Fakturoid</th>
+              <th style={{ textAlign: 'left', padding: '14px 20px', fontWeight: 600, color: C.fg2 }}>iDoklad</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={r.label} style={{ borderTop: `1px solid ${C.border}`, background: i % 2 === 1 ? C.bgSoft : 'transparent' }}>
+                <td style={{ padding: '14px 20px', fontWeight: 600, color: C.fg2, whiteSpace: 'nowrap' }}>{r.label}</td>
+                <td style={{ padding: '14px 20px', color: C.primaryDark, fontWeight: 600 }}>{r.fakturo}</td>
+                <td style={{ padding: '14px 20px', color: C.muted }}>{r.fakturoid}</td>
+                <td style={{ padding: '14px 20px', color: C.muted }}>{r.idoklad}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p style={{ fontSize: 12, color: C.muted2, marginTop: 12, textAlign: 'center' }}>
+        Fakturoid a iDoklad jsou zavedené appky s víc funkcemi než my (např. daňové přiznání). My sázíme na rychlost, jednodušší cenu a moderní rozhraní.
+      </p>
+    </section>
+  )
+}
+
+function UseCases() {
+  const groups: { title: string; text: string }[] = [
+    { title: 'Programátor a vývojář', text: 'Fakturuješ klientům za hodiny nebo hotové dodávky. Šablona položek a opakující se faktura na měsíční retainer ti ušetří vyplňování pokaždé znovu.' },
+    { title: 'Grafik a designér', text: 'Zálohová faktura na začátek zakázky, doplatek na konci. Vlastní logo na faktuře a víc profilů dodavatele, když fakturuješ pod víc jmény.' },
+    { title: 'Řemeslník', text: 'Vystavíš fakturu z mobilu hned na place, klient zaplatí přes QR kód v bankovní appce. Žádné papírování večer doma.' },
+    { title: 'Konzultant a poradce', text: 'Pravidelný měsíční retainer si appka vystaví a odešle sama. Upomínky na nezaplacené faktury jdou taky automaticky — ty se nemusíš ozývat sám.' },
+  ]
+  return (
+    <section style={{ ...cont, padding: '88px 32px' }}>
+      <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 48px' }}>
+        <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Fakturo v praxi</div>
+        <h2 style={{ ...disp, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', margin: '0 0 16px', letterSpacing: -1.5 }}>Pro koho to je</h2>
+        <p style={{ fontSize: 16, color: C.muted, lineHeight: 1.65 }}>Fakturo používají OSVČ, freelanceři i malé firmy — každý trochu jinak. Pár příkladů, kde se lidi nejčastěji poznají.</p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ marginBottom: 20 }}>
+        {groups.map(g => (
+          <div key={g.title} style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 18, padding: 30 }}>
+            <h3 style={{ fontSize: 18, fontWeight: 700, margin: '0 0 10px', letterSpacing: -0.3 }}>{g.title}</h3>
+            <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.65, margin: 0 }}>{g.text}</p>
           </div>
-          <h3 style={{ fontSize: 19, fontWeight: 700, margin: '0 0 10px', letterSpacing: -0.3 }}>Pro účetní</h3>
-          <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.65, margin: '0 0 20px' }}>
-            Měsíční podklady jedním kliknutím — export do Pohody i obyčejné PDF/CSV. Tvoje účetní si je naimportuje bez ručního přepisování.
-          </p>
-          <Link href="/funkce" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: C.primaryDark, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
-            Zjistit víc <span>→</span>
-          </Link>
+        ))}
+      </div>
+      <div style={{ background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 18, padding: '24px 30px', display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap', justifyContent: 'space-between' }}>
+        <div>
+          <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 4px', letterSpacing: -0.2 }}>Máš účetní?</h3>
+          <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.6, maxWidth: 480 }}>Měsíční podklady jedním kliknutím — export do Pohody i obyčejné PDF/CSV. Naimportuje si je bez ručního přepisování.</p>
         </div>
+        <Link href="/funkce" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: C.primaryDark, fontSize: 14, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          Zjistit víc <span>→</span>
+        </Link>
       </div>
     </section>
+  )
+}
+
+function TrustBadge({ icon, text }: { icon: React.ReactNode; text: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 18px', background: C.bgSoft, border: `1px solid ${C.border}`, borderRadius: 999 }}>
+      <span style={{ width: 28, height: 28, borderRadius: 999, background: C.primarySoft, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{icon}</span>
+      <span style={{ fontSize: 13, fontWeight: 600, color: C.fg2, whiteSpace: 'nowrap' }}>{text}</span>
+    </div>
   )
 }
 
@@ -349,11 +409,16 @@ function TrustBlock() {
         <p style={{ fontSize: 17, lineHeight: 1.65, color: C.fg2, margin: '0 0 16px' }}>
           Žádná kreditní karta. Žádný závazek. Vyzkoušíš zdarma a uvidíš sám, jestli ti to sedí — nemusíš věřit nikomu na slovo.
         </p>
-        <p style={{ fontSize: 17, lineHeight: 1.65, color: C.fg2, margin: '0 0 16px' }}>
+        <p style={{ fontSize: 17, lineHeight: 1.65, color: C.fg2, margin: '0 0 32px' }}>
           A kdyby se ti to nesedlo: tvoje data jsou tvoje. Export do PDF i CSV kdykoliv, jedním klikem. Nic tě nedrží.
         </p>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 28 }}>
+          <TrustBadge text="Data v EU" icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke={C.primaryDark} strokeWidth="1.8" /><path d="M12 3a9 9 0 0 1 0 18 9 9 0 0 1 0-18Z" stroke={C.primaryDark} strokeWidth="1.8" /><path d="M3 12h18" stroke={C.primaryDark} strokeWidth="1.8" /></svg>} />
+          <TrustBadge text="Šifrovaný přenos i uložení" icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke={C.primaryDark} strokeWidth="1.8" /><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke={C.primaryDark} strokeWidth="1.8" /></svg>} />
+          <TrustBadge text="GDPR" icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z" stroke={C.primaryDark} strokeWidth="1.8" strokeLinejoin="round" /><path d="M9 12l2 2 4-4" stroke={C.primaryDark} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} />
+        </div>
         <p style={{ fontSize: 14, color: C.muted, margin: 0 }}>
-          Data jsou šifrovaná a servery běží v EU.
+          Přecházíš z Fakturoidu, iDokladu nebo Money S3? Pošli nám export a data ti <strong style={{ color: C.fg2 }}>převedeme zdarma</strong>.
         </p>
       </div>
     </section>
@@ -366,9 +431,9 @@ function CTA() {
       <div style={{ maxWidth: 1180, margin: '0 auto', background: C.bgDark, color: C.bg, borderRadius: 24, padding: '72px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)', width: 800, height: 600, background: `radial-gradient(ellipse, ${C.primary}33, transparent 70%)`, filter: 'blur(40px)' }} />
         <div style={{ position: 'relative' }}>
-          <h2 style={{ ...disp, fontSize: 'clamp(2rem,4.5vw,3.5rem)', margin: 0, marginBottom: 16, lineHeight: 1.05, letterSpacing: -2, color: C.bg }}>Vystav první fakturu ještě dnes</h2>
+          <h2 style={{ ...disp, fontSize: 'clamp(2rem,4.5vw,3.5rem)', margin: 0, marginBottom: 16, lineHeight: 1.05, letterSpacing: -2, color: C.bg }}>Vystav první fakturu za 30 sekund</h2>
           <p style={{ fontSize: 17, opacity: 0.7, marginBottom: 32, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.55 }}>5 faktur měsíčně zdarma, bez kreditní karty. Žádný závazek. Žádné překvapení.</p>
-          <AuthLink style={ctaPrimaryStyle} signedOutLabel="Začít zdarma →" signedInLabel="Přejít do dashboardu →" />
+          <AuthLink style={ctaPrimaryStyle} signedOutLabel="Vystav fakturu zdarma →" signedInLabel="Přejít do dashboardu →" />
         </div>
       </div>
     </section>
@@ -489,6 +554,7 @@ export default function HomePage() {
       <Reveal><FeatureGrid /></Reveal>
       <Reveal><FeatureShowcaseSection /></Reveal>
       <Reveal><UseCases /></Reveal>
+      <Reveal><Comparison /></Reveal>
       <Reveal><TrustBlock /></Reveal>
       <Reveal>
         <section id="pricing" style={{ ...cont, padding: '80px 32px' }}>
