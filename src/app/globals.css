@@ -16,8 +16,8 @@
   /* Vlastní kurzor místo OS šipky — s fallbackem na auto/pointer, kdyby se
      SVG nenačetlo. Na textových polích se stejně uplatní prohlížečí "text"
      kurzor, ten je specifičtější než dědění z body. */
-  body { cursor: url('/cursor-arrow.svg') 2 2, auto; }
-  a, button { cursor: url('/cursor-hand.svg') 8 2, pointer; }
+  body { cursor: url('/cursor-arrow.svg') 3 3, auto; }
+  a, button { cursor: url('/cursor-hand.svg') 11 3, pointer; }
 
   /* Kdo si v OS vypnul animace, dostane je vypnuté i tady — hlavně kvůli
      plovoucí nav liště (SiteNav), co má hodně transition tříd. */
