@@ -7,6 +7,12 @@
      nativní inputy/textarea bez explicitního pozadí (např. v ClientsManager
      modálu) braly OS dark theme — černé pozadí, špatně čitelný text. */
   color-scheme: light;
+
+  /* Výchozí kurzory (tmavé, 32px). Uživatel si barvu/velikost může v Nastavení
+     přepnout — CursorPreferenceLoader pak tyhle proměnné přepíše inline stylem
+     na <html> podle localStorage, viz src/lib/cursor.ts. */
+  --cursor-arrow: url('/cursor-arrow.svg') 3 3;
+  --cursor-hand: url('/cursor-hand.svg') 11 3;
 }
 
 @layer base {
@@ -16,8 +22,15 @@
   /* Vlastní kurzor místo OS šipky — s fallbackem na auto/pointer, kdyby se
      SVG nenačetlo. Na textových polích se stejně uplatní prohlížečí "text"
      kurzor, ten je specifičtější než dědění z body. */
-  body { cursor: url('/cursor-arrow.svg') 3 3, auto; }
-  a, button { cursor: url('/cursor-hand.svg') 11 3, pointer; }
+  body { cursor: var(--cursor-arrow), auto; }
+  a, button { cursor: var(--cursor-hand), pointer; }
+
+  /* Clerk komponenty (UserButton, "Manage account" modál) si nastavují cursor
+     inline stylem – přebije naše pravidlo výše. Cíl na jejich cl- třídy s
+     !important, ať to platí i pro budoucí Clerk prvky bez ručního patchování. */
+  a[class*='cl-'], button[class*='cl-'] {
+    cursor: var(--cursor-hand), pointer !important;
+  }
 
   /* Kdo si v OS vypnul animace, dostane je vypnuté i tady — hlavně kvůli
      plovoucí nav liště (SiteNav), co má hodně transition tříd. */

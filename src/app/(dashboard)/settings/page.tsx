@@ -6,6 +6,7 @@ import { ReminderSettings } from '@/components/ReminderSettings'
 import { UpgradeButton } from '@/components/UpgradeButton'
 import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
+import { CursorSettings } from '@/components/CursorSettings'
 import { SetPasswordCard } from '@/components/SetPasswordCard'
 import { ProUpsell } from '@/components/ProUpsell'
 import { PohodaExportButton } from '@/components/PohodaExportButton'
@@ -79,6 +80,13 @@ export default async function SettingsPage() {
         {pro ? <ReminderSettings userId={userId} initialDays={reminderDays} /> : (
           <ProUpsell title="Automatické upomínky" description="Fakturo samo pošle klientovi upomínku před i po splatnosti — součást Pro plánu." />
         )}
+      </div>
+
+      {/* Kurzor */}
+      <div className="p-5 bg-white rounded-xl border border-zinc-200">
+        <h2 className="font-semibold mb-1">Kurzor</h2>
+        <p className="text-xs text-slate-400 mb-4">Nastavení platí jen pro tento prohlížeč/zařízení.</p>
+        <CursorSettings />
       </div>
 
       {/* Bank statement upload */}

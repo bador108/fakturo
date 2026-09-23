@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, DM_Sans } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ToastProvider } from '@/components/Toast'
+import { CursorPreferenceLoader } from '@/components/CursorPreferenceLoader'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'] })
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <html lang="cs">
         <body className={`${inter.className} ${dmSans.variable} bg-slate-50 text-slate-900 antialiased`}>
+          <CursorPreferenceLoader />
           <ToastProvider>{children}</ToastProvider>
         </body>
       </html>
