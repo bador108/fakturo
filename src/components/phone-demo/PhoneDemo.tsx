@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { useRef, type PointerEvent } from 'react'
 import { AnimatePresence, motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { DeviceFrame, DEVICE, type Touch } from './DeviceFrame'
 import { DashboardScreen } from './DashboardScreen'
 import { FormScreen } from './FormScreen'
 import { ListScreen } from './ListScreen'
 import { StepRail, StepCaption, InvoicePaper } from './StepRail'
-import { useDemoClock } from './useDemoClock'
-import { T, sceneAt, seg, type Scene } from './timeline'
+import { useLoopClock, usePageVisible } from '../demo/useLoopClock'
+import { LOOP, T, sceneAt, seg, type Scene } from './timeline'
 
 // kam prst ťuká (obrazovka 390×844, px)
 const TOUCHES: Touch[] = [
@@ -41,14 +41,8 @@ export function PhoneDemo() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { margin: '-15% 0px' })
   const reduced = useReducedMotion() ?? false
-  const [pageVisible, setPageVisible] = useState(true)
-  useEffect(() => {
-    const onChange = () => setPageVisible(!document.hidden)
-    document.addEventListener('visibilitychange', onChange)
-    return () => document.removeEventListener('visibilitychange', onChange)
-  }, [])
-
-  const clock = useDemoClock(inView && pageVisible && !reduced)
+  const pageVisible = usePageVisible()
+  const { t: clock } = useLoopClock(inView && pageVisible && !reduced, LOOP)
   // s omezeným pohybem stojí ukázka na hotovém přehledu
   const t = reduced ? 2 : clock
   const scene = sceneAt(t)

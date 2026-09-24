@@ -7,7 +7,7 @@ import { AuthLink } from '@/components/home/HomeAuthLinks'
 import { SiteNav } from '@/components/layout/SiteNav'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
 import { PhoneDemo } from '@/components/phone-demo/PhoneDemo'
-import { FeatureShowcase } from '@/components/FeatureShowcase'
+import { AppDemo } from '@/components/app-demo/AppDemo'
 import { Reveal } from '@/components/Reveal'
 
 export const metadata: Metadata = {
@@ -280,10 +280,10 @@ function FeatureShowcaseSection() {
       <div style={{ ...cont, position: 'relative' }}>
         <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 56px' }}>
           <div style={{ fontSize: 12, color: C.primary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Appka zevnitř</div>
-          <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Žádné mockupy — skutečná appka</h2>
-          <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Prohlédni si, jak vypadá Fakturo zevnitř — přímo ze živého provozu.</p>
+          <h2 style={{ ...disp, fontSize: 44, margin: 0, lineHeight: 1.05, letterSpacing: -1.5 }}>Takhle Fakturo vypadá uvnitř</h2>
+          <p style={{ fontSize: 17, color: C.muted, marginTop: 16, lineHeight: 1.55 }}>Projdi si appku stránku po stránce. Klikni vlevo a ukázka skočí tam, kam chceš.</p>
         </div>
-        <FeatureShowcase />
+        <AppDemo />
       </div>
     </section>
   )
