@@ -12,6 +12,7 @@ import { ProUpsell } from '@/components/ProUpsell'
 import { PohodaExportButton } from '@/components/PohodaExportButton'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
 import { isPro } from '@/lib/plan'
+import { DEFAULT_REMINDER_DAYS, DEFAULT_REMINDER_TONE, isReminderTone } from '@/lib/reminderConfig'
 
 export default async function SettingsPage() {
   const { userId } = await auth()
@@ -20,14 +21,17 @@ export default async function SettingsPage() {
   const db = createServiceClient()
   const [{ data: profiles }, { data: user }] = await Promise.all([
     db.from('sender_profiles').select('*').eq('user_id', userId).order('is_default', { ascending: false }),
-    db.from('users').select('plan, email, invoice_count_this_month, reminder_days').eq('id', userId).single(),
+    db.from('users').select('plan, email, full_name, invoice_count_this_month, reminder_days, reminder_tone').eq('id', userId).single(),
   ])
 
   const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
   const canBrand = plan === 'start' || plan === 'pro'
   const pro = isPro(plan)
   const used = user?.invoice_count_this_month ?? 0
-  const reminderDays: number[] = user?.reminder_days ?? [3, 7, 14]
+  const reminderDays: number[] = user?.reminder_days ?? DEFAULT_REMINDER_DAYS
+  const reminderTone = isReminderTone(user?.reminder_tone) ? user?.reminder_tone : DEFAULT_REMINDER_TONE
+  // jméno do náhledu upomínky — výchozí profil dodavatele, jinak jméno účtu
+  const reminderSender = profiles?.[0]?.name || user?.full_name || 'Vaše jméno'
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -77,7 +81,7 @@ export default async function SettingsPage() {
       {/* Reminder settings */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-1">Upomínky</h2>
-        {pro ? <ReminderSettings userId={userId} initialDays={reminderDays} /> : (
+        {pro ? <ReminderSettings initialDays={reminderDays} initialTone={reminderTone} senderName={reminderSender} /> : (
           <ProUpsell title="Automatické upomínky" description="Fakturo samo pošle klientovi upomínku před i po splatnosti — součást Pro plánu." />
         )}
       </div>
