@@ -22,6 +22,34 @@ interface Plan {
   features: Array<{ text: string; included: boolean }>
 }
 
+type Tier = 'free' | 'start' | 'pro'
+const RANK: Record<Tier, number> = { free: 0, start: 1, pro: 2 }
+
+// Jeden seznam řádků pro všechny plány, ať jde ceník porovnat řádek po řádku. Musí sedět
+// s tím, co appka opravdu hlídá v kódu (FREE_TIER_LIMIT, FREE_CLIENT_LIMIT, isPaid / isPro).
+const FEATURES: { text: string; free?: string; from: Tier }[] = [
+  { text: 'Neomezené faktury', free: '5 faktur měsíčně', from: 'free' },
+  { text: 'Neomezení klienti', free: 'Až 5 klientů', from: 'free' },
+  { text: 'PDF, odeslání e-mailem a QR platba', from: 'free' },
+  { text: 'Odkaz na fakturu pro klienta', from: 'free' },
+  { text: 'Doplnění firmy z ARESu', from: 'free' },
+  { text: 'Párování plateb z výpisu banky', from: 'free' },
+  { text: 'EUR a USD s kurzem ČNB', from: 'start' },
+  { text: 'Cenové nabídky', from: 'start' },
+  { text: 'Výdaje a účtenky', from: 'start' },
+  { text: 'Cashflow, grafy a odhad daní', from: 'start' },
+  { text: 'Vlastní barva faktury', from: 'start' },
+  { text: 'Pravidelné faktury', from: 'pro' },
+  { text: 'Automatické upomínky klientům', from: 'pro' },
+  { text: 'Export do Pohody pro účetní', from: 'pro' },
+  { text: 'Logo na faktuře', from: 'pro' },
+  { text: 'Šablony položek a víc profilů dodavatele', from: 'pro' },
+]
+
+function featuresFor(tier: Tier) {
+  return FEATURES.map(f => ({ text: tier === 'free' && f.free ? f.free : f.text, included: RANK[tier] >= RANK[f.from] }))
+}
+
 const plans: Plan[] = [
   {
     id: 'free',
@@ -30,25 +58,12 @@ const plans: Plan[] = [
     annual: 0,
     annualTotal: 0,
     subtitle: 'Pro vyzkoušení bez závazků',
-    description: '5 faktur měsíčně a základní správa klientů — stačí na vyzkoušení, jestli ti Fakturo sedne. Žádná karta, žádný časový limit.',
+    description: '5 faktur měsíčně a až 5 klientů. Stačí na pár zakázek nebo na vyzkoušení, jestli ti Fakturo sedne. Žádný časový limit.',
     accentColor: 'text-slate-900',
     cardClass: 'border border-slate-200 bg-white shadow-sm',
     btnClass: 'border-2 border-slate-200 text-slate-700 hover:border-brand-soft hover:text-brand',
     checkColor: 'text-slate-400',
-    features: [
-      { text: '5 faktur za měsíc', included: true },
-      { text: 'PDF export', included: true },
-      { text: 'Odeslání emailem', included: true },
-      { text: 'Správa klientů (5 klientů)', included: true },
-      { text: 'Doplnění z ARESu', included: true },
-      { text: 'CZK / EUR / USD', included: false },
-      { text: 'Evidence výdajů', included: false },
-      { text: 'Cashflow přehled', included: false },
-      { text: 'Opakující se faktury', included: false },
-      { text: 'Automatické upomínky', included: false },
-      { text: 'Finanční grafy', included: false },
-      { text: 'Export Pohoda XML', included: false },
-    ],
+    features: featuresFor('free'),
   },
   {
     id: 'start',
@@ -59,26 +74,12 @@ const plans: Plan[] = [
     annual: 79,
     annualTotal: 79 * 12,
     subtitle: 'Pro aktivní freelancery',
-    description: 'Pro každýho, kdo fakturuje pravidelně. Neomezené faktury a klienti, evidence výdajů a přehled cashflow — víš přesně, na čem jsi.',
+    description: 'Pro každýho, kdo fakturuje pravidelně. Neomezené faktury a klienti, cizí měny, cenové nabídky a výdaje s přehledem cashflow — víš přesně, na čem jsi.',
     accentColor: 'text-green-600',
     cardClass: 'border-2 border-green-500 bg-gradient-to-b from-green-50 to-white shadow-xl shadow-green-100',
     btnClass: 'bg-green-600 text-white hover:bg-green-700 shadow-lg shadow-green-200',
     checkColor: 'text-green-600',
-    features: [
-      { text: 'Neomezené faktury', included: true },
-      { text: 'PDF export', included: true },
-      { text: 'Odeslání emailem', included: true },
-      { text: 'Neomezení klienti', included: true },
-      { text: 'Doplnění z ARESu', included: true },
-      { text: 'CZK / EUR / USD (live ČNB)', included: true },
-      { text: 'Evidence výdajů', included: true },
-      { text: 'Cashflow přehled', included: true },
-      { text: 'Cenové nabídky', included: true },
-      { text: 'Opakující se faktury', included: false },
-      { text: 'Automatické upomínky', included: false },
-      { text: 'Finanční grafy', included: false },
-      { text: 'Export Pohoda XML', included: false },
-    ],
+    features: featuresFor('start'),
   },
   {
     id: 'pro',
@@ -89,31 +90,12 @@ const plans: Plan[] = [
     annual: 199,
     annualTotal: 199 * 12,
     subtitle: 'Pro profesionály a firmy',
-    description: 'Pro profíky a firmy, co chtějí mít fakturaci na autopilota. Opakující se faktury, automatické upomínky, Pohoda export a víc profilů dodavatele — appka pracuje, ty fakturuješ.',
+    description: 'Fakturace na autopilota. Pravidelné faktury se vystaví samy, upomínky klientům odejdou samy a účetní dostane export do Pohody — appka pracuje, ty fakturuješ.',
     accentColor: 'text-yellow-600',
     cardClass: 'border-2 border-yellow-400 bg-gradient-to-b from-yellow-50 to-white shadow-xl shadow-yellow-100',
     btnClass: 'bg-yellow-500 text-slate-900 hover:bg-yellow-400 shadow-lg shadow-yellow-200',
     checkColor: 'text-yellow-600',
-    features: [
-      { text: 'Neomezené faktury', included: true },
-      { text: 'PDF export', included: true },
-      { text: 'Odeslání emailem', included: true },
-      { text: 'Neomezení klienti', included: true },
-      { text: 'Doplnění z ARESu', included: true },
-      { text: 'CZK / EUR / USD (live ČNB)', included: true },
-      { text: 'Evidence výdajů', included: true },
-      { text: 'Cashflow přehled', included: true },
-      { text: 'Opakující se faktury', included: true },
-      { text: 'Automatické upomínky', included: true },
-      { text: 'Finanční grafy a přehledy', included: true },
-      { text: 'Export Pohoda XML', included: true },
-      { text: 'Online platební odkaz', included: true },
-      { text: 'Šablony položek', included: true },
-      { text: 'Více profilů dodavatele', included: true },
-      { text: 'Cenové nabídky', included: true },
-      { text: 'Logo na faktuře', included: true },
-      { text: 'Prioritní podpora', included: true },
-    ],
+    features: featuresFor('pro'),
   },
 ]
 
@@ -191,7 +173,7 @@ export function PricingSection({ anchorId = 'pricing' }: { anchorId?: string | n
                     <span className="text-slate-400 mb-0.5 text-sm">/měs.</span>
                   </div>
                   {plan.id === 'free' ? (
-                    <p className="text-sm text-slate-400 mt-1.5">Navždy zdarma, bez karty</p>
+                    <p className="text-sm text-slate-400 mt-1.5">Navždy zdarma</p>
                   ) : annual && saving > 0 ? (
                     <p className="text-sm text-slate-400 mt-1.5">
                       {(price * 12).toLocaleString('cs-CZ')} Kč/rok ·{' '}
@@ -243,6 +225,11 @@ export function PricingSection({ anchorId = 'pricing' }: { anchorId?: string | n
             )
           })}
         </div>
+
+        <p className="text-center text-sm text-slate-400 mt-8 max-w-xl mx-auto leading-relaxed">
+          Máš slevový kupon? Zadáš ho v platební bráně u měsíčního předplatného.
+          Předplatné vypneš jedním přepínačem v Nastavení, doběhne do konce zaplaceného období.
+        </p>
 
       </div>
     </section>

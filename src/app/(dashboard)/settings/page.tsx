@@ -11,7 +11,9 @@ import { SetPasswordCard } from '@/components/SetPasswordCard'
 import { ProUpsell } from '@/components/ProUpsell'
 import { PohodaExportButton } from '@/components/PohodaExportButton'
 import { FREE_TIER_LIMIT, getEffectivePlan } from '@/lib/stripe'
-import { isPro } from '@/lib/plan'
+import { isPaid, isPro } from '@/lib/plan'
+import { getSubscriptionSummary } from '@/lib/subscription'
+import { SubscriptionSettings } from '@/components/SubscriptionSettings'
 import { DEFAULT_REMINDER_DAYS, DEFAULT_REMINDER_TONE, isReminderTone } from '@/lib/reminderConfig'
 
 export default async function SettingsPage() {
@@ -21,10 +23,12 @@ export default async function SettingsPage() {
   const db = createServiceClient()
   const [{ data: profiles }, { data: user }] = await Promise.all([
     db.from('sender_profiles').select('*').eq('user_id', userId).order('is_default', { ascending: false }),
-    db.from('users').select('plan, email, full_name, invoice_count_this_month, reminder_days, reminder_tone').eq('id', userId).single(),
+    db.from('users').select('plan, email, full_name, invoice_count_this_month, reminder_days, reminder_tone, stripe_subscription_id').eq('id', userId).single(),
   ])
 
   const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
+  // stav předplatného bereme přímo ze Stripe, ať přepínač obnovení vždy sedí
+  const subscription = isPaid(user?.plan) ? await getSubscriptionSummary(user?.stripe_subscription_id) : null
   const canBrand = plan === 'start' || plan === 'pro'
   const pro = isPro(plan)
   const used = user?.invoice_count_this_month ?? 0
@@ -41,8 +45,10 @@ export default async function SettingsPage() {
 
       {/* Plan status */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
-        <h2 className="font-semibold mb-3">Plán</h2>
-        {plan === 'pro' ? (
+        <h2 className="font-semibold mb-3">Plán a předplatné</h2>
+        {subscription ? (
+          <SubscriptionSettings planName={plan === 'pro' ? 'Pro' : 'Start'} initial={subscription} />
+        ) : plan === 'pro' ? (
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-green-600 font-medium">✓ Pro plán aktivní – neomezené faktury + všechny funkce</p>
             <ManageSubscriptionButton />

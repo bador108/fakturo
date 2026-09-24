@@ -245,7 +245,7 @@ export default function GeneratorPage() {
         <div className="bg-brand-soft border border-brand-soft rounded-2xl p-6 flex items-center justify-between">
           <div>
             <p className="font-semibold text-indigo-900">Chcete ukládat faktury a sledovat platby?</p>
-            <p className="text-sm text-brand mt-1">Registrace zdarma · 30 faktur měsíčně bez poplatku</p>
+            <p className="text-sm text-brand mt-1">Registrace zdarma · 5 faktur měsíčně bez poplatku</p>
           </div>
           <Link href="/sign-up" className="bg-brand text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-dark transition shadow-sm">
             Registrovat zdarma

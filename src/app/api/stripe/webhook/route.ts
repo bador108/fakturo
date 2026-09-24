@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { stripe, isProOverride } from '@/lib/stripe'
+import { stripe, isProOverride, planFromPriceId } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase'
 
 export async function POST(req: Request) {
@@ -41,8 +41,12 @@ export async function POST(req: Request) {
     }
     case 'customer.subscription.updated': {
       const active = (obj.status as string) === 'active' || (obj.status as string) === 'trialing'
-      const { data: updUser } = await db.from('users').select('email').eq('stripe_subscription_id', obj.id as string).single()
-      await db.from('users').update({ plan: isProOverride(updUser?.email) ? 'pro' : active ? 'pro' : 'free' })
+      const { data: updUser } = await db.from('users').select('email, plan').eq('stripe_subscription_id', obj.id as string).single()
+      // plán podle ceny předplatného — dřív tu bylo natvrdo 'pro', takže Start při obnovení dostal Pro
+      const items = obj.items as { data?: { price?: { id?: string } }[] } | undefined
+      const pricePlan = planFromPriceId(items?.data?.[0]?.price?.id)
+      const paidPlan = pricePlan ?? (updUser?.plan === 'start' ? 'start' : 'pro')
+      await db.from('users').update({ plan: isProOverride(updUser?.email) ? 'pro' : active ? paidPlan : 'free' })
         .eq('stripe_subscription_id', obj.id as string)
       break
     }

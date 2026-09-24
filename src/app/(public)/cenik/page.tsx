@@ -20,9 +20,11 @@ const cont = { maxWidth: 1180, margin: '0 auto', padding: '0 32px' }
 const disp = { letterSpacing: -2, fontWeight: 600 }
 
 const faqItems: [string, string][] = [
-  ['Můžu kdykoliv zrušit?', 'Ano, bez výpovědní doby. Klikneš v nastavení a předplatné se zruší. Data si stáhneš v PDF i CSV.'],
+  ['Můžu kdykoliv zrušit?', 'Ano, bez výpovědní doby. V Nastavení vypneš automatické obnovení a předplatné doběhne do konce zaplaceného období. Pak přejdeš na Free a faktury i data ti zůstanou.'],
+  ['Mám slevový kupon. Kde ho uplatním?', 'V platební bráně při objednání měsíčního předplatného Start nebo Pro, v poli pro slevový kód.'],
   ['Přijímáte platební kartu?', 'Platíš kartou přes zabezpečenou platební bránu Stripe.'],
-  ['Mohu přejít mezi plány kdykoliv?', 'Ano, upgrade nebo downgrade kdykoliv.'],
+  ['Mohu přejít mezi plány kdykoliv?', 'Ano, upgrade nebo downgrade kdykoliv v Nastavení.'],
+  ['Co když na Free dojdou faktury?', 'Free plán má 5 faktur měsíčně a až 5 klientů. Další měsíc se limit faktur obnoví, nebo přejdeš na Start s neomezenými fakturami.'],
   ['Mám faktury v bezpečí?', 'Data jsou šifrovaná (TLS), databáze má row-level security a servery jsou v EU.'],
 ]
 

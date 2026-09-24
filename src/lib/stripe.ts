@@ -20,6 +20,11 @@ export function getEffectivePlan(plan: string, email?: string | null): string {
   return plan
 }
 
+/** Jen vlastník appky (bez ručně přidělených Pro účtů) — admin akce jako generování slevových kuponů. */
+export function isAppOwner(email?: string | null): boolean {
+  return !!email && [OWNER_EMAIL, 'vaclav.urbanec3@gmail.com'].includes(email)
+}
+
 export const FREE_TIER_LIMIT = 5
 export const START_TIER_LIMIT = 999999 // unlimited in practice
 
@@ -32,6 +37,40 @@ export function getPriceId(plan: 'start' | 'pro', billing: 'monthly' | 'annual')
   return billing === 'annual'
     ? process.env.STRIPE_PRO_ANNUAL_PRICE_ID!
     : process.env.STRIPE_PRO_MONTHLY_PRICE_ID!
+}
+
+/** Plán podle ceny předplatného (měsíční i roční cena Start / Pro), null = neznámá cena. */
+export function planFromPriceId(priceId?: string | null): 'start' | 'pro' | null {
+  if (!priceId) return null
+  if (priceId === process.env.STRIPE_START_MONTHLY_PRICE_ID || priceId === process.env.STRIPE_START_ANNUAL_PRICE_ID) return 'start'
+  if (priceId === process.env.STRIPE_PRO_MONTHLY_PRICE_ID || priceId === process.env.STRIPE_PRO_ANNUAL_PRICE_ID) return 'pro'
+  return null
+}
+
+interface CheckoutOptions {
+  customerId: string
+  userId: string
+  plan: 'start' | 'pro'
+  billing: 'monthly' | 'annual'
+  cancelUrl: string
+}
+
+/** Stripe Checkout pro předplatné. Vrací URL platební brány. */
+export async function createSubscriptionCheckout({ customerId, userId, plan, billing, cancelUrl }: CheckoutOptions): Promise<string> {
+  const session = await stripe.checkout.sessions.create({
+    customer: customerId,
+    mode: 'subscription',
+    payment_method_types: ['card'],
+    line_items: [{ price: getPriceId(plan, billing), quantity: 1 }],
+    // slevový kupon jde zadat jen u měsíční platby — kupon "1 měsíc zdarma" (100 % na první
+    // platbu) by u roční platby dal zdarma celý rok
+    allow_promotion_codes: billing === 'monthly',
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=1`,
+    cancel_url: cancelUrl,
+    metadata: { userId, plan },
+    locale: 'cs',
+  })
+  return session.url!
 }
 
 export async function getOrCreateStripeCustomer(

@@ -1,9 +1,10 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
-import { isProOverride } from '@/lib/stripe'
+import { isAppOwner, isProOverride } from '@/lib/stripe'
 import { cn } from '@/lib/utils'
 import { SendRemindersButton } from '@/components/SendRemindersButton'
+import { CouponsPanel } from '@/components/CouponsPanel'
 
 interface InboxMessage {
   id: string
@@ -42,6 +43,11 @@ export default async function ZpravyPage() {
       <div className="mb-6">
         <SendRemindersButton />
       </div>
+      {isAppOwner(user?.email) && (
+        <div className="mb-6">
+          <CouponsPanel />
+        </div>
+      )}
 
       {messages.length === 0 ? (
         <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-8 text-center text-sm text-slate-400">

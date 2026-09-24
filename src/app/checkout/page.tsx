@@ -1,6 +1,6 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import { stripe, getOrCreateStripeCustomer, getPriceId } from '@/lib/stripe'
+import { getOrCreateStripeCustomer, createSubscriptionCheckout } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase'
 
 async function ensureUser(userId: string) {
@@ -37,18 +37,10 @@ export default async function CheckoutPage({
   const user = await currentUser()
   const email = user?.emailAddresses[0]?.emailAddress ?? ''
   const customerId = await getOrCreateStripeCustomer(userId, email)
-  const priceId = getPriceId(plan, billing)
-
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: 'subscription',
-    payment_method_types: ['card'],
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=1`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/#cenik`,
-    metadata: { userId, plan },
-    locale: 'cs',
+  const url = await createSubscriptionCheckout({
+    customerId, userId, plan, billing,
+    cancelUrl: `${process.env.NEXT_PUBLIC_APP_URL}/#cenik`,
   })
 
-  redirect(session.url!)
+  redirect(url)
 }
