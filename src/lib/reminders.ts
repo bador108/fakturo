@@ -3,7 +3,7 @@ import { getEffectivePlan } from '@/lib/stripe'
 import { isPro } from '@/lib/plan'
 import { escapeHtml as esc, formatCurrency, formatDate } from '@/lib/utils'
 import { renderBrandedEmail } from '@/lib/emailTemplate'
-import { DEFAULT_REMINDER_DAYS, DEFAULT_REMINDER_TONE, isReminderTone, reminderCopy, type ReminderCopy } from '@/lib/reminderConfig'
+import { DEFAULT_REMINDER_DAYS, DEFAULT_REMINDER_TONE, buildReminder, isReminderTone, type ReminderCopy } from '@/lib/reminderConfig'
 import { Resend } from 'resend'
 
 interface ReminderInvoice {
@@ -14,14 +14,16 @@ interface ReminderInvoice {
   public_token: string | null
 }
 
-function reminderBodyHtml(inv: ReminderInvoice, copy: ReminderCopy, overdue: boolean): string {
+/** ordinal 0 = připomínka před splatností, 1+ = kolikátá upomínka po splatnosti */
+function reminderBodyHtml(inv: ReminderInvoice, copy: ReminderCopy, ordinal: number): string {
+  const overdue = ordinal > 0
   const link = inv.public_token
     ? `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://fakturo.online'}/f/${inv.public_token}`
     : null
   return `
+    ${overdue ? `<span style="display:inline-block;font-size:11px;font-weight:600;color:#b91c1c;background:#fef2f2;border-radius:999px;padding:3px 10px;margin:0 0 10px">${ordinal}. upomínka</span>` : ''}
     <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#0c0c0e">${esc(copy.subject)}</h2>
-    <p style="color:#64748b;font-size:14px;margin:0 0 12px;line-height:1.55">Dobrý den,<br/>${esc(copy.intro)}</p>
-    <p style="color:#64748b;font-size:14px;margin:0 0 24px;line-height:1.55">${esc(copy.outro)}</p>
+    <p style="color:#64748b;font-size:14px;margin:0 0 24px;line-height:1.55">${esc(copy.greeting)}<br/>${esc(copy.text)}</p>
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:0">
       <tr><td style="color:#64748b;padding:4px 0">Číslo faktury</td><td style="text-align:right;font-weight:600">${esc(inv.invoice_number)}</td></tr>
       <tr><td style="color:#64748b;padding:4px 0">Datum splatnosti</td><td style="text-align:right;font-weight:600">${esc(formatDate(inv.due_date))}</td></tr>
@@ -81,8 +83,19 @@ export async function runReminders(): Promise<{ sent: number }> {
 
     if (alreadySent) continue
 
+    // kolikátá upomínka po splatnosti to pro tuhle fakturu je (1. mile, 2. jasněji, 3. důrazně)
+    let ordinal = 0
+    if (diffDays < 0) {
+      const { count } = await db
+        .from('invoice_reminders')
+        .select('id', { count: 'exact', head: true })
+        .eq('invoice_id', inv.id)
+        .gt('days_offset', 0)
+      ordinal = (count ?? 0) + 1
+    }
+
     const tone = isReminderTone(user.reminder_tone) ? user.reminder_tone : DEFAULT_REMINDER_TONE
-    const copy = reminderCopy({ tone, invoiceNumber: inv.invoice_number, senderName: inv.sender_name, daysToDue: diffDays })
+    const copy = buildReminder({ tone, ordinal, days: diffDays, invoiceNumber: inv.invoice_number, senderName: inv.sender_name })
 
     const { error: mailErr } = await resend.emails.send({
       from: 'Fakturo <info@fakturo.online>',
@@ -92,7 +105,7 @@ export async function runReminders(): Promise<{ sent: number }> {
       html: renderBrandedEmail({
         senderName: inv.sender_name,
         senderLogoUrl: inv.sender_logo_url,
-        bodyHtml: reminderBodyHtml(inv, copy, diffDays < 0),
+        bodyHtml: reminderBodyHtml(inv, copy, ordinal),
       }),
     })
 

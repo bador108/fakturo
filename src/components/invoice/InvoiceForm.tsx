@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import QRCode from 'qrcode'
 import { Plus, Trash2, Save, Send, FileDown, Search, Mail, X, Copy, FileText, User, Download, Link2 } from 'lucide-react'
@@ -19,6 +19,8 @@ interface InvoiceFormProps {
   publicToken?: string
   nextInvoiceNumber: string
   plan?: string
+  /** panel pod hlavičkou (např. časová osa upomínek u odeslané faktury) */
+  aside?: ReactNode
 }
 
 const DEFAULT_ITEM: InvoiceItemDraft = {
@@ -29,7 +31,7 @@ const DEFAULT_ITEM: InvoiceItemDraft = {
   vat_rate: 21,
 }
 
-export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoiceNumber, plan = 'free' }: InvoiceFormProps) {
+export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoiceNumber, plan = 'free', aside }: InvoiceFormProps) {
   const [linkCopied, setLinkCopied] = useState(false)
 
   async function copyPublicLink() {
@@ -418,6 +420,8 @@ export function InvoiceForm({ defaultValues, invoiceId, publicToken, nextInvoice
           </Button>
         </div>
       </div>
+
+      {aside}
 
       {/* Meta row */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-5 bg-white rounded-xl border border-slate-100 shadow-sm">

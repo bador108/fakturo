@@ -1,54 +1,68 @@
 'use client'
 
+import { useState } from 'react'
+import type { ReminderTone } from '@/types'
 import { cn } from '@/lib/utils'
-import { REMINDER_TONES, dayOptionLabel, reminderCopy, type ReminderTone } from '@/lib/reminderConfig'
+import { REMINDER_TONES, buildReminder, reminderLabel } from '@/lib/reminderConfig'
 
 interface Props {
-  tone: ReminderTone
+  value: ReminderTone
   onChange: (tone: ReminderTone) => void
   senderName: string
-  /** den, pro který se ukazuje náhled (se znaménkem jako v nastavení) */
-  previewDays: number
 }
 
-export function ReminderTonePicker({ tone, onChange, senderName, previewDays }: Props) {
-  const copy = reminderCopy({ tone, invoiceNumber: '2026/042', senderName, daysToDue: previewDays })
+// ukázka pro náhled: 1.–3. upomínka jde 3, 7 a 14 dní po splatnosti
+const PREVIEW_DAYS = [3, 7, 14]
+
+export function ReminderTonePicker({ value, onChange, senderName }: Props) {
+  const [ordinal, setOrdinal] = useState(1)
+  const copy = buildReminder({ tone: value, ordinal, days: PREVIEW_DAYS[ordinal - 1], invoiceNumber: '2026/042', senderName })
 
   return (
-    <section>
-      <h3 className="text-sm font-medium text-slate-900 mb-1">Tón e-mailu</h3>
-      <p className="text-xs text-slate-400 mb-3">Jak moc mile nebo přísně bude upomínka napsaná.</p>
-
-      <div role="radiogroup" aria-label="Tón e-mailu" className="grid gap-2 sm:grid-cols-3">
-        {REMINDER_TONES.map(t => {
-          const active = t.value === tone
-          return (
-            <button
-              key={t.value}
-              type="button"
-              role="radio"
-              aria-checked={active}
-              onClick={() => onChange(t.value)}
-              className={cn(
-                'text-left rounded-lg border p-3 transition-colors',
-                active ? 'border-brand ring-1 ring-brand bg-white' : 'border-slate-200 bg-white hover:bg-slate-50'
-              )}
-            >
-              <span className="block text-sm font-medium text-slate-900">{t.label}</span>
-              <span className="block text-xs text-slate-500 mt-0.5 leading-relaxed">{t.hint}</span>
-            </button>
-          )
-        })}
+    <div className="space-y-3">
+      <div role="radiogroup" aria-label="Tón upomínek" className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        {REMINDER_TONES.map(t => (
+          <button
+            key={t.value}
+            type="button"
+            role="radio"
+            aria-checked={value === t.value}
+            onClick={() => onChange(t.value)}
+            className={cn(
+              'text-left rounded-lg border p-3 transition-colors',
+              value === t.value ? 'border-emerald-600 bg-emerald-50' : 'border-slate-200 bg-white hover:bg-slate-50'
+            )}
+          >
+            <span className="block text-sm font-semibold text-slate-900">{t.label}</span>
+            <span className="block text-xs text-slate-500 mt-0.5">{t.description}</span>
+          </button>
+        ))}
       </div>
 
-      <div className="mt-3 rounded-lg border border-slate-100 bg-slate-50 p-4">
-        <p className="text-[11px] uppercase tracking-wide text-slate-400 mb-2">
-          Náhled e-mailu klientovi · {dayOptionLabel(previewDays)}
-        </p>
+      <div className="rounded-lg bg-slate-50 border border-slate-100 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <p className="text-xs text-slate-400">Náhled — {reminderLabel(ordinal)}</p>
+          <div className="flex gap-1">
+            {[1, 2, 3].map(o => (
+              <button
+                key={o}
+                type="button"
+                onClick={() => setOrdinal(o)}
+                aria-pressed={o === ordinal}
+                className={cn(
+                  'text-xs rounded-md px-2 py-0.5 transition-colors',
+                  o === ordinal ? 'bg-white border border-slate-200 text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
+                )}
+              >
+                {o}.
+              </button>
+            ))}
+          </div>
+        </div>
         <p className="text-sm font-semibold text-slate-900">{copy.subject}</p>
-        <p className="text-sm text-slate-600 mt-2 leading-relaxed">Dobrý den,<br />{copy.intro}</p>
-        <p className="text-sm text-slate-600 mt-2 leading-relaxed">{copy.outro}</p>
+        <p className="text-sm text-slate-600 mt-1.5 leading-relaxed">{copy.greeting}<br />{copy.text}</p>
       </div>
-    </section>
+      <p className="text-xs text-slate-400">Každá další upomínka po splatnosti trochu přitvrdí, ale zůstane slušná.</p>
+    </div>
   )
 }

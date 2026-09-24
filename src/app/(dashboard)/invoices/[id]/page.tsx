@@ -2,7 +2,10 @@ import { auth } from '@clerk/nextjs/server'
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import { InvoiceForm } from '@/components/invoice/InvoiceForm'
+import { ReminderTimeline } from '@/components/invoice/ReminderTimeline'
 import { getEffectivePlan } from '@/lib/stripe'
+import { isPro } from '@/lib/plan'
+import { DEFAULT_REMINDER_DAYS } from '@/lib/reminderConfig'
 import type { Currency, Invoice, InvoiceItem } from '@/types'
 
 export default async function InvoicePage({ params }: { params: { id: string } }) {
@@ -12,13 +15,27 @@ export default async function InvoicePage({ params }: { params: { id: string } }
   const db = createServiceClient()
   const [{ data, error }, { data: user }] = await Promise.all([
     db.from('invoices').select('*, invoice_items(*)').eq('id', params.id).eq('user_id', userId).single(),
-    db.from('users').select('plan, email').eq('id', userId).single(),
+    db.from('users').select('plan, email, reminder_days').eq('id', userId).single(),
   ])
 
   if (error || !data) notFound()
   const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
 
   const invoice = data as Invoice & { invoice_items: InvoiceItem[] }
+
+  // časová osa upomínek jen u odeslané (nezaplacené) faktury — upomínky jsou Pro funkce
+  let reminders = null
+  if (isPro(plan) && invoice.status === 'sent' && invoice.invoice_type !== 'nabidka') {
+    const { data: sent } = await db.from('invoice_reminders').select('days_offset').eq('invoice_id', invoice.id)
+    reminders = (
+      <ReminderTimeline
+        dueDate={invoice.due_date}
+        reminderDays={user?.reminder_days ?? DEFAULT_REMINDER_DAYS}
+        sentOffsets={(sent ?? []).map(r => r.days_offset)}
+        hasClientEmail={Boolean(invoice.client_email)}
+      />
+    )
+  }
 
   const defaultValues = {
     invoice_type: invoice.invoice_type,
@@ -72,6 +89,7 @@ export default async function InvoicePage({ params }: { params: { id: string } }
       nextInvoiceNumber={invoice.invoice_number}
       defaultValues={defaultValues}
       plan={plan}
+      aside={reminders}
     />
   )
 }

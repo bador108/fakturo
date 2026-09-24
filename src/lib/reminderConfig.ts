@@ -1,43 +1,35 @@
-// Sdílené nastavení upomínek — používá cron (lib/reminders.ts) i náhled v Nastavení,
+import type { ReminderTone } from '@/types'
+
+// Sdílené nastavení a texty upomínek — cron (lib/reminders.ts), Nastavení i časová osa na faktuře,
 // takže klient dostane přesně ten text, který uživatel vidí v náhledu.
+// Tón volí uživatel; pořadí upomínky po splatnosti (1.–3.) přitvrzuje, ale zůstává slušné.
 
-export type ReminderTone = 'friendly' | 'neutral' | 'firm'
-
-export const DEFAULT_REMINDER_TONE: ReminderTone = 'neutral'
-
-export const REMINDER_TONES: { value: ReminderTone; label: string; hint: string }[] = [
-  { value: 'friendly', label: 'Přátelský', hint: 'Mile a s pochopením. Pro stálé klienty.' },
-  { value: 'neutral', label: 'Věcný', hint: 'Zdvořile a k věci. Výchozí volba.' },
-  { value: 'firm', label: 'Důrazný', hint: 'Jasně a bez vytáček. Když už to trvá.' },
+export const REMINDER_TONES: { value: ReminderTone; label: string; description: string }[] = [
+  { value: 'pratelsky', label: 'Přátelský', description: 'Vlídně, jako mezi známými.' },
+  { value: 'vecny', label: 'Věcný', description: 'Krátce a jasně, bez omáčky.' },
+  { value: 'formalni', label: 'Formální', description: 'Úřední tón pro firmy a instituce.' },
 ]
 
+export const DEFAULT_REMINDER_TONE: ReminderTone = 'vecny'
+
 export function isReminderTone(v: unknown): v is ReminderTone {
-  return v === 'friendly' || v === 'neutral' || v === 'firm'
+  return v === 'pratelsky' || v === 'vecny' || v === 'formalni'
 }
 
 // Dny se ukládají se znaménkem: kladné = dní PŘED splatností, záporné = dní PO splatnosti
-export const REMINDER_DAYS_BEFORE = [14, 7, 3, 1]
+export const REMINDER_DAYS_BEFORE = [1, 3, 7, 14]
 export const REMINDER_DAYS_AFTER = [-1, -3, -7, -14, -30]
 export const REMINDER_DAY_OPTIONS = [...REMINDER_DAYS_BEFORE, ...REMINDER_DAYS_AFTER]
 
-export const DEFAULT_REMINDER_DAYS = [3, -1, -7, -14]
+// 3 dny před splatností + 1., 2. a 3. upomínka 3, 7 a 14 dní po ní
+export const DEFAULT_REMINDER_DAYS = [3, -3, -7, -14]
 
-export const REMINDER_PRESETS: { id: string; label: string; days: number[] }[] = [
-  { id: 'off', label: 'Vypnuto', days: [] },
-  { id: 'rare', label: 'Zřídka', days: [3, -7, -30] },
-  { id: 'normal', label: 'Běžně', days: DEFAULT_REMINDER_DAYS },
-  { id: 'often', label: 'Často', days: [7, 3, 1, -1, -3, -7, -14, -30] },
-]
+// jak upomínka přitvrzuje: 1. mile, 2. jasněji, 3. a další důrazně
+const LEVEL_TAGS = ['mile', 'jasněji', 'důrazně']
 
-/** Seřadí dny chronologicky (od nejdřívější upomínky před splatností). */
+/** Seřadí dny chronologicky (od nejdřívější připomínky před splatností). */
 export function sortReminderDays(days: number[]): number[] {
   return Array.from(new Set(days)).sort((a, b) => b - a)
-}
-
-/** Vrátí id presetu, který přesně odpovídá výběru, jinak null (= vlastní). */
-export function matchPreset(days: number[]): string | null {
-  const key = sortReminderDays(days).join(',')
-  return REMINDER_PRESETS.find(p => sortReminderDays(p.days).join(',') === key)?.id ?? null
 }
 
 /** 1 den, 2–4 dny, 5+ dní */
@@ -50,62 +42,63 @@ export function dayOptionLabel(d: number): string {
   return `${daysLabel(d)} ${d > 0 ? 'před' : 'po'} splatnosti`
 }
 
-interface CopyInput {
+/** „1. upomínka — mile“; ordinal 0 = připomínka před splatností */
+export function reminderLabel(ordinal: number): string {
+  if (ordinal <= 0) return 'Připomínka před splatností'
+  return `${ordinal}. upomínka — ${LEVEL_TAGS[Math.min(ordinal, 3) - 1]}`
+}
+
+interface ReminderInput {
   tone: ReminderTone
+  /** 0 = před splatností, 1+ = kolikátá upomínka po splatnosti (texty od 3. dál zůstávají důrazné) */
+  ordinal: number
+  /** počet dní do splatnosti (ordinal 0) nebo po splatnosti (1+) */
+  days: number
   invoiceNumber: string
   senderName: string
-  /** kladné = do splatnosti zbývá, záporné = po splatnosti */
-  daysToDue: number
 }
 
 export interface ReminderCopy {
   subject: string
-  intro: string
-  outro: string
+  greeting: string
+  text: string
 }
 
-/** Předmět a text upomínky pro zvolený tón (prostý text, escapuje se až při skládání HTML). */
-export function reminderCopy({ tone, invoiceNumber: n, senderName: s, daysToDue }: CopyInput): ReminderCopy {
-  const d = daysLabel(daysToDue)
-  const overdue = daysToDue < 0
+const OVERDUE_TEXTS: Record<ReminderTone, [string, string, string]> = {
+  pratelsky: [
+    'jen drobné upozornění — {f} je {d} po splatnosti. Možná to jen zapadlo v e-mailech. Pokud už je platba na cestě, děkujeme a tuto zprávu prosím ignorujte.',
+    'ozýváme se znovu — {f} je stále neuhrazena, už {d} po splatnosti. Budeme moc rádi, když ji uhradíte v nejbližších dnech.',
+    '{f} je už {d} po splatnosti a platba zatím nedorazila. Prosíme o úhradu do 5 pracovních dnů. Pokud je něco v nepořádku, stačí odpovědět na tento e-mail a domluvíme se.',
+  ],
+  vecny: [
+    'upozorňujeme, že {f} je {d} po splatnosti. Prosíme o její úhradu.',
+    '{f} zůstává neuhrazená, je {d} po splatnosti. Prosíme o úhradu v nejbližších dnech.',
+    '{f} je {d} po splatnosti a stále není uhrazena. Žádáme o úhradu nejpozději do 5 pracovních dnů od doručení tohoto e-mailu. Pokud jste už zaplatili, ozvěte se prosím.',
+  ],
+  formalni: [
+    'dovolujeme si Vás upozornit, že {f} je {d} po splatnosti. Žádáme Vás tímto o její úhradu.',
+    'opakovaně Vás upozorňujeme, že {f} je {d} po splatnosti a dosud nebyla uhrazena. Žádáme Vás o úhradu bez zbytečného odkladu.',
+    '{f} je {d} po splatnosti a přes předchozí upomínky nebyla uhrazena. Žádáme Vás o úhradu nejpozději do 5 pracovních dnů od doručení této upomínky. Pokud byla platba již odeslána, považujte prosím tuto zprávu za bezpředmětnou.',
+  ],
+}
 
-  if (tone === 'friendly') {
-    return overdue
-      ? {
-          subject: `Faktura č. ${n} možná zapadla`,
-          intro: `možná to jen zapadlo v poště: faktura č. ${n} od ${s} je ${d} po splatnosti.`,
-          outro: 'Budeme rádi, když ji uhradíte, jakmile to půjde. Pokud už je zaplaceno, děkujeme a tento e-mail prosím ignorujte.',
-        }
-      : {
-          subject: `Malá připomínka k faktuře č. ${n}`,
-          intro: `jen drobná připomínka: faktura č. ${n} od ${s} bude splatná za ${d}.`,
-          outro: 'Pokud už je zaplaceno, tento e-mail prosím ignorujte. Děkujeme!',
-        }
+const BEFORE_TEXTS: Record<ReminderTone, string> = {
+  pratelsky: 'jen připomínáme, že {f} bude splatná za {d}. Děkujeme!',
+  vecny: 'připomínáme, že {f} bude splatná za {d}.',
+  formalni: 'dovolujeme si Vám připomenout, že {f} bude splatná za {d}.',
+}
+
+/** Předmět a text upomínky (prostý text; po oslovení s čárkou pokračuje dopis malým písmenem). */
+export function buildReminder({ tone, ordinal, days, invoiceNumber, senderName }: ReminderInput): ReminderCopy {
+  const d = daysLabel(days)
+  const fill = (t: string) => t.replace('{f}', `faktura č. ${invoiceNumber} od ${senderName}`).replace('{d}', d)
+  const greeting = tone === 'formalni' ? 'Vážená paní, vážený pane,' : 'Dobrý den,'
+
+  if (ordinal <= 0) {
+    return { subject: `Připomínka: faktura č. ${invoiceNumber} je splatná za ${d}`, greeting, text: fill(BEFORE_TEXTS[tone]) }
   }
 
-  if (tone === 'firm') {
-    return overdue
-      ? {
-          subject: `Důrazná upomínka: faktura č. ${n} je ${d} po splatnosti`,
-          intro: `faktura č. ${n} od ${s} je ${d} po splatnosti a dosud nebyla uhrazena.`,
-          outro: 'Žádáme o okamžitou úhradu. Pokud platbu neobdržíme, budeme nuceni přistoupit k dalším krokům.',
-        }
-      : {
-          subject: `Faktura č. ${n} je splatná za ${d}`,
-          intro: `faktura č. ${n} od ${s} je splatná za ${d}.`,
-          outro: 'Žádáme o úhradu nejpozději v den splatnosti.',
-        }
-  }
-
-  return overdue
-    ? {
-        subject: `Upomínka: faktura č. ${n} je ${d} po splatnosti`,
-        intro: `upozorňujeme, že faktura č. ${n} od ${s} je ${d} po splatnosti.`,
-        outro: 'Prosíme o její úhradu. Pokud jste platbu již odeslali, považujte tento e-mail za bezpředmětný.',
-      }
-    : {
-        subject: `Připomínka: faktura č. ${n} je splatná za ${d}`,
-        intro: `připomínáme, že faktura č. ${n} od ${s} bude splatná za ${d}.`,
-        outro: 'Děkujeme za včasnou úhradu.',
-      }
+  const text = fill(OVERDUE_TEXTS[tone][Math.min(ordinal, 3) - 1])
+  const prefix = ordinal === 1 ? 'Upomínka' : `${ordinal}. upomínka`
+  return { subject: `${prefix}: faktura č. ${invoiceNumber} je ${d} po splatnosti`, greeting, text }
 }
