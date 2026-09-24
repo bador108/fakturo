@@ -6,7 +6,7 @@ import { PricingSection } from '@/components/PricingSection'
 import { AuthLink } from '@/components/home/HomeAuthLinks'
 import { SiteNav } from '@/components/layout/SiteNav'
 import { BotcraftWidget } from '@/components/BotcraftWidget'
-import { PhoneMockup } from '@/components/PhoneMockup'
+import { PhoneDemo } from '@/components/phone-demo/PhoneDemo'
 import { FeatureShowcase } from '@/components/FeatureShowcase'
 import { Reveal } from '@/components/Reveal'
 
@@ -521,9 +521,7 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <PhoneMockup />
-          </div>
+          <PhoneDemo />
         </section>
       </Reveal>
       <Reveal><Highlights /></Reveal>
