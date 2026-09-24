@@ -9,14 +9,10 @@ export const APP = { w: 1120, h: 700, bar: 40 }
 
 export function BrowserBar({ path }: { path: string }) {
   return (
-    <div className="flex items-center gap-4 px-4 bg-[#f3f3f1] border-b border-slate-200/80" style={{ height: APP.bar }}>
-      <span className="flex gap-2">
-        <i className="h-3 w-3 rounded-full bg-[#ff5f57]" /><i className="h-3 w-3 rounded-full bg-[#febc2e]" /><i className="h-3 w-3 rounded-full bg-[#28c840]" />
-      </span>
-      <span className="mx-auto flex items-center gap-1.5 h-7 w-[420px] justify-center rounded-lg bg-white border border-slate-200/80 text-[13px] text-slate-500">
+    <div className="flex items-center justify-center px-4 bg-[#f3f3f1] border-b border-slate-200/80" style={{ height: APP.bar }}>
+      <span className="flex items-center gap-1.5 h-7 w-[420px] justify-center rounded-lg bg-white border border-slate-200/80 text-[13px] text-slate-500">
         <Lock className="h-3 w-3 text-slate-400" />fakturo.online/<span className="text-slate-800">{path}</span>
       </span>
-      <span className="w-[52px]" />
     </div>
   )
 }
