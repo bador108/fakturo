@@ -10,6 +10,8 @@ export type PaymentMethod = 'bank_transfer' | 'cash' | 'card';
 
 export type Currency = 'CZK' | 'EUR' | 'USD';
 
+export type ReminderTone = 'pratelsky' | 'vecny' | 'formalni';
+
 export type ExpenseCategory =
   | 'kancelar'
   | 'software'

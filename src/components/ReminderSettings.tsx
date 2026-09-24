@@ -3,10 +3,13 @@
 import { useState } from 'react'
 import { Check, Bell } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ReminderTonePicker } from '@/components/ReminderTonePicker'
+import type { ReminderTone } from '@/types'
 
 interface Props {
   userId: string
   initialDays: number[]
+  initialTone: ReminderTone
 }
 
 const OPTIONS = [
@@ -29,8 +32,9 @@ const ALL_OPTIONS = [...BEFORE, ...AFTER]
 void OPTIONS
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function ReminderSettings({ userId, initialDays }: Props) {
+export function ReminderSettings({ userId, initialDays, initialTone }: Props) {
   const [days, setDays] = useState<number[]>(initialDays)
+  const [tone, setTone] = useState<ReminderTone>(initialTone)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -46,7 +50,7 @@ export function ReminderSettings({ userId, initialDays }: Props) {
       const res = await fetch('/api/settings/reminders', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reminder_days: days }),
+        body: JSON.stringify({ reminder_days: days, reminder_tone: tone }),
       })
       if (res.ok) setSaved(true)
     } finally {
@@ -63,6 +67,11 @@ export function ReminderSettings({ userId, initialDays }: Props) {
         <Bell className="h-3.5 w-3.5 shrink-0" />
         Upomínky jsou odesílány pouze fakturám se statusem &quot;Odesláno&quot; a vyplněným e-mailem klienta.
       </div>
+      <div>
+        <p className="text-sm font-medium text-slate-700 mb-2">Tón upomínek</p>
+        <ReminderTonePicker value={tone} onChange={t => { setTone(t); setSaved(false) }} />
+      </div>
+      <p className="text-sm font-medium text-slate-700">Kdy upomínky posílat</p>
       <div className="space-y-1">
         {ALL_OPTIONS.map(opt => (
           <label key={opt.value} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 cursor-pointer">

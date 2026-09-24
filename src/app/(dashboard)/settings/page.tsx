@@ -3,6 +3,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { SenderProfilesManager } from '@/components/SenderProfilesManager'
 import { ItemTemplatesManager } from '@/components/ItemTemplatesManager'
 import { ReminderSettings } from '@/components/ReminderSettings'
+import { isReminderTone, DEFAULT_REMINDER_TONE, DEFAULT_REMINDER_DAYS } from '@/lib/reminderTemplates'
 import { UpgradeButton } from '@/components/UpgradeButton'
 import { ManageSubscriptionButton } from '@/components/ManageSubscriptionButton'
 import { BankStatementUpload } from '@/components/BankStatementUpload'
@@ -20,14 +21,16 @@ export default async function SettingsPage() {
   const db = createServiceClient()
   const [{ data: profiles }, { data: user }] = await Promise.all([
     db.from('sender_profiles').select('*').eq('user_id', userId).order('is_default', { ascending: false }),
-    db.from('users').select('plan, email, invoice_count_this_month, reminder_days').eq('id', userId).single(),
+    // select('*'): reminder_tone přibyl v migration9 — stránka nesmí spadnout, dokud migrace neproběhne
+    db.from('users').select('*').eq('id', userId).single(),
   ])
 
   const plan = getEffectivePlan(user?.plan ?? 'free', user?.email)
   const canBrand = plan === 'start' || plan === 'pro'
   const pro = isPro(plan)
   const used = user?.invoice_count_this_month ?? 0
-  const reminderDays: number[] = user?.reminder_days ?? [3, 7, 14]
+  const reminderDays: number[] = user?.reminder_days ?? DEFAULT_REMINDER_DAYS
+  const reminderTone = isReminderTone(user?.reminder_tone) ? user.reminder_tone : DEFAULT_REMINDER_TONE
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -77,7 +80,7 @@ export default async function SettingsPage() {
       {/* Reminder settings */}
       <div className="p-5 bg-white rounded-xl border border-zinc-200">
         <h2 className="font-semibold mb-1">Upomínky</h2>
-        {pro ? <ReminderSettings userId={userId} initialDays={reminderDays} /> : (
+        {pro ? <ReminderSettings userId={userId} initialDays={reminderDays} initialTone={reminderTone} /> : (
           <ProUpsell title="Automatické upomínky" description="Fakturo samo pošle klientovi upomínku před i po splatnosti — součást Pro plánu." />
         )}
       </div>
