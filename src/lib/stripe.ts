@@ -55,9 +55,30 @@ interface CheckoutOptions {
   cancelUrl: string
 }
 
+// Vzhled platební brány: značka Fakturo místo názvu Stripe účtu, barvy a font podle webu.
+// Obrázky musí být veřejně dostupné, proto vždy produkční doména (ne localhost / preview).
+type CheckoutParams = NonNullable<Parameters<typeof stripe.checkout.sessions.create>[0]>
+
+const CHECKOUT_LOOK: Pick<CheckoutParams, 'branding_settings' | 'wallet_options' | 'custom_text'> = {
+  branding_settings: {
+    display_name: 'Fakturo',
+    logo: { type: 'url', url: 'https://fakturo.online/logo.png' },
+    icon: { type: 'url', url: 'https://fakturo.online/checkout-icon.png' },
+    background_color: '#fafaf8',
+    button_color: '#0c0c0e',
+    border_style: 'rounded',
+    font_family: 'be_vietnam_pro',
+  },
+  // bez Link tlačítka a "Uložit mé údaje" — karta, Apple Pay a Google Pay zůstávají
+  wallet_options: { link: { display: 'never' } },
+  custom_text: {
+    submit: { message: 'Předplatné vypneš kdykoliv v Nastavení jedním přepínačem. Doběhne do konce zaplaceného období a pak už nic neplatíš.' },
+  },
+}
+
 /** Stripe Checkout pro předplatné. Vrací URL platební brány. */
 export async function createSubscriptionCheckout({ customerId, userId, plan, billing, cancelUrl }: CheckoutOptions): Promise<string> {
-  const session = await stripe.checkout.sessions.create({
+  const params: CheckoutParams = {
     customer: customerId,
     mode: 'subscription',
     payment_method_types: ['card'],
@@ -69,8 +90,16 @@ export async function createSubscriptionCheckout({ customerId, userId, plan, bil
     cancel_url: cancelUrl,
     metadata: { userId, plan },
     locale: 'cs',
-  })
-  return session.url!
+  }
+  try {
+    const session = await stripe.checkout.sessions.create({ ...params, ...CHECKOUT_LOOK })
+    return session.url!
+  } catch (e) {
+    // platba nesmí spadnout kvůli vzhledu — když Stripe úpravy vzhledu odmítne, jede se bez nich
+    console.error('[checkout] look rejected, retrying without it:', e instanceof Error ? e.message : e)
+    const session = await stripe.checkout.sessions.create(params)
+    return session.url!
+  }
 }
 
 export async function getOrCreateStripeCustomer(
